@@ -46,5 +46,34 @@
     // 9. Keyword Catch Game
     const game = new KeywordCatchGame(scroller);
     game.init();
+
+    // 10. Creative Work — video lightbox
+    const lightbox = document.getElementById('video-lightbox');
+    const lightboxVideo = document.getElementById('lightbox-video');
+    const lightboxClose = document.getElementById('video-lightbox-close');
+
+    document.querySelectorAll('.creative-card--video').forEach(card => {
+      card.addEventListener('click', () => {
+        const src = card.dataset.video;
+        if (!src) return;
+        lightboxVideo.src = src;
+        lightbox.classList.add('active');
+        lightboxVideo.play();
+      });
+    });
+
+    function closeLightbox() {
+      lightbox.classList.remove('active');
+      lightboxVideo.pause();
+      lightboxVideo.src = '';
+    }
+
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeLightbox();
+    });
   });
 })();
