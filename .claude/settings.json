@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mv \"7e52211d-8c42-42de-a03e-22a59ee210fa.jpeg\" \"creative-1.jpg\")",
+      "Bash(mv \"b567e869-3f95-4883-92a0-ba88576c9cef.jpeg\" \"creative-2.jpg\")",
+      "Bash(mv \"7fa33494-a202-4163-8427-3f6dcb03b2cc.jpeg\" \"creative-3.jpg\")",
+      "Bash(mv \"Blue and Yellow Modern Business Consultant Facebook Post \\(3\\).png\" \"creative-4.png\")",
+      "Bash(mv \"SkillBrew_AI_Promo_Reel_2026.mp4\" \"creative-video-1.mp4\")"
+    ]
+  }
+}
