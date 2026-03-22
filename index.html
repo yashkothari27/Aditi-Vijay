@@ -66,9 +66,21 @@
         ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 4px; }
 
         .parallax { display: inline-block; }
+        .tool-icon { border-radius: 1rem; border: 2px solid #111; box-shadow: 4px 4px 0px #111; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.15s; }
+        .tool-icon:hover { transform: scale(1.1); }
     </style>
 </head>
 <body class="font-body antialiased">
+    <!-- SVG symbol definitions — reused throughout the page -->
+    <svg style="display:none;" aria-hidden="true">
+        <defs>
+            <symbol id="heart-outline" viewBox="0 0 50 50">
+                <path d="M25 42C25 42 5 30 5 16a10 10 0 0 1 20-2 10 10 0 0 1 20 2c0 14-20 26-20 26z" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </symbol>
+            <symbol id="tool-icon-base" viewBox="0 0 1 1" preserveAspectRatio="none"></symbol>
+        </defs>
+    </svg>
+
     <div class="custom-cursor" id="custom-cursor"></div>
 
     <!-- Hero Section -->
@@ -101,7 +113,7 @@
     </section>
 
     <!-- About Section -->
-    <section class="panel relative py-20 px-6 md:px-20 bg-pink scroll-section overflow-hidden" data-color="#f8d5e0">
+    <section class="panel relative py-12 md:py-20 px-5 md:px-12 lg:px-20 bg-pink scroll-section overflow-hidden" data-color="#f8d5e0">
 
         <!-- Brush stroke doodles — top left (matching Framer reference) -->
         <div class="absolute top-0 left-0 pointer-events-none z-10" style="transform: translate(-10px, -10px);">
@@ -120,7 +132,7 @@
         </div>
 
         <!-- Brush stroke doodles — bottom left (mirrored from top-left, like Creative Designer reference) -->
-        <div class="absolute bottom-0 left-0 pointer-events-none z-10" style="transform: translate(-10px, 10px) scaleY(-1);">
+        <div class="absolute bottom-0 left-0 pointer-events-none z-10 hidden md:block" style="transform: translate(-10px, 10px) scaleY(-1);">
             <svg width="160" height="120" viewBox="0 0 160 120" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M20 120 Q30 80 50 30 Q52 24 48 28 Q35 50 25 100" stroke="#111" stroke-width="3" stroke-linecap="round" fill="none"/>
                 <path d="M35 118 Q50 70 75 20 Q78 13 73 18 Q55 48 42 105" stroke="#111" stroke-width="2.5" stroke-linecap="round" fill="none"/>
@@ -130,22 +142,18 @@
             </svg>
         </div>
 
-        <!-- Large heart doodle — left side (matching Creative Designer left side heart) -->
-        <div class="absolute left-6 top-1/2 pointer-events-none z-10 parallax" data-speed="0.5" style="transform: translateY(-50%);">
-            <svg width="70" height="70" viewBox="0 0 50 50" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M25 42C25 42 5 30 5 16a10 10 0 0 1 20-2 10 10 0 0 1 20 2c0 14-20 26-20 26z"/>
-            </svg>
+        <!-- Large heart doodle — left side -->
+        <div class="absolute left-6 top-1/2 pointer-events-none z-10 parallax hidden lg:block" data-speed="0.5" style="transform: translateY(-50%);">
+            <svg width="70" height="70" fill="none" stroke="#111" stroke-width="2"><use href="#heart-outline"/></svg>
         </div>
 
-        <!-- Small heart doodle — left side lower (like Creative Designer has multiple hearts) -->
-        <div class="absolute left-10 top-[65%] pointer-events-none z-10 parallax" data-speed="-0.4">
-            <svg width="40" height="40" viewBox="0 0 50 50" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M25 42C25 42 5 30 5 16a10 10 0 0 1 20-2 10 10 0 0 1 20 2c0 14-20 26-20 26z"/>
-            </svg>
+        <!-- Small heart doodle — left side lower -->
+        <div class="absolute left-10 top-[65%] pointer-events-none z-10 parallax hidden lg:block" data-speed="-0.4">
+            <svg width="40" height="40" fill="none" stroke="#111" stroke-width="2.5"><use href="#heart-outline"/></svg>
         </div>
 
         <!-- Top-right slash marks — matching Creative Designer top-right deco -->
-        <div class="absolute top-6 right-8 pointer-events-none z-10 parallax" data-speed="-0.6">
+        <div class="absolute top-6 right-8 pointer-events-none z-10 parallax hidden md:block" data-speed="-0.6">
             <svg width="90" height="55" viewBox="0 0 90 55" fill="none">
                 <path d="M5 48 L35 5" stroke="#111" stroke-width="4" stroke-linecap="round"/>
                 <path d="M28 50 L60 6" stroke="#111" stroke-width="4" stroke-linecap="round"/>
@@ -153,13 +161,13 @@
             </svg>
         </div>
 
-        <h2 class="font-display text-[9vw] leading-[0.85] mb-12 text-left text-[#f8d5e0] tracking-tighter uppercase relative z-10" style="-webkit-text-stroke: 3px #111; text-shadow: 6px 6px 0px #111; font-family: 'Lilita One', cursive;">DIGITAL MARKETER</h2>
+        <h2 class="font-display text-[12vw] md:text-[9vw] leading-[0.85] mb-12 text-left text-[#f8d5e0] tracking-tighter uppercase relative z-10" style="-webkit-text-stroke: 2px #111; text-shadow: 3px 3px 0px #111; font-family: 'Lilita One', cursive;">DIGITAL MARKETER</h2>
 
-        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10 items-center">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 relative z-10 items-center">
 
             <!-- Left: Bio text & Tools -->
-            <div class="flex flex-col justify-center gap-10 relative z-20 lg:pl-4">
-                <div class="text-[17px] md:text-[19px] leading-relaxed font-medium text-[#222]">
+            <div class="flex flex-col justify-center gap-6 md:gap-10 relative z-20 lg:pl-4">
+                <div class="text-[15px] md:text-[17px] lg:text-[19px] leading-relaxed font-medium text-[#222]">
                     I am a motivated <span class="font-bold">MBA graduate</span> and results-driven digital marketing professional. With a strong foundation in <span style="background:#fca5a5; padding: 0 4px; border-radius: 4px; display: inline-block;" class="font-bold text-black">business strategy</span> and data analysis, I turn brand visibility into measurable growth — from SEO and content creation to <span style="background:#fde047; padding: 0 4px; border-radius: 4px; display: inline-block;" class="font-bold text-black">Google Analytics</span> and email campaigns.
                 </div>
 
@@ -175,32 +183,28 @@
                     </a>
                 </div>
 
-                <!-- Tool Icons — 2×2 grid (Aditi's actual tools from resume) -->
-                <div class="grid grid-cols-2 gap-4 w-fit parallax" data-speed="1.2">
-                    <!-- Canva -->
-                    <div class="w-[80px] h-[80px] rounded-2xl hover-target transition hover:scale-110 cursor-pointer flex flex-col items-center justify-center gap-1" style="background:linear-gradient(145deg,#7B2FBE,#00C4CC); box-shadow: 4px 4px 0px #111; border: 2px solid #111;">
+                <!-- Tool Icons — 4 cols on mobile, 2 cols on desktop -->
+                <div class="grid grid-cols-4 lg:grid-cols-2 gap-4 w-fit parallax" data-speed="1.2">
+                    <div class="tool-icon hover-target w-[60px] h-[60px] md:w-[70px] md:h-[70px] lg:w-[80px] lg:h-[80px]" style="background:linear-gradient(145deg,#7B2FBE,#00C4CC);">
                         <svg width="36" height="36" viewBox="0 0 100 100" fill="none">
                             <circle cx="50" cy="50" r="42" fill="white" fill-opacity="0.2"/>
                             <text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="44" fill="white">Ca</text>
                         </svg>
                     </div>
-                    <!-- Google Analytics -->
-                    <div class="w-[80px] h-[80px] rounded-2xl hover-target transition hover:scale-110 cursor-pointer flex flex-col items-center justify-center gap-1 bg-white" style="box-shadow: 4px 4px 0px #111; border: 2px solid #111;">
+                    <div class="tool-icon hover-target w-[60px] h-[60px] md:w-[70px] md:h-[70px] lg:w-[80px] lg:h-[80px] bg-white">
                         <svg width="44" height="36" viewBox="0 0 44 36" fill="none">
                             <rect x="2" y="18" width="8" height="16" rx="4" fill="#F9AB00"/>
                             <rect x="18" y="10" width="8" height="24" rx="4" fill="#E37400"/>
                             <rect x="34" y="2" width="8" height="32" rx="4" fill="#E37400"/>
                         </svg>
                     </div>
-                    <!-- SEO / Google Search Console -->
-                    <div class="w-[80px] h-[80px] rounded-2xl hover-target transition hover:scale-110 cursor-pointer flex items-center justify-center" style="background:linear-gradient(145deg,#0F9D58,#34A853); box-shadow: 4px 4px 0px #111; border: 2px solid #111;">
+                    <div class="tool-icon hover-target w-[60px] h-[60px] md:w-[70px] md:h-[70px] lg:w-[80px] lg:h-[80px]" style="background:linear-gradient(145deg,#0F9D58,#34A853);">
                         <svg width="44" height="38" viewBox="0 0 44 38" fill="none">
                             <circle cx="17" cy="16" r="12" stroke="white" stroke-width="3.5" fill="none"/>
                             <line x1="26" y1="25" x2="42" y2="36" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
                         </svg>
                     </div>
-                    <!-- Email Marketing / CRM -->
-                    <div class="w-[80px] h-[80px] rounded-2xl hover-target transition hover:scale-110 cursor-pointer flex items-center justify-center" style="background:linear-gradient(145deg,#EA4335,#FF6B35); box-shadow: 4px 4px 0px #111; border: 2px solid #111;">
+                    <div class="tool-icon hover-target w-[60px] h-[60px] md:w-[70px] md:h-[70px] lg:w-[80px] lg:h-[80px]" style="background:linear-gradient(145deg,#EA4335,#FF6B35);">
                         <svg width="46" height="34" viewBox="0 0 46 34" fill="none">
                             <rect x="2" y="2" width="42" height="30" rx="4" stroke="white" stroke-width="3" fill="none"/>
                             <path d="M2 8l21 13 21-13" stroke="white" stroke-width="3" stroke-linecap="round"/>
@@ -210,18 +214,16 @@
             </div>
 
             <!-- Center: Portrait — transparent PNG cutout, no card -->
-            <div class="relative flex justify-center items-end lg:h-[700px] z-10 hover-target">
-                <img src="public/assets/girl-portrait.png" alt="Portrait" class="h-full w-auto max-w-none object-contain object-bottom origin-bottom scale-[1.7] md:scale-[2] lg:scale-[2.2] translate-y-[10%] lg:translate-y-[15%] transition-transform duration-500 hover:scale-[1.75] md:hover:scale-[2.05] lg:hover:scale-[2.25]"/>
+            <div class="relative flex justify-center items-end h-[320px] md:h-[500px] lg:h-[700px] z-10 hover-target order-first lg:order-none">
+                <img src="public/assets/girl-portrait.png" alt="Portrait" class="h-full w-auto max-w-none object-contain object-bottom origin-bottom scale-[1.4] md:scale-[1.8] lg:scale-[2.2] translate-y-[10%] lg:translate-y-[15%] transition-transform duration-500 hover:scale-[1.45] md:hover:scale-[1.85] lg:hover:scale-[2.25]"/>
 
                 <!-- Doodle heart — right of portrait -->
-                <div class="absolute top-[30%] right-[-8%] parallax opacity-90" data-speed="0.8">
-                    <svg width="50" height="50" viewBox="0 0 50 50" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M25 42C25 42 5 30 5 16a10 10 0 0 1 20-2 10 10 0 0 1 20 2c0 14-20 26-20 26z"/>
-                    </svg>
+                <div class="absolute top-[30%] right-[-8%] parallax opacity-90 hidden md:block" data-speed="0.8">
+                    <svg width="50" height="50" fill="none" stroke="#111" stroke-width="2.5"><use href="#heart-outline"/></svg>
                 </div>
 
                 <!-- Diagonal slash doodles — floating center-top (between bio and playlist) -->
-                <div class="absolute top-[8%] left-[-5%] pointer-events-none parallax" data-speed="-0.6">
+                <div class="absolute top-[8%] left-[-5%] pointer-events-none parallax hidden md:block" data-speed="-0.6">
                     <svg width="100" height="50" viewBox="0 0 100 50" fill="none">
                         <path d="M5 40 L30 5" stroke="#111" stroke-width="4" stroke-linecap="round"/>
                         <path d="M25 45 L55 8" stroke="#111" stroke-width="4" stroke-linecap="round"/>
@@ -231,16 +233,16 @@
             </div>
 
             <!-- Right: Playlist + Bouquet + Doodles -->
-            <div class="relative flex flex-col justify-between z-20 lg:pr-4 pt-4 min-h-[580px]">
+            <div class="relative flex flex-col justify-between z-20 lg:pr-4 pt-4 lg:min-h-[580px]">
 
                 <!-- Bouquet photo — top right, overlapping playlist -->
                 <div class="absolute -top-8 right-0 parallax z-10" data-speed="-1.2">
-                    <img src="public/assets/bouquet.png" class="w-[160px] object-contain" style="transform: rotate(-8deg); filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.15));"/>
+                    <img src="public/assets/bouquet.png" class="w-[110px] md:w-[140px] lg:w-[160px] object-contain" style="transform: rotate(-8deg); filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.15));"/>
                 </div>
 
                 <!-- Playlist widget — top area -->
-                <div class="transform rotate-[3deg] hover-target parallax" data-speed="-0.8" style="width:280px; margin-top: 10px;">
-                    <h3 class="font-display text-[2.4rem] leading-tight mb-3 text-[#111]">What's on<br/>my playlist?</h3>
+                <div class="transform rotate-[3deg] hover-target parallax mt-2.5 w-full" data-speed="-0.8">
+                    <h3 class="font-display text-[1.8rem] md:text-[2.2rem] leading-tight mb-3 text-[#111]">What's on<br/>my playlist?</h3>
                     <div class="flex flex-col gap-3">
                         <div class="flex items-center gap-3">
                             <div class="w-11 h-11 rounded overflow-hidden flex-shrink-0 border border-black/10" style="background: linear-gradient(135deg, #f9c6d0, #e8a0b0);">
@@ -274,9 +276,9 @@
 
                     <!-- Theme color swatches — black, pink, cream (actual page theme colors) -->
                     <div class="flex items-center gap-2" style="margin-left: 28px;">
-                        <div class="w-11 h-11 rounded-full" style="background:#111111; border: 2px solid #111;"></div>
-                        <div class="w-11 h-11 rounded-full" style="background:#f8d5e0; border: 2px solid rgba(0,0,0,0.25);"></div>
-                        <div class="w-11 h-11 rounded-full" style="background:#f4ede4; border: 2px solid rgba(0,0,0,0.18);"></div>
+                        <div class="w-9 h-9 md:w-11 md:h-11 rounded-full" style="background:#111111; border: 2px solid #111;"></div>
+                        <div class="w-9 h-9 md:w-11 md:h-11 rounded-full" style="background:#f8d5e0; border: 2px solid rgba(0,0,0,0.25);"></div>
+                        <div class="w-9 h-9 md:w-11 md:h-11 rounded-full" style="background:#f4ede4; border: 2px solid rgba(0,0,0,0.18);"></div>
                     </div>
 
                     <!-- Star left of "6" -->
@@ -298,9 +300,7 @@
 
                     <!-- Heart doodle — right side -->
                     <div class="absolute opacity-70" style="top: 55px; right: 0;">
-                        <svg width="48" height="48" viewBox="0 0 50 50" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M25 42C25 42 5 30 5 16a10 10 0 0 1 20-2 10 10 0 0 1 20 2c0 14-20 26-20 26z"/>
-                        </svg>
+                        <svg width="48" height="48" fill="none" stroke="#111" stroke-width="2"><use href="#heart-outline"/></svg>
                     </div>
                 </div>
 
@@ -718,6 +718,7 @@
             const y = (e.clientY - window.innerHeight / 2) / 50;
 
             parallaxItems.forEach(item => {
+                if (getComputedStyle(item).display === 'none') return;
                 const speed = item.dataset.speed;
                 gsap.to(item, {
                     x: x * speed,
