@@ -119,6 +119,40 @@
             </svg>
         </div>
 
+        <!-- Brush stroke doodles — bottom left (mirrored from top-left, like Creative Designer reference) -->
+        <div class="absolute bottom-0 left-0 pointer-events-none z-10" style="transform: translate(-10px, 10px) scaleY(-1);">
+            <svg width="160" height="120" viewBox="0 0 160 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 120 Q30 80 50 30 Q52 24 48 28 Q35 50 25 100" stroke="#111" stroke-width="3" stroke-linecap="round" fill="none"/>
+                <path d="M35 118 Q50 70 75 20 Q78 13 73 18 Q55 48 42 105" stroke="#111" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                <path d="M55 122 Q65 78 85 35 Q88 28 84 32 Q70 60 60 110" stroke="#111" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                <path d="M72 125 Q85 85 100 48 Q103 40 99 44 Q88 68 76 118" stroke="#111" stroke-width="2" stroke-linecap="round" fill="none"/>
+                <path d="M88 128 Q98 92 110 62 Q113 54 109 58 Q100 78 90 120" stroke="#111" stroke-width="2" stroke-linecap="round" fill="none"/>
+            </svg>
+        </div>
+
+        <!-- Large heart doodle — left side (matching Creative Designer left side heart) -->
+        <div class="absolute left-6 top-1/2 pointer-events-none z-10 parallax" data-speed="0.5" style="transform: translateY(-50%);">
+            <svg width="70" height="70" viewBox="0 0 50 50" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M25 42C25 42 5 30 5 16a10 10 0 0 1 20-2 10 10 0 0 1 20 2c0 14-20 26-20 26z"/>
+            </svg>
+        </div>
+
+        <!-- Small heart doodle — left side lower (like Creative Designer has multiple hearts) -->
+        <div class="absolute left-10 top-[65%] pointer-events-none z-10 parallax" data-speed="-0.4">
+            <svg width="40" height="40" viewBox="0 0 50 50" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M25 42C25 42 5 30 5 16a10 10 0 0 1 20-2 10 10 0 0 1 20 2c0 14-20 26-20 26z"/>
+            </svg>
+        </div>
+
+        <!-- Top-right slash marks — matching Creative Designer top-right deco -->
+        <div class="absolute top-6 right-8 pointer-events-none z-10 parallax" data-speed="-0.6">
+            <svg width="90" height="55" viewBox="0 0 90 55" fill="none">
+                <path d="M5 48 L35 5" stroke="#111" stroke-width="4" stroke-linecap="round"/>
+                <path d="M28 50 L60 6" stroke="#111" stroke-width="4" stroke-linecap="round"/>
+                <path d="M52 48 L80 10" stroke="#111" stroke-width="3.5" stroke-linecap="round"/>
+            </svg>
+        </div>
+
         <h2 class="font-display text-[9vw] leading-[0.85] mb-12 text-left text-[#f8d5e0] tracking-tighter uppercase relative z-10" style="-webkit-text-stroke: 3px #111; text-shadow: 6px 6px 0px #111; font-family: 'Lilita One', cursive;">DIGITAL MARKETER</h2>
 
         <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10 items-center">
@@ -196,11 +230,16 @@
                 </div>
             </div>
 
-            <!-- Right: Playlist (floating, no card) + Bouquet + Doodles -->
-            <div class="relative flex flex-col z-20 lg:pr-4 pt-4">
+            <!-- Right: Playlist + Bouquet + Doodles -->
+            <div class="relative flex flex-col justify-between z-20 lg:pr-4 pt-4 min-h-[580px]">
 
-                <!-- Playlist widget — floating, tilted, exactly like Framer reference -->
-                <div class="transform rotate-[5deg] hover-target parallax mb-4" data-speed="-0.8" style="width:280px;">
+                <!-- Bouquet photo — top right, overlapping playlist -->
+                <div class="absolute -top-8 right-0 parallax z-10" data-speed="-1.2">
+                    <img src="public/assets/bouquet.png" class="w-[160px] object-contain" style="transform: rotate(-8deg); filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.15));"/>
+                </div>
+
+                <!-- Playlist widget — top area -->
+                <div class="transform rotate-[3deg] hover-target parallax" data-speed="-0.8" style="width:280px; margin-top: 10px;">
                     <h3 class="font-display text-[2.4rem] leading-tight mb-3 text-[#111]">What's on<br/>my playlist?</h3>
                     <div class="flex flex-col gap-3">
                         <div class="flex items-center gap-3">
@@ -227,39 +266,47 @@
                     </div>
                 </div>
 
-                <!-- Bouquet photo — top right beside playlist, exactly like reference -->
-                <div class="absolute -top-8 right-0 parallax" data-speed="-1.2">
-                    <img src="public/assets/bouquet.png" class="w-[150px] object-contain" style="transform: rotate(-8deg); filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.15));"/>
+                <!-- Bottom decorative area: swatches + arrow pointing at them + "6" + stars -->
+                <div class="relative mt-10" style="min-height: 220px;">
+
+                    <!-- Star left of swatches -->
+                    <div class="absolute opacity-50" style="top: 8px; left: 0px; font-size:18px; color:#888;">☆</div>
+
+                    <!-- Theme color swatches — black, pink, cream (actual page theme colors) -->
+                    <div class="flex items-center gap-2" style="margin-left: 28px;">
+                        <div class="w-11 h-11 rounded-full" style="background:#111111; border: 2px solid #111;"></div>
+                        <div class="w-11 h-11 rounded-full" style="background:#f8d5e0; border: 2px solid rgba(0,0,0,0.25);"></div>
+                        <div class="w-11 h-11 rounded-full" style="background:#f4ede4; border: 2px solid rgba(0,0,0,0.18);"></div>
+                    </div>
+
+                    <!-- Star left of "6" -->
+                    <div class="absolute opacity-40" style="top: 80px; left: 5px; font-size:16px; color:#888;">☆</div>
+
+                    <!-- Hand-drawn "6" whose tail IS the arrow pointing up at the swatches — single SVG path -->
+                    <div style="margin-left: 10px; margin-top: 4px;">
+                        <svg width="160" height="230" viewBox="0 0 160 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Tail of 6 going up — tip is the arrowhead toward swatches -->
+                            <path d="M78 210 C75 185, 72 155, 70 125 C68 100, 66 80, 68 55 C70 35, 74 18, 80 8"
+                                  stroke="#111" stroke-width="5.5" stroke-linecap="round" fill="none"/>
+                            <!-- Arrowhead at top of tail pointing upward toward swatches -->
+                            <path d="M68 22 L80 6 L91 22" stroke="#111" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                            <!-- Loop of the "6" — circle at bottom -->
+                            <path d="M70 125 C72 112, 82 105, 98 108 C116 112, 128 128, 126 148 C124 168, 110 182, 92 182 C74 182, 60 168, 60 150 C60 132, 74 118, 92 118 C108 118, 120 130, 120 148"
+                                  stroke="#111" stroke-width="5.5" stroke-linecap="round" fill="none"/>
+                        </svg>
+                    </div>
+
+                    <!-- Heart doodle — right side -->
+                    <div class="absolute opacity-70" style="top: 55px; right: 0;">
+                        <svg width="48" height="48" viewBox="0 0 50 50" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M25 42C25 42 5 30 5 16a10 10 0 0 1 20-2 10 10 0 0 1 20 2c0 14-20 26-20 26z"/>
+                        </svg>
+                    </div>
                 </div>
 
-                <!-- Color swatches — bottom right -->
-                <div class="absolute bottom-24 right-4 flex items-center gap-2 parallax" data-speed="-0.4">
-                    <div class="w-10 h-10 rounded-full bg-[#111]"></div>
-                    <div class="w-10 h-10 rounded-full bg-[#f4ede4] border border-black/20"></div>
-                    <div class="w-10 h-10 rounded-full bg-[#d9d9d9] border border-black/10"></div>
-                </div>
-
-                <!-- Cursive "6" -->
-                <div class="absolute bottom-0 right-16 parallax opacity-80" data-speed="-1" style="font-family:'Dancing Script',cursive; font-size:90px; color:#111; line-height:1; transform:rotate(5deg);">6</div>
-
-                <!-- Curved arrow -->
-                <div class="absolute bottom-16 right-4 parallax opacity-70" data-speed="0.5">
-                    <svg width="80" height="90" viewBox="0 0 80 90" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round">
-                        <path d="M15 10 Q12 55 55 72" fill="none"/>
-                        <path d="M44 62 L55 72 L46 80" fill="none"/>
-                    </svg>
-                </div>
-
-                <!-- Heart doodle — left of right column -->
-                <div class="absolute bottom-40 left-[-20px] parallax opacity-90" data-speed="0.6">
-                    <svg width="52" height="52" viewBox="0 0 50 50" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M25 42C25 42 5 30 5 16a10 10 0 0 1 20-2 10 10 0 0 1 20 2c0 14-20 26-20 26z"/>
-                    </svg>
-                </div>
-
-                <!-- Food items -->
-                <div class="absolute -bottom-2 left-[10%] text-5xl parallax select-none" data-speed="2">🍒</div>
-                <div class="absolute -bottom-2 left-[45%] text-5xl parallax select-none" data-speed="1.5">🥧</div>
+                <!-- Food sticker items — bottom of section, absolute to section via left positioning -->
+                <div class="absolute -bottom-6 left-[-120px] text-5xl parallax select-none" data-speed="1.5" style="transform: rotate(-8deg); filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.18));">🥧</div>
+                <div class="absolute -bottom-4 left-[-30px] text-5xl parallax select-none" data-speed="2" style="transform: rotate(6deg); filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.15));">🍬</div>
             </div>
 
         </div>
