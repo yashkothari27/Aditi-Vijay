@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
     <title>Aditi Vijay | Digital Marketing Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;700&family=League+Gothic&family=Dancing+Script:wght@400;700&family=Lilita+One&display=swap" rel="stylesheet"/>
@@ -53,10 +53,15 @@
         .hovered-cursor { width: 56px; height: 56px; background: #f8d5e0; }
         .hovered-cursor::after { color: #111; }
 
+        @media (hover: none), (pointer: coarse) {
+            body { cursor: auto; }
+            .custom-cursor { display: none; }
+        }
+
         /* ===== NAV ===== */
         #site-nav {
             position: fixed; top: 0; left: 0; right: 0; z-index: 999;
-            padding: 18px 32px;
+            padding: max(18px, env(safe-area-inset-top)) max(32px, env(safe-area-inset-right)) 18px max(32px, env(safe-area-inset-left));
             display: flex; align-items: center; justify-content: space-between;
             transition: background 0.4s, backdrop-filter 0.4s, box-shadow 0.4s;
         }
@@ -84,7 +89,7 @@
             transition: width 0.3s ease;
         }
         .nav-links a:hover::after { width: 100%; }
-        .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+        .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 12px; margin: -12px; }
         .nav-hamburger span { display: block; width: 24px; height: 2px; background: #111; border-radius: 2px; transition: all 0.3s; }
         .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
         .nav-hamburger.open span:nth-child(2) { opacity: 0; }
@@ -119,6 +124,18 @@
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 4px; }
+
+        /* ===== SKIP LINK & FOCUS VISIBILITY ===== */
+        .skip-link {
+            position: absolute; top: -100px; left: 16px; z-index: 10001;
+            background: #111; color: #fff; padding: 10px 18px; border-radius: 6px;
+            font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.9rem;
+            text-decoration: none; transition: top 0.2s ease;
+        }
+        .skip-link:focus { top: 16px; }
+        a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
+            outline: 3px solid #f8a4c8; outline-offset: 3px; border-radius: 2px;
+        }
 
         /* ===== TOOL ICONS ===== */
         .parallax { display: inline-block; }
@@ -158,7 +175,7 @@
         @media (max-width: 768px) {
             .portrait-wrap { height: 500px !important; margin-top: -1rem; margin-bottom: 2rem; }
             .portrait-wrap img { transform: translateY(0) scale(1.7) !important; object-position: bottom; transform-origin: bottom; max-height: 500px; }
-            #site-nav { padding: 14px 20px; }
+            #site-nav { padding: max(14px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) 14px max(20px, env(safe-area-inset-left)); }
             .nav-links { display: none; }
             .nav-hamburger { display: flex; }
         }
@@ -169,9 +186,16 @@
             .mobile-scroll-x > * { scroll-snap-align: start; flex-shrink: 0; }
             /* hide GSAP pin spacer on mobile */
         }
+
+        /* ===== REDUCED MOTION ===== */
+        @media (prefers-reduced-motion: reduce) {
+            .sticker-float, .sticker-float-r, .bounce-arrow, .marquee-track { animation: none !important; }
+            .reveal, .reveal-left, .reveal-right { transition: none !important; opacity: 1 !important; transform: none !important; }
+        }
     </style>
 </head>
 <body class="font-body antialiased">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <!-- SVG symbol definitions — reused throughout the page -->
     <svg style="display:none;" aria-hidden="true">
         <defs>
@@ -193,7 +217,7 @@
             <li><a href="#works" class="hover-target">Work</a></li>
             <li><a href="#contact" class="hover-target">Contact</a></li>
         </ul>
-        <div class="nav-hamburger hover-target" id="nav-hamburger" aria-label="Menu">
+        <div class="nav-hamburger hover-target" id="nav-hamburger" role="button" tabindex="0" aria-label="Open menu" aria-expanded="false" aria-controls="nav-mobile-menu">
             <span></span><span></span><span></span>
         </div>
     </nav>
@@ -206,7 +230,7 @@
     </div>
 
     <!-- Hero Section -->
-    <section class="panel min-h-screen relative flex items-center justify-center p-4 bg-cream overflow-hidden scroll-section" data-color="#f4ede4">
+    <section id="main-content" class="panel min-h-screen relative flex items-center justify-center p-4 bg-cream overflow-hidden scroll-section" data-color="#f4ede4">
 
         <!-- Pink curved arrow + Name (top-right, like Framer) -->
         <div class="absolute top-[12%] right-[8%] md:top-[15%] md:right-[12%] z-20 flex items-start gap-0" id="hero-name-group">
@@ -345,7 +369,7 @@
                 <!-- Tool Icons — 4 cols on mobile, 2 cols on desktop -->
                 <div class="grid grid-cols-4 lg:grid-cols-2 gap-4 w-fit parallax" data-speed="1.2">
                     <div class="flex flex-col items-center gap-1.5">
-                        <div class="tool-icon hover-target w-[60px] h-[60px] md:w-[70px] md:h-[70px] lg:w-[80px] lg:h-[80px]" style="background:linear-gradient(145deg,#7B2FBE,#00C4CC);">
+                        <div class="tool-icon hover-target w-[60px] h-[60px] md:w-[70px] md:h-[70px] lg:w-[80px] lg:h-[80px]" aria-hidden="true" style="background:linear-gradient(145deg,#7B2FBE,#00C4CC);">
                             <svg width="36" height="36" viewBox="0 0 100 100" fill="none">
                                 <circle cx="50" cy="50" r="42" fill="white" fill-opacity="0.2"/>
                                 <text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="44" fill="white">Ca</text>
@@ -354,7 +378,7 @@
                         <span class="text-[10px] font-semibold text-[#444] uppercase tracking-wide">Canva</span>
                     </div>
                     <div class="flex flex-col items-center gap-1.5">
-                        <div class="tool-icon hover-target w-[60px] h-[60px] md:w-[70px] md:h-[70px] lg:w-[80px] lg:h-[80px] bg-white">
+                        <div class="tool-icon hover-target w-[60px] h-[60px] md:w-[70px] md:h-[70px] lg:w-[80px] lg:h-[80px] bg-white" aria-hidden="true">
                             <svg width="44" height="36" viewBox="0 0 44 36" fill="none">
                                 <rect x="2" y="18" width="8" height="16" rx="4" fill="#F9AB00"/>
                                 <rect x="18" y="10" width="8" height="24" rx="4" fill="#E37400"/>
@@ -364,7 +388,7 @@
                         <span class="text-[10px] font-semibold text-[#444] uppercase tracking-wide">Analytics</span>
                     </div>
                     <div class="flex flex-col items-center gap-1.5">
-                        <div class="tool-icon hover-target w-[60px] h-[60px] md:w-[70px] md:h-[70px] lg:w-[80px] lg:h-[80px]" style="background:linear-gradient(145deg,#0F9D58,#34A853);">
+                        <div class="tool-icon hover-target w-[60px] h-[60px] md:w-[70px] md:h-[70px] lg:w-[80px] lg:h-[80px]" aria-hidden="true" style="background:linear-gradient(145deg,#0F9D58,#34A853);">
                             <svg width="44" height="38" viewBox="0 0 44 38" fill="none">
                                 <circle cx="17" cy="16" r="12" stroke="white" stroke-width="3.5" fill="none"/>
                                 <line x1="26" y1="25" x2="42" y2="36" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
@@ -373,7 +397,7 @@
                         <span class="text-[10px] font-semibold text-[#444] uppercase tracking-wide">SEO</span>
                     </div>
                     <div class="flex flex-col items-center gap-1.5">
-                        <div class="tool-icon hover-target w-[60px] h-[60px] md:w-[70px] md:h-[70px] lg:w-[80px] lg:h-[80px]" style="background:linear-gradient(145deg,#EA4335,#FF6B35);">
+                        <div class="tool-icon hover-target w-[60px] h-[60px] md:w-[70px] md:h-[70px] lg:w-[80px] lg:h-[80px]" aria-hidden="true" style="background:linear-gradient(145deg,#EA4335,#FF6B35);">
                             <svg width="46" height="34" viewBox="0 0 46 34" fill="none">
                                 <rect x="2" y="2" width="42" height="30" rx="4" stroke="white" stroke-width="3" fill="none"/>
                                 <path d="M2 8l21 13 21-13" stroke="white" stroke-width="3" stroke-linecap="round"/>
@@ -386,7 +410,7 @@
 
             <!-- Center: Portrait — transparent PNG cutout, no card -->
             <div class="portrait-wrap relative flex justify-center items-end h-[320px] md:h-[500px] lg:h-[700px] z-10 hover-target order-first lg:order-none reveal">
-                <img src="public/assets/girl-portrait.png" alt="Portrait" class="h-full w-auto max-w-none object-contain object-bottom origin-bottom scale-[1.4] md:scale-[1.8] lg:scale-[2.2] translate-y-[10%] lg:translate-y-[15%] transition-transform duration-500 hover:scale-[1.45] md:hover:scale-[1.85] lg:hover:scale-[2.25]"/>
+                <img src="public/assets/girl-portrait.png" alt="Portrait of Aditi Vijay" class="h-full w-auto max-w-none object-contain object-bottom origin-bottom scale-[1.4] md:scale-[1.8] lg:scale-[2.2] translate-y-[10%] lg:translate-y-[15%] transition-transform duration-500 hover:scale-[1.45] md:hover:scale-[1.85] lg:hover:scale-[2.25]"/>
 
                 <!-- Doodle heart — right of portrait -->
                 <div class="absolute top-[30%] right-[-8%] parallax opacity-90 hidden md:block" data-speed="0.8">
@@ -408,7 +432,7 @@
 
                 <!-- Bouquet photo — top right, overlapping playlist -->
                 <div class="absolute -top-8 right-0 parallax z-10" data-speed="-1.2">
-                    <img src="public/assets/bouquet.png" class="w-[110px] md:w-[140px] lg:w-[160px] object-contain" style="transform: rotate(-8deg); filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.15));"/>
+                    <img src="public/assets/bouquet.png" alt="" aria-hidden="true" class="w-[110px] md:w-[140px] lg:w-[160px] object-contain" style="transform: rotate(-8deg); filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.15));"/>
                 </div>
 
                 <!-- Playlist widget — top area -->
@@ -420,21 +444,21 @@
                                 <img src="https://i.scdn.co/image/ab67616d00004851e787cffec20aa2a396a61647" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
                             </div>
                             <div class="leading-tight flex-1"><p class="font-bold text-sm text-[#111]">Love Story</p><p class="text-xs text-gray-500 italic">Taylor Swift</p></div>
-                            <span class="text-gray-400 text-base">☆</span>
+                            <span class="text-gray-400 text-base" aria-hidden="true">☆</span>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-11 h-11 rounded overflow-hidden flex-shrink-0 border border-black/10" style="background: linear-gradient(135deg, #1a1a2e, #3d2b5e);">
                                 <img src="https://i.scdn.co/image/ab67616d00004851d7fb3e4c63020039d1cff6b2" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
                             </div>
                             <div class="leading-tight flex-1"><p class="font-bold text-sm text-[#111]">Dark Paradise</p><p class="text-xs text-gray-500 italic">Lana Del Rey</p></div>
-                            <span class="text-gray-400 text-base">☆</span>
+                            <span class="text-gray-400 text-base" aria-hidden="true">☆</span>
                         </div>
                         <div class="flex items-center gap-3">
                             <div class="w-11 h-11 rounded overflow-hidden flex-shrink-0 border border-black/10" style="background: linear-gradient(135deg, #c8a97e, #a07850);">
                                 <img src="https://i.scdn.co/image/ab67616d00004851ebc8cfac8b586bc475b04918" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
                             </div>
                             <div class="leading-tight flex-1"><p class="font-bold text-sm text-[#111]">Young and Beautiful</p><p class="text-xs text-gray-500 italic">Lana Del Rey</p></div>
-                            <span class="text-gray-400 text-base">☆</span>
+                            <span class="text-gray-400 text-base" aria-hidden="true">☆</span>
                         </div>
                     </div>
                 </div>
@@ -443,7 +467,7 @@
                 <div class="relative mt-10" style="min-height: 220px;">
 
                     <!-- Star left of swatches -->
-                    <div class="absolute opacity-50" style="top: 8px; left: 0px; font-size:18px; color:#888;">☆</div>
+                    <div class="absolute opacity-50" aria-hidden="true" style="top: 8px; left: 0px; font-size:18px; color:#888;">☆</div>
 
                     <!-- Theme color swatches — black, pink, cream (actual page theme colors) -->
                     <div class="flex items-center gap-2" style="margin-left: 28px;">
@@ -453,7 +477,7 @@
                     </div>
 
                     <!-- Star left of "6" -->
-                    <div class="absolute opacity-40" style="top: 80px; left: 5px; font-size:16px; color:#888;">☆</div>
+                    <div class="absolute opacity-40" aria-hidden="true" style="top: 80px; left: 5px; font-size:16px; color:#888;">☆</div>
 
                     <!-- Hand-drawn "6" whose tail IS the arrow pointing up at the swatches — single SVG path -->
                     <div style="margin-left: 10px; margin-top: 4px;">
@@ -476,8 +500,8 @@
                 </div>
 
                 <!-- Food sticker items — bottom of section, absolute to section via left positioning -->
-                <div class="absolute -bottom-6 left-[-120px] text-5xl parallax select-none" data-speed="1.5" style="transform: rotate(-8deg); filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.18));">🥧</div>
-                <div class="absolute -bottom-4 left-[-30px] text-5xl parallax select-none" data-speed="2" style="transform: rotate(6deg); filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.15));">🍬</div>
+                <div class="absolute -bottom-6 left-[-120px] text-5xl parallax select-none" aria-hidden="true" data-speed="1.5" style="transform: rotate(-8deg); filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.18));">🥧</div>
+                <div class="absolute -bottom-4 left-[-30px] text-5xl parallax select-none" aria-hidden="true" data-speed="2" style="transform: rotate(6deg); filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.15));">🍬</div>
             </div>
 
         </div>
@@ -506,21 +530,21 @@
                         <ul class="space-y-5 font-medium text-gray-800" style="font-size:1.25rem;">
                             <li class="flex items-center gap-4">
                                 <!-- Cake icon -->
-                                <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                <svg class="contact-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/>
                                 </svg>
                                 Jaipur, Rajasthan, India
                             </li>
                             <li class="flex items-center gap-4">
                                 <!-- Envelope icon -->
-                                <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                <svg class="contact-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
                                     <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
                                 </svg>
                                 <a href="mailto:aditivijay642@gmail.com" class="hover-target text-gray-800 hover:text-black transition-colors" style="text-decoration:none;">aditivijay642@gmail.com</a>
                             </li>
                             <li class="flex items-center gap-4">
                                 <!-- LinkedIn icon -->
-                                <svg class="contact-icon" viewBox="0 0 24 24" fill="#333">
+                                <svg class="contact-icon" aria-hidden="true" viewBox="0 0 24 24" fill="#333">
                                   <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
                                 </svg>
                                 <a href="https://linkedin.com/in/aditivijay11" target="_blank" class="hover-target text-gray-800 hover:text-black transition-colors" style="text-decoration:none;">linkedin.com/in/aditivijay11</a>
@@ -565,17 +589,17 @@
                     <div class="reveal" style="transition-delay:0.3s">
                         <h2 class="bubble-title text-6xl mb-8 tracking-wide">TOOLS</h2>
                         <div class="flex gap-3">
-                            <div class="w-[68px] h-[68px] rounded-xl hover-target transition hover:scale-110 cursor-pointer flex items-center justify-center" style="background:linear-gradient(135deg,#7B2FBE,#00C4CC);">
-                                <svg viewBox="0 0 88 88" width="68" height="68"><text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="34" fill="white">Ca</text></svg>
+                            <div class="w-[68px] h-[68px] rounded-xl transition flex items-center justify-center" style="background:linear-gradient(135deg,#7B2FBE,#00C4CC);" aria-label="Canva" role="img">
+                                <svg viewBox="0 0 88 88" width="68" height="68" aria-hidden="true"><text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="34" fill="white">Ca</text></svg>
                             </div>
-                            <div class="w-[68px] h-[68px] rounded-xl hover-target transition hover:scale-110 cursor-pointer flex items-center justify-center" style="background:white; border:2px solid #ddd;">
-                                <svg viewBox="0 0 88 88" width="68" height="68"><text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="34" fill="#4285F4">G</text></svg>
+                            <div class="w-[68px] h-[68px] rounded-xl transition flex items-center justify-center" style="background:white; border:2px solid #ddd;" aria-label="Google" role="img">
+                                <svg viewBox="0 0 88 88" width="68" height="68" aria-hidden="true"><text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="34" fill="#4285F4">G</text></svg>
                             </div>
-                            <div class="w-[68px] h-[68px] rounded-xl hover-target transition hover:scale-110 cursor-pointer flex items-center justify-center" style="background:#0F9D58;">
-                                <svg viewBox="0 0 88 88" width="68" height="68"><text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="20" fill="white">SEO</text></svg>
+                            <div class="w-[68px] h-[68px] rounded-xl transition flex items-center justify-center" style="background:#0F9D58;" aria-label="SEO" role="img">
+                                <svg viewBox="0 0 88 88" width="68" height="68" aria-hidden="true"><text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="20" fill="white">SEO</text></svg>
                             </div>
-                            <div class="w-[68px] h-[68px] rounded-xl hover-target transition hover:scale-110 cursor-pointer flex items-center justify-center" style="background:#FF6B35;">
-                                <svg viewBox="0 0 88 88" width="68" height="68"><text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="18" fill="white">CRM</text></svg>
+                            <div class="w-[68px] h-[68px] rounded-xl transition flex items-center justify-center" style="background:#FF6B35;" aria-label="CRM" role="img">
+                                <svg viewBox="0 0 88 88" width="68" height="68" aria-hidden="true"><text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="18" fill="white">CRM</text></svg>
                             </div>
                         </div>
                     </div>
@@ -637,7 +661,6 @@
 
             </div>
         </div>
-        <div class="absolute bottom-4 right-4 bg-white text-xs px-2 py-1 rounded shadow text-gray-400 font-bold border opacity-80 z-50">Made in Framer</div>
     </section>
 
     <!-- Projects (Horizontal Scroll) -->
@@ -648,7 +671,7 @@
             <!-- Card 1 -->
             <div class="project-card flex-shrink-0 w-[300px] md:w-[400px]">
                 <div class="w-full h-[480px] bg-[#2a2a2a] rounded-3xl overflow-hidden hover-target relative group border border-white/10 shadow-2xl">
-                    <img src="public/assets/creative-1.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"/>
+                    <img src="public/assets/creative-1.jpg" alt="Digital marketing campaign creative for Lokmat" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"/>
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
                 <p class="text-white font-bold mt-4 text-xl font-headline">Digital Marketing Campaign</p>
@@ -657,7 +680,7 @@
             <!-- Card 2 -->
             <div class="project-card flex-shrink-0 w-[300px] md:w-[400px]">
                 <div class="w-full h-[480px] bg-[#2a2a2a] rounded-3xl overflow-hidden hover-target relative group border border-white/10 shadow-2xl">
-                    <img src="public/assets/creative-2.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"/>
+                    <img src="public/assets/creative-2.jpg" alt="Social media content and reel design in Canva" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"/>
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
                 <p class="text-white font-bold mt-4 text-xl font-headline">Social Media Content</p>
@@ -666,7 +689,7 @@
             <!-- Card 3 -->
             <div class="project-card flex-shrink-0 w-[300px] md:w-[400px]">
                 <div class="w-full h-[480px] bg-[#2a2a2a] rounded-3xl overflow-hidden hover-target relative group border border-white/10 shadow-2xl">
-                    <img src="public/assets/creative-3.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"/>
+                    <img src="public/assets/creative-3.jpg" alt="Creative brand visual design" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"/>
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
                 <p class="text-white font-bold mt-4 text-xl font-headline">Creative Visuals</p>
@@ -675,7 +698,7 @@
             <!-- Card 4 -->
             <div class="project-card flex-shrink-0 w-[300px] md:w-[400px]">
                 <div class="w-full h-[480px] bg-[#2a2a2a] rounded-3xl overflow-hidden hover-target relative group border border-white/10 shadow-2xl">
-                    <img src="public/assets/creative-4.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"/>
+                    <img src="public/assets/creative-4.png" alt="Email marketing campaign creative" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"/>
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
                 <p class="text-white font-bold mt-4 text-xl font-headline">Email Marketing</p>
@@ -684,7 +707,7 @@
             <!-- Card 5 -->
             <div class="project-card flex-shrink-0 w-[300px] md:w-[400px]">
                 <div class="w-full h-[480px] bg-[#2a2a2a] rounded-3xl overflow-hidden hover-target relative group border border-white/10 shadow-2xl">
-                    <img src="public/assets/creative-5.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"/>
+                    <img src="public/assets/creative-5.png" alt="Brand visual graphic design" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"/>
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
                 <p class="text-white font-bold mt-4 text-xl font-headline">Brand Visuals</p>
@@ -693,7 +716,7 @@
             <!-- Card 6 — Video reel -->
             <div class="project-card flex-shrink-0 w-[260px] md:w-[320px]">
                 <div class="w-full h-[480px] bg-[#2a2a2a] rounded-3xl overflow-hidden hover-target relative group border border-white/10 shadow-2xl">
-                    <video src="public/assets/creative-video-1.mp4" autoplay muted loop playsinline class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"></video>
+                    <video src="public/assets/creative-video-1.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Video reel: social media and motion content" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"></video>
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <div class="absolute top-3 right-3 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 text-white text-xs font-bold">▶ REEL</div>
                 </div>
@@ -703,7 +726,7 @@
             <!-- Card 7 — Video reel 2 -->
             <div class="project-card flex-shrink-0 w-[260px] md:w-[320px]">
                 <div class="w-full h-[480px] bg-[#2a2a2a] rounded-3xl overflow-hidden hover-target relative group border border-white/10 shadow-2xl">
-                    <video src="public/assets/creative-video-2.mp4" autoplay muted loop playsinline class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"></video>
+                    <video src="public/assets/creative-video-2.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Video reel: marketing and content" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"></video>
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <div class="absolute top-3 right-3 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 text-white text-xs font-bold">▶ REEL</div>
                 </div>
@@ -778,49 +801,49 @@
         <div class="px-6 lg:px-20 columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
             <!-- Item 1 -->
             <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative reveal">
-                <img src="public/assets/creative-1.jpg" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Project"/>
+                <img src="public/assets/creative-1.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="SEO campaign creative"/>
                 <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                     <p class="font-bold text-white text-sm uppercase tracking-widest">SEO Campaign</p>
                 </div>
             </div>
             <!-- Item 2 -->
             <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative reveal" style="transition-delay:0.1s">
-                <img src="public/assets/creative-2.jpg" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:1/1;" alt="Project"/>
+                <img src="public/assets/creative-2.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:1/1;" alt="Social media post design"/>
                 <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                     <p class="font-bold text-white text-sm uppercase tracking-widest">Social Media</p>
                 </div>
             </div>
             <!-- Item 3 -->
             <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative reveal" style="transition-delay:0.2s">
-                <img src="public/assets/creative-3.jpg" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:4/5;" alt="Project"/>
+                <img src="public/assets/creative-3.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:4/5;" alt="Content creation visual"/>
                 <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                     <p class="font-bold text-white text-sm uppercase tracking-widest">Content Creation</p>
                 </div>
             </div>
             <!-- Item 4 -->
             <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative reveal" style="transition-delay:0.3s">
-                <img src="public/assets/creative-4.png" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Project"/>
+                <img src="public/assets/creative-4.png" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Creative design visual"/>
                 <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                     <p class="font-bold text-white text-sm uppercase tracking-widest">Creative Design</p>
                 </div>
             </div>
             <!-- Item 5 -->
             <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
-                <img src="public/assets/creative-5.png" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:1/1;" alt="Project"/>
+                <img src="public/assets/creative-5.png" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:1/1;" alt="Brand visual design"/>
                 <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                     <p class="font-bold text-white text-sm uppercase tracking-widest">Brand Visuals</p>
                 </div>
             </div>
             <!-- Item 6: Video -->
             <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
-                <video src="public/assets/creative-video-1.mp4" autoplay muted loop playsinline class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:9/16;"></video>
+                <video src="public/assets/creative-video-1.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Video reel: social media and motion content" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:9/16;"></video>
                 <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                     <p class="font-bold text-white text-sm uppercase tracking-widest">Video Reel</p>
                 </div>
             </div>
             <!-- Item 7: Video -->
             <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
-                <video src="public/assets/creative-video-2.mp4" autoplay muted loop playsinline class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:9/16;"></video>
+                <video src="public/assets/creative-video-2.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Video reel: marketing and content" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:9/16;"></video>
                 <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                     <p class="font-bold text-white text-sm uppercase tracking-widest">Marketing Reel</p>
                 </div>
@@ -831,7 +854,7 @@
             </div>
             <!-- Item 9 -->
             <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
-                <img src="public/assets/creative-1.jpg" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:1/1;" alt="Project"/>
+                <img src="public/assets/creative-1.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:1/1;" alt="Email marketing campaign visual"/>
                 <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                     <p class="font-bold text-white text-sm uppercase tracking-widest">Email Campaign</p>
                 </div>
@@ -889,10 +912,10 @@
         <p class="font-script text-4xl text-[#f8d5e0] mb-10">Let's grow your brand together</p>
 
         <div class="flex justify-center gap-6 mb-10">
-            <a href="https://linkedin.com/in/aditivijay11" target="_blank" class="w-14 h-14 bg-[#f8d5e0] text-black rounded-full flex items-center justify-center text-xl hover:scale-110 transition-transform hover-target font-bold">in</a>
+            <a href="https://linkedin.com/in/aditivijay11" target="_blank" aria-label="Aditi Vijay on LinkedIn" class="w-14 h-14 bg-[#f8d5e0] text-black rounded-full flex items-center justify-center text-xl hover:scale-110 transition-transform hover-target font-bold">in</a>
         </div>
 
-        <a href="mailto:aditivijay642@gmail.com" class="text-white/30 hover:text-white/60 text-sm font-body tracking-widest uppercase transition-colors hover-target" style="text-decoration:none;">aditivijay642@gmail.com</a>
+        <a href="mailto:aditivijay642@gmail.com" class="text-white/60 hover:text-white text-sm font-body tracking-widest uppercase transition-colors hover-target" style="text-decoration:none;">aditivijay642@gmail.com</a>
         <p class="text-white/20 text-xs mt-4 font-body">© 2026 Aditi Vijay. Made with ♥</p>
     </footer>
 
@@ -938,16 +961,29 @@
         window.addEventListener('scroll', () => {
             nav.classList.toggle('scrolled', window.scrollY > 60);
         }, { passive: true });
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('open');
-            mobileMenu.classList.toggle('open');
-            document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+        function toggleMobileMenu() {
+            const isOpen = hamburger.classList.toggle('open');
+            mobileMenu.classList.toggle('open', isOpen);
+            hamburger.setAttribute('aria-expanded', String(isOpen));
+            hamburger.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+            document.body.style.overflow = isOpen ? 'hidden' : '';
+            isOpen ? lenis.stop() : lenis.start();
+        }
+        hamburger.addEventListener('click', toggleMobileMenu);
+        hamburger.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleMobileMenu();
+            }
         });
         mobileMenu.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 hamburger.classList.remove('open');
                 mobileMenu.classList.remove('open');
+                hamburger.setAttribute('aria-expanded', 'false');
+                hamburger.setAttribute('aria-label', 'Open menu');
                 document.body.style.overflow = '';
+                lenis.start();
             });
         });
 
@@ -988,19 +1024,24 @@
             });
         });
 
-        // ===== HORIZONTAL SCROLL (desktop only) =====
+        // ===== HORIZONTAL SCROLL (desktop only, recalculates across breakpoint/resize) =====
         const pinWrap = document.querySelector('#cards-container');
-        if (pinWrap && window.innerWidth >= 1024) {
-            const pinWrapWidth = pinWrap.scrollWidth - window.innerWidth + 100;
-            gsap.to(pinWrap, {
-                x: -pinWrapWidth,
-                ease: 'none',
-                scrollTrigger: {
-                    trigger: pinWrap.parentElement,
-                    pin: true,
-                    scrub: 1,
-                    start: 'center center',
-                    end: '+=' + pinWrapWidth
+        if (pinWrap) {
+            ScrollTrigger.matchMedia({
+                '(min-width: 1024px)': function () {
+                    const pinWrapWidth = pinWrap.scrollWidth - window.innerWidth + 100;
+                    gsap.to(pinWrap, {
+                        x: -pinWrapWidth,
+                        ease: 'none',
+                        scrollTrigger: {
+                            trigger: pinWrap.parentElement,
+                            pin: true,
+                            scrub: 1,
+                            start: 'center center',
+                            end: '+=' + pinWrapWidth,
+                            invalidateOnRefresh: true
+                        }
+                    });
                 }
             });
         }
