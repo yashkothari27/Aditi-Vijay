@@ -39,13 +39,15 @@
 
         /* ===== CUSTOM CURSOR ===== */
         .custom-cursor {
-            position: fixed; top: 0; left: 0; width: 32px; height: 32px; background: black;
+            position: fixed; top: -100px; left: -100px; width: 32px; height: 32px; background: black;
             border-radius: 50%; pointer-events: none; z-index: 10000;
             display: flex; align-items: center; justify-content: center;
             transform: translate(-50%, -50%);
-            transition: width 0.25s cubic-bezier(.4,0,.2,1), height 0.25s cubic-bezier(.4,0,.2,1), background 0.25s;
+            opacity: 0;
+            transition: width 0.25s cubic-bezier(.4,0,.2,1), height 0.25s cubic-bezier(.4,0,.2,1), background 0.25s, opacity 0.2s;
             mix-blend-mode: multiply;
         }
+        .custom-cursor.cursor-active { opacity: 1; }
         .custom-cursor::after {
             content: "➔"; color: white; display: block; font-size: 14px; font-weight: bold;
             transform: rotate(-45deg);
@@ -167,7 +169,7 @@
         @keyframes marquee-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
         /* ===== HERO ===== */
-        .hero-title { font-size: clamp(3rem, 20vw, 11rem); }
+        .hero-title { font-size: clamp(2.4rem, 16vw, 11rem); }
         #hero-subtitle { opacity: 0; }
         #hero-stickers > * { opacity: 0; }
 
@@ -176,15 +178,27 @@
             .portrait-wrap { height: 500px !important; margin-top: -1rem; margin-bottom: 2rem; }
             .portrait-wrap img { transform: translateY(0) scale(1.7) !important; object-position: bottom; transform-origin: bottom; max-height: 500px; }
             #site-nav { padding: max(14px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) 14px max(20px, env(safe-area-inset-left)); }
+        }
+
+        /* ===== NAV BREAKPOINT — aligned with content-grid lg breakpoint (1024px) ===== */
+        @media (max-width: 1023px) {
             .nav-links { display: none; }
             .nav-hamburger { display: flex; }
         }
 
-        /* ===== MOBILE PROJECTS — vertical swipe ===== */
-        @media (max-width: 1023px) {
+        /* ===== MOBILE PROJECTS — native swipe (narrow viewports OR any touch/coarse-pointer device, e.g. tablets >=1024px) ===== */
+        @media (max-width: 1023px), (pointer: coarse) {
             .mobile-scroll-x { overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; display: flex !important; gap: 1.5rem; padding-bottom: 1rem; }
             .mobile-scroll-x > * { scroll-snap-align: start; flex-shrink: 0; }
             /* hide GSAP pin spacer on mobile */
+        }
+
+        /* ===== SHORT LANDSCAPE HERO (phones rotated sideways) ===== */
+        @media (max-height: 500px) and (orientation: landscape) {
+            #hero-year { bottom: 6px; left: 6px; }
+            #hero-year span { font-size: 1.1rem; }
+            #hero-scroll-cue { display: none; }
+            #hero-subtitle { margin-top: 0.5rem; }
         }
 
         /* ===== REDUCED MOTION ===== */
@@ -233,8 +247,8 @@
     <section id="main-content" class="panel min-h-screen relative flex items-center justify-center p-4 bg-cream overflow-hidden scroll-section" data-color="#f4ede4">
 
         <!-- Pink curved arrow + Name (top-right, like Framer) -->
-        <div class="absolute top-[12%] right-[8%] md:top-[15%] md:right-[12%] z-20 flex items-start gap-0" id="hero-name-group">
-            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" class="parallax" data-speed="-0.5">
+        <div class="hidden sm:flex absolute top-[10%] right-[8%] md:top-[15%] md:right-[12%] z-20 items-start gap-0" id="hero-name-group">
+            <svg width="80" height="80" class="flex-shrink-0 parallax" viewBox="0 0 80 80" fill="none" data-speed="-0.5">
                 <path d="M10 70 C20 30, 50 10, 70 25" stroke="#f8a4c8" stroke-width="2.5" stroke-linecap="round" fill="none"/>
                 <path d="M65 18 L72 26 L60 28" stroke="#f8a4c8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
             </svg>
@@ -242,7 +256,7 @@
         </div>
 
         <!-- Pink year (bottom-left, like Framer) -->
-        <div class="absolute bottom-12 left-10 md:bottom-20 md:left-24 z-20">
+        <div class="absolute bottom-12 left-10 md:bottom-20 md:left-24 z-20" id="hero-year">
             <span class="font-script text-4xl md:text-5xl text-[#f8a4c8] transform rotate-[-8deg] inline-block">2026</span>
         </div>
 
@@ -280,7 +294,7 @@
             </div>
 
             <div class="inline-block relative mt-8" id="hero-subtitle">
-                <p class="font-bold text-xl md:text-3xl uppercase tracking-widest relative z-10" style="font-family: 'Space Grotesk', sans-serif;">Digital Marketing Professional</p>
+                <p class="font-bold text-xs sm:text-xl md:text-3xl uppercase tracking-wide sm:tracking-widest relative z-10 px-2 whitespace-nowrap" style="font-family: 'Space Grotesk', sans-serif;">Digital Marketing Professional</p>
                 <!-- Wavy pink underline (like Framer reference) -->
                 <svg class="absolute -bottom-3 left-1/2 -translate-x-1/2 z-0" width="100%" height="10" viewBox="0 0 400 10" preserveAspectRatio="none" fill="none">
                     <path d="M0 5 Q50 0 100 5 Q150 10 200 5 Q250 0 300 5 Q350 10 400 5" stroke="#f8a4c8" stroke-width="2.5" stroke-linecap="round" fill="none"/>
@@ -289,7 +303,7 @@
         </div>
 
         <!-- Scroll Down Arrow -->
-        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 bounce-arrow flex flex-col items-center gap-1 opacity-40">
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 bounce-arrow flex flex-col items-center gap-1 opacity-40" id="hero-scroll-cue">
             <span class="text-xs font-body font-semibold uppercase tracking-widest">Scroll</span>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
         </div>
@@ -494,7 +508,7 @@
                 </div>
 
                 <!-- Food sticker items — bottom of section, straddling the section boundary -->
-                <img src="public/assets/cupcake-sticker.png" alt="" aria-hidden="true" loading="lazy" decoding="async" class="absolute -bottom-6 left-[-120px] w-24 parallax select-none" data-speed="1.5" style="transform: rotate(-8deg); filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.18));"/>
+                <img src="public/assets/cupcake-sticker.png" alt="" aria-hidden="true" loading="lazy" decoding="async" class="absolute -bottom-6 left-2 lg:left-[-120px] w-24 parallax select-none" data-speed="1.5" style="transform: rotate(-8deg); filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.18));"/>
             </div>
 
         </div>
@@ -1044,6 +1058,7 @@
         // ===== CUSTOM CURSOR =====
         const cursor = document.getElementById('custom-cursor');
         document.addEventListener('mousemove', (e) => {
+            cursor.classList.add('cursor-active');
             gsap.to(cursor, { left: e.clientX, top: e.clientY, duration: 0.15, ease: 'power2.out' });
         });
         const hoverTargets = document.querySelectorAll('.hover-target, a, button');
@@ -1122,11 +1137,11 @@
             });
         });
 
-        // ===== HORIZONTAL SCROLL (desktop only, recalculates across breakpoint/resize) =====
+        // ===== HORIZONTAL SCROLL (fine-pointer desktop only; touch tablets get native swipe regardless of width) =====
         const pinWrap = document.querySelector('#cards-container');
         if (pinWrap) {
             ScrollTrigger.matchMedia({
-                '(min-width: 1024px)': function () {
+                '(min-width: 1024px) and (pointer: fine)': function () {
                     const pinWrapWidth = pinWrap.scrollWidth - window.innerWidth + 100;
                     gsap.to(pinWrap, {
                         x: -pinWrapWidth,
