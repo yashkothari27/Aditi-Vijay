@@ -466,18 +466,12 @@
                 <!-- Bottom decorative area: swatches + arrow pointing at them + "6" + stars -->
                 <div class="relative mt-10" style="min-height: 220px;">
 
-                    <!-- Star left of swatches -->
-                    <div class="absolute opacity-50" aria-hidden="true" style="top: 8px; left: 0px; font-size:18px; color:#888;">☆</div>
-
                     <!-- Theme color swatches — black, pink, cream (actual page theme colors) -->
                     <div class="flex items-center gap-2" style="margin-left: 28px;">
                         <div class="w-9 h-9 md:w-11 md:h-11 rounded-full" style="background:#111111; border: 2px solid #111;"></div>
                         <div class="w-9 h-9 md:w-11 md:h-11 rounded-full" style="background:#f8d5e0; border: 2px solid rgba(0,0,0,0.25);"></div>
                         <div class="w-9 h-9 md:w-11 md:h-11 rounded-full" style="background:#f4ede4; border: 2px solid rgba(0,0,0,0.18);"></div>
                     </div>
-
-                    <!-- Star left of "6" -->
-                    <div class="absolute opacity-40" aria-hidden="true" style="top: 80px; left: 5px; font-size:16px; color:#888;">☆</div>
 
                     <!-- Hand-drawn "6" whose tail IS the arrow pointing up at the swatches — single SVG path -->
                     <div style="margin-left: 10px; margin-top: 4px;">
@@ -499,9 +493,8 @@
                     </div>
                 </div>
 
-                <!-- Food sticker items — bottom of section, absolute to section via left positioning -->
-                <div class="absolute -bottom-6 left-[-120px] text-5xl parallax select-none" aria-hidden="true" data-speed="1.5" style="transform: rotate(-8deg); filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.18));">🥧</div>
-                <div class="absolute -bottom-4 left-[-30px] text-5xl parallax select-none" aria-hidden="true" data-speed="2" style="transform: rotate(6deg); filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.15));">🍬</div>
+                <!-- Food sticker items — bottom of section, straddling the section boundary -->
+                <img src="public/assets/cupcake-sticker.png" alt="" aria-hidden="true" loading="lazy" decoding="async" class="absolute -bottom-6 left-[-120px] w-24 parallax select-none" data-speed="1.5" style="transform: rotate(-8deg); filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.18));"/>
             </div>
 
         </div>
