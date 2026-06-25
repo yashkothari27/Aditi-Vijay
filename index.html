@@ -4,6 +4,9 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
     <title>Aditi Vijay | Digital Marketing Portfolio</title>
+    <script>
+        document.documentElement.classList.add('js-active');
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;700&family=League+Gothic&family=Dancing+Script:wght@400;700&family=Lilita+One&display=swap" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -54,6 +57,16 @@
         }
         .hovered-cursor { width: 56px; height: 56px; background: #e8c9a8; }
         .hovered-cursor::after { color: #111; }
+        .custom-cursor.mail-hovered::after {
+            content: "✉" !important;
+            transform: none !important;
+            font-size: 16px !important;
+        }
+        .custom-cursor.phone-hovered::after {
+            content: "📞" !important;
+            transform: none !important;
+            font-size: 14px !important;
+        }
 
         @media (hover: none), (pointer: coarse) {
             body { cursor: auto; }
@@ -144,6 +157,74 @@
         .tool-icon { border-radius: 1rem; border: 2px solid #111; box-shadow: 4px 4px 0px #111; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.15s; }
         .tool-icon:hover { transform: scale(1.1); }
 
+        /* ===== PROJECT CARDS ===== */
+        .project-card {
+            padding-bottom: 2.5rem;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+        }
+        .project-card:last-child { border-bottom: none; }
+        .project-badge {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            padding: 5px 14px;
+            border-radius: 100px;
+            border: 1.5px solid rgba(0,0,0,0.15);
+            color: rgba(0,0,0,0.55);
+            background: transparent;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .project-card:hover .project-badge {
+            border-color: rgba(0,0,0,0.35);
+            color: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.04);
+        }
+        .project-img-wrap {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.5s cubic-bezier(.4,0,.2,1), box-shadow 0.5s cubic-bezier(.4,0,.2,1);
+        }
+        .project-img-wrap:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+        }
+        .project-img {
+            transition: transform 0.6s cubic-bezier(.4,0,.2,1);
+        }
+        .project-img-wrap:hover .project-img {
+            transform: scale(1.05);
+        }
+        .project-title {
+            transition: letter-spacing 0.4s ease;
+        }
+        .project-card:hover .project-title {
+            letter-spacing: 0.03em;
+        }
+
+        /* Dark mode project cards */
+        html.dark .project-card { border-bottom-color: rgba(240,232,223,0.08); }
+        html.dark .project-badge {
+            border-color: rgba(240,232,223,0.15);
+            color: rgba(240,232,223,0.5);
+        }
+        html.dark .project-card:hover .project-badge {
+            border-color: rgba(240,232,223,0.35);
+            color: rgba(240,232,223,0.8);
+            background: rgba(240,232,223,0.06);
+        }
+        html.dark .project-title { color: #f0e8df !important; }
+        html.dark .project-img-wrap:hover {
+            box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+        }
+        html.dark #works .font-body.text-black\/50 { color: rgba(240,232,223,0.45) !important; }
+        html.dark #works .font-headline.text-black\/25 { color: rgba(240,232,223,0.2) !important; }
+        html.dark #works .text-black\/30 { color: rgba(240,232,223,0.25) !important; }
+        html.dark #works .bg-black\/15 { background-color: rgba(240,232,223,0.1) !important; }
+
         /* ===== SCROLL REVEAL ===== */
         .reveal { opacity: 0; transform: translateY(40px); }
         .reveal.is-visible { opacity: 1; transform: translateY(0); transition: opacity 0.75s cubic-bezier(.4,0,.2,1), transform 0.75s cubic-bezier(.4,0,.2,1); }
@@ -201,10 +282,21 @@
             #hero-subtitle { margin-top: 0.5rem; }
         }
 
+        /* ===== SCROLL PROGRESS BAR ===== */
+        #scroll-progress {
+            position: fixed; top: 0; left: 0; width: 0%; height: 3px;
+            background: linear-gradient(90deg, #d4956a, #c4845a, #e8c9a8);
+            z-index: 10001; pointer-events: none; will-change: width;
+        }
+
+        /* ===== HERO LETTER SPLIT ===== */
+        .hero-letter { display: inline-block; }
+
         /* ===== REDUCED MOTION ===== */
         @media (prefers-reduced-motion: reduce) {
             .sticker-float, .sticker-float-r, .bounce-arrow, .marquee-track { animation: none !important; }
             .reveal, .reveal-left, .reveal-right { transition: none !important; opacity: 1 !important; transform: none !important; }
+            #scroll-progress { display: none; }
         }
 
         /* ===== DARK MODE TOGGLE BUTTON ===== */
@@ -218,34 +310,43 @@
         .dark-icon-moon { display: block; }
 
         /* ===== DARK MODE ===== */
-        html.dark body { background-color: #1c1714 !important; color: #f0e8df; }
+        html.dark body { background-color: #16120e !important; color: #f0e8df; }
         html.dark #site-nav.scrolled { background: rgba(28,23,20,0.92) !important; box-shadow: 0 2px 20px rgba(0,0,0,0.4); }
         html.dark .nav-logo { color: #f0e8df !important; -webkit-text-stroke-color: #f0e8df; }
         html.dark .nav-links a { color: #f0e8df; }
         html.dark .nav-links a::after { background: #f0e8df; }
         html.dark .nav-hamburger span { background: #f0e8df; }
-        html.dark .nav-mobile-menu { background: #1c1714; }
+        html.dark .nav-mobile-menu { background: #16120e; }
         html.dark .nav-mobile-menu a { color: #f0e8df; }
         html.dark #dark-toggle { color: #f0e8df; }
         html.dark #dark-toggle:hover { background: rgba(255,255,255,0.08); }
         html.dark .dark-icon-sun { display: block; }
         html.dark .dark-icon-moon { display: none; }
 
-        /* Dark section backgrounds */
-        html.dark #main-content  { background-color: #1c1714 !important; }
-        html.dark #about         { background-color: #2c1f16 !important; }
-        html.dark #resume        { background-color: #221a13 !important; }
-        html.dark #works         { background-color: #1a1410 !important; }
-        html.dark #photography   { background-color: #1a1410 !important; }
-        html.dark section[data-color="#e8c9a8"] { background-color: #2c2118 !important; }
+        /* Dark section backgrounds + text inheritance fallback */
+        html.dark #main-content  { background-color: #16120e !important; color: #f0e8df; }
+        html.dark #about         { background-color: #231a12 !important; color: #f0e8df; }
+        html.dark #resume        { background-color: #1a150f !important; color: #f0e8df; }
+        html.dark #works         { background-color: #1e1810 !important; color: #f0e8df; }
+        html.dark #photography   { background-color: #1e1810 !important; color: #f0e8df; }
+        html.dark section[data-color="#e8c9a8"] { background-color: #251c14 !important; color: #f0e8df; }
 
         /* Dark text overrides */
         html.dark .text-\[\#222\]    { color: #f0e8df !important; }
         html.dark .text-\[\#111\]    { color: #f0e8df !important; }
         html.dark .text-\[\#444\]    { color: rgba(240,232,223,0.55) !important; }
         html.dark .text-black        { color: #f0e8df !important; }
+        html.dark .text-gray-400     { color: rgba(240,232,223,0.35) !important; }
         html.dark .text-gray-500     { color: rgba(240,232,223,0.45) !important; }
+        html.dark .text-gray-600     { color: rgba(240,232,223,0.55) !important; }
         html.dark .text-gray-700     { color: rgba(240,232,223,0.6) !important; }
+        html.dark .text-gray-800     { color: rgba(240,232,223,0.85) !important; }
+        html.dark .text-gray-900     { color: rgba(240,232,223,0.95) !important; }
+        /* Resume bullet points have no color class — inherit from section */
+        html.dark #resume            { color: #f0e8df; }
+        html.dark #resume li         { color: rgba(240,232,223,0.8); }
+        html.dark #resume p          { color: rgba(240,232,223,0.8); }
+        html.dark #resume .hover\:text-black:hover { color: #f0e8df !important; }
         html.dark .text-black\/50    { color: rgba(240,232,223,0.5) !important; }
         html.dark .text-black\/40    { color: rgba(240,232,223,0.4) !important; }
         html.dark .text-black\/35    { color: rgba(240,232,223,0.35) !important; }
@@ -255,10 +356,10 @@
         html.dark .border-black\/10   { border-color: rgba(240,232,223,0.1) !important; }
         html.dark .border-black\/20   { border-color: rgba(240,232,223,0.15) !important; }
         html.dark .border-gray-200   { border-color: rgba(240,232,223,0.15) !important; }
-        html.dark .bg-white           { background-color: #2c2118 !important; }
-        html.dark .bg-\[\#f5efe6\]   { background-color: #221a13 !important; }
-        html.dark .bg-cream           { background-color: #221a13 !important; }
-        html.dark .bg-pink            { background-color: #2c1f16 !important; }
+        html.dark .bg-white           { background-color: #231a12 !important; }
+        html.dark .bg-\[\#f5efe6\]   { background-color: #1a150f !important; }
+        html.dark .bg-cream           { background-color: #1a150f !important; }
+        html.dark .bg-pink            { background-color: #231a12 !important; }
         html.dark .tool-icon          { border-color: rgba(240,232,223,0.25); box-shadow: 4px 4px 0px rgba(240,232,223,0.15); }
         html.dark .rounded-2xl.overflow-hidden { box-shadow: none; }
         html.dark .bg-\[\#1f1f1f\]   { background-color: #3d2b1e !important; }
@@ -269,8 +370,12 @@
         /* Dark bubble title */
         html.dark .bubble-title { color: #c4845a; -webkit-text-stroke-color: rgba(240,232,223,0.8); filter: drop-shadow(2px 2px 0px rgba(240,232,223,0.3)); }
 
+        /* Dark progress bar */
+        html.dark #scroll-progress { background: linear-gradient(90deg, #c4845a, #d4956a, rgba(240,232,223,0.5)); }
+
         /* Dark cursor hover */
-        html.dark .hovered-cursor { background: #3d2b1e !important; }
+        html.dark .hovered-cursor { background: #352618 !important; }
+        html.dark .hovered-cursor::after { color: #f0e8df !important; }
 
         /* Dark hero text */
         html.dark #hero-title { color: #f0e8df; }
@@ -278,9 +383,207 @@
 
         /* Dark scrollbar */
         html.dark ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); }
+
+        /* Resume divider line + contact SVG icons */
+        html.dark .bg-gray-400    { background-color: rgba(240,232,223,0.2) !important; }
+        html.dark .bg-gray-200    { background-color: rgba(240,232,223,0.12) !important; }
+        /* contact-icon: fill/stroke on both SVG element AND child paths */
+        html.dark .contact-icon,
+        html.dark .contact-icon * { stroke: rgba(240,232,223,0.7) !important; fill: rgba(240,232,223,0.7) !important; }
+
+        /* Global hover:text-black override in dark mode */
+        html.dark .hover\:text-black:hover { color: #f0e8df !important; }
+
+        /* About section decorative SVGs — path[stroke] directly on elements */
+        html.dark #about path[stroke="#111"],
+        html.dark #about line[stroke="#111"],
+        html.dark #about path[stroke="#333"] { stroke: rgba(240,232,223,0.25) !important; }
+        html.dark #about svg[stroke="#111"],
+        html.dark #about svg[stroke="#111"] path,
+        html.dark #about svg[stroke="#111"] line { stroke: rgba(240,232,223,0.25) !important; }
+
+        /* Works / Photography section brand name text visibility */
+        html.dark #works .project-title   { color: #f0e8df !important; }
+        html.dark #works .font-script       { color: rgba(240,232,223,0.45) !important; }
+        html.dark #photography h2, html.dark #photography p { color: inherit; }
+
+        /* Marquee section (skills ticker) */
+        html.dark section[data-color="#e8c9a8"] .font-display { color: rgba(240,232,223,0.35) !important; }
+
+        /* Hero title visibility */
+        html.dark .hero-title { color: #f0e8df !important; }
+        html.dark #hero-subtitle p { color: rgba(240,232,223,0.85) !important; }
+
+        /* Resume skill tags on dark mode (already dark bg — lighten text) */
+        html.dark .bg-\[\#1f1f1f\]   { background-color: #3d2b1e !important; }
+        html.dark .bg-\[\#1f1f1f\] * { color: #e8c9a8 !important; }
+
+        /* About section bio highlight spans — keep readable */
+        html.dark span[style*="background:#d4956a"] { background: #7a4e30 !important; color: #f0e8df !important; }
+        html.dark span[style*="background:#fde047"] { background: #7a6200 !important; color: #f0e8df !important; }
+
+        /* Resume date labels background */
+        html.dark .bg-cream { background-color: #2c2118 !important; }
+
+        /* ===== PAGE LOADER ===== */
+        .page-loader {
+            position: fixed; inset: 0; z-index: 99999;
+            display: flex; align-items: center; justify-content: center;
+            background: #111;
+            pointer-events: all;
+        }
+        .page-loader .loader-text {
+            font-family: 'Lilita One', cursive;
+            font-size: clamp(2rem, 8vw, 5rem);
+            color: #e8c9a8;
+            letter-spacing: 0.04em;
+            overflow: hidden;
+        }
+        .page-loader .loader-letter {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(100%);
+        }
+        html.dark .page-loader { background: #0d0a08; }
+
+        /* ===== FLOATING PARTICLES ===== */
+        .particle {
+            position: absolute; border-radius: 50%; pointer-events: none;
+            background: radial-gradient(circle, rgba(196,132,90,0.35) 0%, transparent 70%);
+            animation: particle-float 6s ease-in-out infinite;
+        }
+        @keyframes particle-float {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+            25% { transform: translate(15px, -20px) scale(1.15); opacity: 0.7; }
+            50% { transform: translate(-10px, -35px) scale(0.9); opacity: 0.5; }
+            75% { transform: translate(20px, -15px) scale(1.1); opacity: 0.6; }
+        }
+
+        /* ===== CLIP-PATH SECTION REVEAL ===== */
+        .clip-reveal {
+            clip-path: inset(0 0 100% 0);
+        }
+        .clip-reveal.is-revealed {
+            clip-path: inset(0 0 0% 0);
+            transition: clip-path 1.2s cubic-bezier(.77,0,.175,1);
+        }
+
+        /* ===== HIGHLIGHT SWEEP ===== */
+        .highlight-sweep {
+            background-size: 200% 100% !important;
+            background-position: 100% 0 !important;
+            transition: background-position 0.8s cubic-bezier(.4,0,.2,1) !important;
+        }
+        .highlight-sweep.swept {
+            background-position: 0% 0 !important;
+        }
+
+        /* ===== 3D TILT ===== */
+        .tilt-3d {
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+
+        /* ===== TEXT SCRAMBLE ===== */
+        .scramble-char {
+            display: inline-block;
+            transition: opacity 0.1s;
+        }
+
+        /* ===== TIMELINE LINE DRAW ===== */
+        .timeline-line {
+            transform-origin: top center;
+            transform: scaleY(0);
+        }
+
+        /* ===== IMAGE MASK REVEAL ===== */
+        .img-mask-reveal {
+            position: relative;
+            overflow: hidden;
+        }
+        .js-active .img-mask-reveal img,
+        .js-active .img-mask-reveal video {
+            opacity: 0;
+        }
+
+        /* ===== HEADING LETTER SPLIT ===== */
+        .split-letter {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(40px) rotate(8deg);
+        }
+        .split-letter.is-visible {
+            opacity: 1;
+            transform: translateY(0) rotate(0deg);
+            transition: opacity 0.5s cubic-bezier(.4,0,.2,1), transform 0.5s cubic-bezier(.4,0,.2,1);
+        }
+
+        /* ===== THANK YOU STROKE FILL ===== */
+        #footer-title {
+            background: linear-gradient(to right, #e8c9a8 50%, transparent 50%);
+            background-size: 200% 100%;
+            background-position: 100% 0;
+            -webkit-background-clip: text;
+            background-clip: text;
+            transition: background-position 1.5s cubic-bezier(.4,0,.2,1);
+        }
+        #footer-title.filled {
+            background-position: 0% 0;
+        }
+
+        /* ===== MAGNETIC BUTTON ===== */
+        .magnetic-btn {
+            transition: transform 0.15s ease-out;
+        }
+
+        /* ===== SKILL TAG POP ===== */
+        .skill-tag-anim {
+            opacity: 0;
+            transform: scale(0.7) translateY(10px);
+        }
+        .skill-tag-anim.is-popped {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            transition: opacity 0.4s cubic-bezier(.4,0,.2,1), transform 0.4s cubic-bezier(.34,1.56,.64,1);
+        }
+
+        /* ===== PLAYLIST HOVER ===== */
+        .playlist-item {
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            border-radius: 8px;
+            padding: 4px;
+            margin: -4px;
+        }
+        .playlist-item:hover {
+            transform: translateX(6px);
+            box-shadow: -4px 0 0 #c4845a;
+        }
+
+        /* ===== COUNTER NUMBER ===== */
+        .counter-anim {
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ===== ENHANCED REDUCED MOTION ===== */
+        @media (prefers-reduced-motion: reduce) {
+            .page-loader { display: none !important; }
+            .particle { display: none !important; }
+            .clip-reveal { clip-path: none !important; }
+            .highlight-sweep { background-position: 0% 0 !important; transition: none !important; }
+            .split-letter { opacity: 1 !important; transform: none !important; transition: none !important; }
+            .skill-tag-anim { opacity: 1 !important; transform: none !important; transition: none !important; }
+            .img-mask-reveal::before { display: none !important; }
+            .timeline-line { transform: scaleY(1) !important; }
+            #footer-title { background-position: 0% 0 !important; }
+            .playlist-item:hover { transform: none !important; }
+        }
     </style>
 </head>
 <body class="font-body antialiased">
+    <!-- Page Loader -->
+    <div class="page-loader" id="page-loader">
+        <div class="loader-text" id="loader-text"></div>
+    </div>
     <a href="#main-content" class="skip-link">Skip to main content</a>
     <!-- SVG symbol definitions — reused throughout the page -->
     <svg style="display:none;" aria-hidden="true">
@@ -292,6 +595,7 @@
         </defs>
     </svg>
 
+    <div id="scroll-progress" aria-hidden="true"></div>
     <div class="custom-cursor" id="custom-cursor"></div>
 
     <!-- Floating Navigation -->
@@ -323,6 +627,8 @@
 
     <!-- Hero Section -->
     <section id="main-content" class="panel min-h-screen relative flex items-center justify-center p-4 bg-cream overflow-hidden scroll-section" data-color="#f5efe6">
+        <!-- Floating Particles -->
+        <div id="hero-particles" class="absolute inset-0 pointer-events-none z-0" aria-hidden="true"></div>
 
         <!-- Pink curved arrow + Name (top-right, like Framer) -->
         <div class="hidden sm:flex absolute top-[10%] right-[8%] md:top-[15%] md:right-[12%] z-20 items-start gap-0" id="hero-name-group">
@@ -537,21 +843,21 @@
                 <div class="transform rotate-[3deg] hover-target parallax mt-2.5 w-full" data-speed="-0.8">
                     <h3 class="font-display text-[1.8rem] md:text-[2.2rem] leading-tight mb-3 text-[#111]">What's on<br/>my playlist?</h3>
                     <div class="flex flex-col gap-3">
-                        <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-3 playlist-item">
                             <div class="w-11 h-11 rounded overflow-hidden flex-shrink-0 border border-black/10" style="background: linear-gradient(135deg, #f9c6d0, #e8a0b0);">
                                 <img src="https://i.scdn.co/image/ab67616d00004851e787cffec20aa2a396a61647" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
                             </div>
                             <div class="leading-tight flex-1"><p class="font-bold text-sm text-[#111]">Love Story</p><p class="text-xs text-gray-500 italic">Taylor Swift</p></div>
                             <span class="text-gray-400 text-base" aria-hidden="true">☆</span>
                         </div>
-                        <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-3 playlist-item">
                             <div class="w-11 h-11 rounded overflow-hidden flex-shrink-0 border border-black/10" style="background: linear-gradient(135deg, #1a1a2e, #3d2b5e);">
                                 <img src="https://i.scdn.co/image/ab67616d00004851d7fb3e4c63020039d1cff6b2" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
                             </div>
                             <div class="leading-tight flex-1"><p class="font-bold text-sm text-[#111]">Dark Paradise</p><p class="text-xs text-gray-500 italic">Lana Del Rey</p></div>
                             <span class="text-gray-400 text-base" aria-hidden="true">☆</span>
                         </div>
-                        <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-3 playlist-item">
                             <div class="w-11 h-11 rounded overflow-hidden flex-shrink-0 border border-black/10" style="background: linear-gradient(135deg, #c8a97e, #a07850);">
                                 <img src="https://i.scdn.co/image/ab67616d00004851ebc8cfac8b586bc475b04918" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
                             </div>
@@ -605,7 +911,7 @@
             <div class="relative grid grid-cols-1 lg:grid-cols-2 gap-x-0 gap-y-16">
 
                 <!-- Center vertical divider line -->
-                <div class="hidden lg:block absolute left-1/2 top-0 bottom-0 w-px bg-gray-400 -translate-x-1/2 z-0"></div>
+                <div class="hidden lg:block absolute left-1/2 top-0 bottom-0 w-px bg-gray-400 -translate-x-1/2 z-0 timeline-line" id="timeline-line"></div>
 
                 <!-- Dates ON the center line -->
 
@@ -625,8 +931,8 @@
                             </li>
                             <li class="flex items-center gap-4">
                                 <!-- Envelope icon -->
-                                <svg class="contact-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                                <svg class="contact-icon" width="32" height="32" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="2" y="4" width="20" height="16" rx="2" fill="none"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
                                 </svg>
                                 <a href="mailto:aditivijay642@gmail.com" class="hover-target text-gray-800 hover:text-black transition-colors" style="text-decoration:none;">aditivijay642@gmail.com</a>
                             </li>
@@ -660,16 +966,16 @@
                     <!-- Skills Block -->
                     <div class="reveal" style="transition-delay:0.2s">
                         <h2 class="bubble-title text-6xl mb-8 tracking-wide">SKILLS</h2>
-                        <div class="flex flex-wrap gap-3">
-                            <span class="bg-[#1f1f1f] text-[#e8c9a8] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105">Digital Marketing</span>
-                            <span class="bg-[#1f1f1f] text-[#e8c9a8] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105">Social Media Marketing</span>
-                            <span class="bg-[#1f1f1f] text-[#e8c9a8] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105">Email Marketing</span>
-                            <span class="bg-[#1f1f1f] text-[#e8c9a8] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105">Content Creation</span>
-                            <span class="bg-[#1f1f1f] text-[#e8c9a8] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105">SEO &amp; Backlinking</span>
-                            <span class="bg-[#1f1f1f] text-[#e8c9a8] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105">Google Analytics</span>
-                            <span class="bg-[#1f1f1f] text-[#e8c9a8] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105">CRM Tools</span>
-                            <span class="bg-[#1f1f1f] text-[#e8c9a8] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105">Canva Design</span>
-                            <span class="bg-[#1f1f1f] text-[#e8c9a8] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105">Visual Branding</span>
+                        <div class="flex flex-wrap gap-3" id="skills-grid">
+                            <span class="bg-[#1f1f1f] text-[#e8c9a8] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105 skill-tag-anim">Digital Marketing</span>
+                            <span class="bg-[#1f1f1f] text-[#e8c9a8] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105 skill-tag-anim">Social Media Marketing</span>
+                            <span class="bg-[#1f1f1f] text-[#e8c9a8] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105 skill-tag-anim">Email Marketing</span>
+                            <span class="bg-[#1f1f1f] text-[#e8c9a8] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105 skill-tag-anim">Content Creation</span>
+                            <span class="bg-[#1f1f1f] text-[#e8c9a8] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105 skill-tag-anim">SEO &amp; Backlinking</span>
+                            <span class="bg-[#1f1f1f] text-[#e8c9a8] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105 skill-tag-anim">Google Analytics</span>
+                            <span class="bg-[#1f1f1f] text-[#e8c9a8] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105 skill-tag-anim">CRM Tools</span>
+                            <span class="bg-[#1f1f1f] text-[#e8c9a8] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105 skill-tag-anim">Canva Design</span>
+                            <span class="bg-[#1f1f1f] text-[#e8c9a8] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105 skill-tag-anim">Visual Branding</span>
                         </div>
                     </div>
 
@@ -751,99 +1057,113 @@
         </div>
     </section>
 
-    <!-- Projects (Horizontal Scroll) -->
+
+    <!-- Projects / Selected Works -->
     <section id="works" class="panel scroll-section bg-[#ede4d8] text-black" data-color="#ede4d8">
 
         <!-- Section heading -->
-        <div class="px-6 lg:px-20 pt-20 pb-2">
-            <h2 class="bubble-title text-[8vw] hover-target reveal" style="color:#111;">SELECTED WORKS</h2>
+        <div class="max-w-[1400px] mx-auto px-6 lg:px-20 pt-24 pb-6">
+            <div class="flex items-end justify-between gap-4 mb-4">
+                <h2 class="bubble-title text-[10vw] md:text-[7vw] hover-target reveal leading-[0.85]">SELECTED WORKS</h2>
+                <span class="text-sm font-headline font-semibold text-black/30 uppercase tracking-widest pb-2 hidden md:block reveal">3 Projects</span>
+            </div>
+            <div class="w-full h-px bg-black/15"></div>
         </div>
 
-        <!-- ── LOKMAT ── -->
-        <div class="border-t border-black/10 px-6 lg:px-20 pt-10 pb-14 reveal">
-            <div class="flex items-end justify-between mb-1">
-                <h3 class="font-headline font-black text-[10vw] md:text-[8vw] leading-none uppercase text-black">LOKMAT</h3>
-                <span class="text-[11px] uppercase tracking-[0.2em] font-bold text-black/35 mb-1">Digital Marketing</span>
-            </div>
-            <p class="font-script text-xl text-black/40 mb-6">Content &amp; SEO Campaigns</p>
-            <div class="grid grid-cols-3 gap-3">
-                <div class="rounded-2xl overflow-hidden h-56 md:h-72"><img src="public/assets/creative-1.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500 hover-target" alt="Lokmat digital marketing campaign"/></div>
-                <div class="rounded-2xl overflow-hidden h-56 md:h-72"><img src="public/assets/creative-3.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500 hover-target" alt="Lokmat content creative"/></div>
-                <div class="rounded-2xl overflow-hidden h-56 md:h-72"><img src="public/assets/creative-4.png" loading="lazy" decoding="async" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500 hover-target" alt="Lokmat email marketing"/></div>
-            </div>
-        </div>
+        <!-- Projects container -->
+        <div class="max-w-[1400px] mx-auto px-6 lg:px-20 pb-20 flex flex-col gap-16 md:gap-20">
 
-        <!-- ── TALKNLOCK ── -->
-        <div class="border-t border-black/10 px-6 lg:px-20 pt-10 pb-14 reveal">
-            <div class="flex items-end justify-between mb-1">
-                <h3 class="font-headline font-black text-[10vw] md:text-[8vw] leading-none uppercase text-black">TALKNLOCK</h3>
-                <span class="text-[11px] uppercase tracking-[0.2em] font-bold text-black/35 mb-1">Social Media Mgmt</span>
-            </div>
-            <p class="font-script text-xl text-black/40 mb-6">Reels, Posts &amp; Brand Visuals</p>
-            <div class="grid grid-cols-3 gap-3">
-                <div class="rounded-2xl overflow-hidden h-56 md:h-72"><img src="public/assets/creative-2.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500 hover-target" alt="TalkNLock social content"/></div>
-                <div class="rounded-2xl overflow-hidden h-56 md:h-72"><img src="public/assets/creative-5.png" loading="lazy" decoding="async" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500 hover-target" alt="TalkNLock brand visuals"/></div>
-                <div class="rounded-2xl overflow-hidden h-56 md:h-72"><video src="public/assets/creative-video-1.mp4" autoplay muted loop playsinline preload="metadata" class="w-full h-full object-cover hover-target" aria-label="TalkNLock reel"></video></div>
-            </div>
-        </div>
-
-        <!-- ── BAG CENTRAL ── -->
-        <div class="border-t border-black/10 px-6 lg:px-20 pt-10 pb-14 reveal">
-            <div class="flex items-end justify-between mb-1">
-                <h3 class="font-headline font-black text-[10vw] md:text-[8vw] leading-none uppercase text-black">BAG CENTRAL</h3>
-                <span class="text-[11px] uppercase tracking-[0.2em] font-bold text-black/35 mb-1">Brand Design</span>
-            </div>
-            <p class="font-script text-xl text-black/40 mb-6">Instagram Stories &amp; Posts</p>
-            <div class="grid grid-cols-3 gap-3">
-                <div class="rounded-2xl overflow-hidden h-56 md:h-72"><img src="public/assets/bag-central-stories.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500 hover-target" alt="Bag Central story"/></div>
-                <a href="public/assets/bag-central-posts.pdf" target="_blank" rel="noopener" aria-label="Bag Central posts PDF" class="col-span-2 relative rounded-2xl overflow-hidden group block h-56 md:h-72">
-                    <img src="public/assets/bag-central-posts-cover.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Bag Central posts PDF"/>
-                    <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-5">
-                        <span class="font-bold text-white text-sm uppercase tracking-widest">View PDF →</span>
+            <!-- ── PROJECT 01 — BAG CENTRAL ── -->
+            <div class="project-card group reveal" data-project="01">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-2 mb-5">
+                    <div class="flex items-baseline gap-4">
+                        <span class="font-headline text-sm font-bold text-black/25 tracking-widest">01</span>
+                        <h3 class="font-headline font-black text-[11vw] md:text-[5.5vw] leading-[0.9] uppercase text-black project-title">BAG CENTRAL</h3>
                     </div>
-                    <span class="absolute top-3 right-3 bg-black/60 backdrop-blur-sm rounded-full px-3 py-1 text-white text-xs font-bold">PDF · 3 pages</span>
-                </a>
-            </div>
-        </div>
-
-        <!-- ── TRIMURTI ── -->
-        <div class="border-t border-black/10 px-6 lg:px-20 pt-10 pb-14 reveal">
-            <div class="flex items-end justify-between mb-1">
-                <h3 class="font-headline font-black text-[10vw] md:text-[8vw] leading-none uppercase text-black">TRIMURTI</h3>
-                <span class="text-[11px] uppercase tracking-[0.2em] font-bold text-black/35 mb-1">Restaurant · Social</span>
-            </div>
-            <p class="font-script text-xl text-black/40 mb-6">Social Content &amp; Reels</p>
-            <div class="grid grid-cols-3 gap-3">
-                <a href="public/assets/trimurti-posts.pdf" target="_blank" rel="noopener" aria-label="Trimurti posts PDF" class="col-span-2 relative rounded-2xl overflow-hidden group block h-56 md:h-72">
-                    <img src="public/assets/trimurti-posts-cover.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Trimurti posts PDF"/>
-                    <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-5">
-                        <span class="font-bold text-white text-sm uppercase tracking-widest">View PDF →</span>
+                    <div class="flex items-center gap-3 mb-1">
+                        <span class="project-badge">Brand Design</span>
+                        <span class="project-badge">Instagram</span>
                     </div>
-                    <span class="absolute top-3 right-3 bg-black/60 backdrop-blur-sm rounded-full px-3 py-1 text-white text-xs font-bold">PDF · 8 pages</span>
-                </a>
-                <div class="rounded-2xl overflow-hidden h-56 md:h-72"><video src="public/assets/trimurti-reel-1.mp4" autoplay muted loop playsinline preload="metadata" class="w-full h-full object-cover hover-target" aria-label="Trimurti reel"></video></div>
-            </div>
-        </div>
-
-        <!-- ── AUROROMA ── -->
-        <div class="border-t border-b border-black/10 px-6 lg:px-20 pt-10 pb-14 reveal">
-            <div class="flex items-end justify-between mb-1">
-                <h3 class="font-headline font-black text-[10vw] md:text-[8vw] leading-none uppercase text-black">AUROROMA</h3>
-                <span class="text-[11px] uppercase tracking-[0.2em] font-bold text-black/35 mb-1">Social Media</span>
-            </div>
-            <p class="font-script text-xl text-black/40 mb-6">Posts &amp; Visual Branding</p>
-            <div class="grid grid-cols-3 gap-3">
-                <a href="public/assets/auroroma-posts.pdf" target="_blank" rel="noopener" aria-label="Auroroma posts PDF" class="col-span-2 relative rounded-2xl overflow-hidden group block h-56 md:h-72">
-                    <img src="public/assets/auroroma-posts-cover.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Auroroma posts PDF"/>
-                    <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-5">
-                        <span class="font-bold text-white text-sm uppercase tracking-widest">View PDF · 5 pages →</span>
+                </div>
+                <p class="font-body text-black/50 text-sm md:text-base mb-6 max-w-xl">Instagram stories and post designs for a fashion accessories brand — building a bold, recognizable visual identity.</p>
+                <div class="grid grid-cols-12 gap-3 md:gap-4">
+                    <div class="col-span-5 md:col-span-4 rounded-2xl overflow-hidden img-mask-reveal project-img-wrap h-56 md:h-[420px]">
+                        <img src="public/assets/bag-central-stories.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central story"/>
                     </div>
-                    <span class="absolute top-3 right-3 bg-black/60 backdrop-blur-sm rounded-full px-3 py-1 text-white text-xs font-bold">PDF · 5 pages</span>
-                </a>
-                <div class="rounded-2xl overflow-hidden h-56 md:h-72"><video src="public/assets/creative-video-2.mp4" autoplay muted loop playsinline preload="metadata" class="w-full h-full object-cover hover-target" aria-label="Marketing reel"></video></div>
+                    <a href="public/assets/bag-central-posts.pdf" target="_blank" rel="noopener" aria-label="Bag Central posts PDF" class="col-span-7 md:col-span-8 relative rounded-2xl overflow-hidden group/pdf block h-56 md:h-[420px] project-img-wrap img-mask-reveal">
+                        <img src="public/assets/bag-central-posts-cover.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central posts PDF"/>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover/pdf:opacity-100 transition-opacity duration-400 flex items-end p-6">
+                            <span class="font-bold text-white text-sm uppercase tracking-widest flex items-center gap-2">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+                                View PDF
+                            </span>
+                        </div>
+                        <span class="absolute top-3 right-3 bg-black/50 backdrop-blur-md rounded-full px-3 py-1.5 text-white text-xs font-bold">PDF · 3 pages</span>
+                    </a>
+                </div>
             </div>
-        </div>
 
+            <!-- ── PROJECT 02 — TRIMURTI ── -->
+            <div class="project-card group reveal" data-project="02">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-2 mb-5">
+                    <div class="flex items-baseline gap-4">
+                        <span class="font-headline text-sm font-bold text-black/25 tracking-widest">02</span>
+                        <h3 class="font-headline font-black text-[11vw] md:text-[5.5vw] leading-[0.9] uppercase text-black project-title">TRIMURTI</h3>
+                    </div>
+                    <div class="flex items-center gap-3 mb-1">
+                        <span class="project-badge">Restaurant</span>
+                        <span class="project-badge">Social Media</span>
+                    </div>
+                </div>
+                <p class="font-body text-black/50 text-sm md:text-base mb-6 max-w-xl">Complete social media presence for a restaurant brand — engaging food content, Reels, and post designs that drive footfall.</p>
+                <div class="grid grid-cols-12 gap-3 md:gap-4">
+                    <a href="public/assets/trimurti-posts.pdf" target="_blank" rel="noopener" aria-label="Trimurti posts PDF" class="col-span-12 md:col-span-8 relative rounded-2xl overflow-hidden group/pdf block h-56 md:h-[420px] project-img-wrap img-mask-reveal">
+                        <img src="public/assets/trimurti-posts-cover.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Trimurti posts PDF"/>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover/pdf:opacity-100 transition-opacity duration-400 flex items-end p-6">
+                            <span class="font-bold text-white text-sm uppercase tracking-widest flex items-center gap-2">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+                                View PDF
+                            </span>
+                        </div>
+                        <span class="absolute top-3 right-3 bg-black/50 backdrop-blur-md rounded-full px-3 py-1.5 text-white text-xs font-bold">PDF · 8 pages</span>
+                    </a>
+                    <div class="col-span-12 md:col-span-4 rounded-2xl overflow-hidden img-mask-reveal project-img-wrap h-56 md:h-[420px]">
+                        <video src="public/assets/trimurti-reel-1.mp4" autoplay muted loop playsinline preload="metadata" class="w-full h-full object-cover" aria-label="Trimurti reel"></video>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── PROJECT 03 — AUROROMA ── -->
+            <div class="project-card group reveal" data-project="03">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-2 mb-5">
+                    <div class="flex items-baseline gap-4">
+                        <span class="font-headline text-sm font-bold text-black/25 tracking-widest">03</span>
+                        <h3 class="font-headline font-black text-[11vw] md:text-[5.5vw] leading-[0.9] uppercase text-black project-title">AUROROMA</h3>
+                    </div>
+                    <div class="flex items-center gap-3 mb-1">
+                        <span class="project-badge">Social Media</span>
+                        <span class="project-badge">Branding</span>
+                    </div>
+                </div>
+                <p class="font-body text-black/50 text-sm md:text-base mb-6 max-w-xl">Visual branding and social media content for a lifestyle brand — curating a cohesive aesthetic that resonates with the target audience.</p>
+                <div class="grid grid-cols-12 gap-3 md:gap-4">
+                    <a href="public/assets/auroroma-posts.pdf" target="_blank" rel="noopener" aria-label="Auroroma posts PDF" class="col-span-12 md:col-span-7 relative rounded-2xl overflow-hidden group/pdf block h-56 md:h-[420px] project-img-wrap img-mask-reveal">
+                        <img src="public/assets/auroroma-posts-cover.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Auroroma posts PDF"/>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover/pdf:opacity-100 transition-opacity duration-400 flex items-end p-6">
+                            <span class="font-bold text-white text-sm uppercase tracking-widest flex items-center gap-2">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+                                View PDF · 5 pages
+                            </span>
+                        </div>
+                        <span class="absolute top-3 right-3 bg-black/50 backdrop-blur-md rounded-full px-3 py-1.5 text-white text-xs font-bold">PDF · 5 pages</span>
+                    </a>
+                    <div class="col-span-12 md:col-span-5 rounded-2xl overflow-hidden img-mask-reveal project-img-wrap h-56 md:h-[420px]">
+                        <video src="public/assets/creative-video-2.mp4" autoplay muted loop playsinline preload="metadata" class="w-full h-full object-cover" aria-label="Marketing reel"></video>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </section>
 
     <!-- Photography & Videography Section -->
@@ -909,7 +1229,7 @@
     <!-- Footer -->
     <footer id="contact" class="py-28 bg-[#111] text-center scroll-section relative overflow-hidden" data-color="#111111">
         <!-- Big THANK YOU -->
-        <h2 class="font-display text-[20vw] leading-none uppercase text-transparent mb-8 select-none reveal" id="footer-title" style="-webkit-text-stroke: 1.5px #e8c9a8;">THANK YOU</h2>
+        <h2 class="font-display text-[20vw] leading-none uppercase text-transparent mb-8 select-none" id="footer-title" style="-webkit-text-stroke: 1.5px #e8c9a8;">THANK YOU</h2>
 
         <p class="font-script text-4xl text-[#e8c9a8] mb-10">Let's grow your brand together</p>
 
@@ -928,7 +1248,10 @@
             </a>
         </div>
 
-        <a href="mailto:aditivijay642@gmail.com" class="text-white/60 hover:text-white text-sm font-body tracking-widest uppercase transition-colors hover-target" style="text-decoration:none;">aditivijay642@gmail.com</a>
+        <a href="mailto:aditivijay642@gmail.com" class="text-white/60 hover:text-white text-sm font-body tracking-widest uppercase transition-colors hover-target flex items-center justify-center gap-2" style="text-decoration:none;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+            aditivijay642@gmail.com
+        </a>
         <p class="text-white/20 text-xs mt-4 font-body">© 2026 Aditi Vijay. Made with ♥</p>
     </footer>
 
@@ -947,14 +1270,131 @@
         // ===== GSAP INIT =====
         gsap.registerPlugin(ScrollTrigger);
 
-        // ===== HERO ENTRY ANIMATIONS =====
-        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-        tl.from('#hero-title', { y: 80, opacity: 0, duration: 1, delay: 0.2 })
-          .to('#hero-subtitle', { opacity: 1, y: 0, duration: 0.7 }, '-=0.4')
-          .to('#hero-stickers > *', { opacity: 1, scale: 1, stagger: 0.15, duration: 0.5, ease: 'back.out(1.7)' }, '-=0.3');
+        // ===== PAGE LOADER =====
+        const pageLoader = document.getElementById('page-loader');
+        const loaderTextEl = document.getElementById('loader-text');
+        const loaderName = 'ADITI VIJAY';
+        // Build loader letters
+        loaderTextEl.innerHTML = [...loaderName].map(c =>
+            c === ' ' ? ' ' : `<span class="loader-letter">${c}</span>`
+        ).join('');
+        // Animate loader
+        const loaderTL = gsap.timeline({
+            onComplete: () => {
+                // Slide loader up
+                gsap.to(pageLoader, {
+                    yPercent: -100,
+                    duration: 0.8,
+                    ease: 'power4.inOut',
+                    onComplete: () => {
+                        pageLoader.style.display = 'none';
+                        // Start hero animations after loader
+                        heroEntryAnimation();
+                    }
+                });
+            }
+        });
+        loaderTL
+            .to('.loader-letter', {
+                opacity: 1,
+                y: 0,
+                stagger: 0.06,
+                duration: 0.5,
+                ease: 'back.out(1.6)',
+                delay: 0.3
+            })
+            .to('.loader-letter', {
+                opacity: 0,
+                y: -30,
+                stagger: 0.03,
+                duration: 0.3,
+                ease: 'power2.in',
+                delay: 0.5
+            });
 
-        // Pre-set sticker scale for pop-in
+        // ===== FLOATING PARTICLES (HERO) =====
+        const particlesContainer = document.getElementById('hero-particles');
+        const particleCount = 18;
+        for (let i = 0; i < particleCount; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const size = Math.random() * 8 + 4;
+            p.style.width = size + 'px';
+            p.style.height = size + 'px';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.top = Math.random() * 100 + '%';
+            p.style.animationDelay = (Math.random() * 6) + 's';
+            p.style.animationDuration = (Math.random() * 4 + 4) + 's';
+            particlesContainer.appendChild(p);
+        }
+
+        // ===== HERO ENTRY ANIMATIONS (called after loader) =====
         gsap.set('#hero-stickers > *', { scale: 0 });
+        gsap.set('#hero-name-group', { opacity: 0, x: 40 });
+        gsap.set('#hero-year', { opacity: 0, x: -30 });
+
+        // Split hero title into individual letter spans
+        const heroTitleEl = document.getElementById('hero-title');
+        heroTitleEl.innerHTML = [...heroTitleEl.textContent].map(c => `<span class="hero-letter">${c}</span>`).join('');
+
+        // Word-by-word subtitle reveal
+        const subtitleEl = document.querySelector('#hero-subtitle p');
+        if (subtitleEl) {
+            const words = subtitleEl.textContent.split(' ');
+            subtitleEl.innerHTML = words.map(w => `<span class="inline-block" style="opacity:0; transform:translateY(12px); transition: opacity 0.4s ease, transform 0.4s ease;">${w}</span>`).join(' ');
+        }
+
+        function heroEntryAnimation() {
+            const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+            tl.from('#hero-title .hero-letter', {
+                y: 80, opacity: 0, rotateX: 90,
+                stagger: 0.06, duration: 0.7, delay: 0.1, ease: 'back.out(1.4)'
+            })
+            .to('#hero-subtitle', { opacity: 1, duration: 0.01 }, '-=0.3');
+
+            // Word-by-word subtitle reveal
+            const wordSpans = document.querySelectorAll('#hero-subtitle p span');
+            wordSpans.forEach((span, i) => {
+                tl.to(span, { opacity: 1, y: 0, duration: 0.35 }, `-=${i === 0 ? 0.2 : 0.25}`);
+            });
+
+            tl.to('#hero-name-group', { opacity: 1, x: 0, duration: 0.7 }, '-=0.45')
+              .to('#hero-year', { opacity: 1, x: 0, duration: 0.6 }, '-=0.55')
+              .to('#hero-stickers > *', { opacity: 1, scale: 1, stagger: 0.12, duration: 0.5, ease: 'back.out(1.7)' }, '-=0.2');
+        }
+
+        // ===== HERO PARALLAX DEPTH ON SCROLL =====
+        gsap.to('#hero-title', {
+            scrollTrigger: {
+                trigger: '#main-content',
+                start: 'top top',
+                end: 'bottom top',
+                scrub: 0.5
+            },
+            y: -100,
+            scale: 0.9,
+            opacity: 0.3
+        });
+        gsap.to('#hero-subtitle', {
+            scrollTrigger: {
+                trigger: '#main-content',
+                start: 'top top',
+                end: 'bottom top',
+                scrub: 0.5
+            },
+            y: -60,
+            opacity: 0
+        });
+        gsap.to('#hero-scroll-cue', {
+            scrollTrigger: {
+                trigger: '#main-content',
+                start: 'top top',
+                end: '30% top',
+                scrub: true
+            },
+            opacity: 0,
+            y: -20
+        });
 
         // ===== CUSTOM CURSOR =====
         const cursor = document.getElementById('custom-cursor');
@@ -964,8 +1404,18 @@
         });
         const hoverTargets = document.querySelectorAll('.hover-target, a, button');
         hoverTargets.forEach(t => {
-            t.addEventListener('mouseenter', () => cursor.classList.add('hovered-cursor'));
-            t.addEventListener('mouseleave', () => cursor.classList.remove('hovered-cursor'));
+            t.addEventListener('mouseenter', () => {
+                cursor.classList.add('hovered-cursor');
+                const href = t.getAttribute('href') || (t.closest('a') && t.closest('a').getAttribute('href'));
+                if (href && href.startsWith('mailto:')) {
+                    cursor.classList.add('mail-hovered');
+                } else if (href && href.startsWith('tel:')) {
+                    cursor.classList.add('phone-hovered');
+                }
+            });
+            t.addEventListener('mouseleave', () => {
+                cursor.classList.remove('hovered-cursor', 'mail-hovered', 'phone-hovered');
+            });
         });
 
         // ===== NAV: GLASSMORPHISM ON SCROLL + HAMBURGER =====
@@ -1003,7 +1453,7 @@
 
         // ===== BACKGROUND COLOR TRANSITIONS =====
         const sections = document.querySelectorAll('.scroll-section');
-        const darkBgMap = { '#f5efe6':'#1c1714', '#e8c9a8':'#2c1f16', '#ede4d8':'#1a1410', '#111111':'#111111' };
+        const darkBgMap = { '#f5efe6':'#16120e', '#e8c9a8':'#251c14', '#ede4d8':'#1e1810', '#111111':'#111111' };
         sections.forEach(section => {
             const lightColor = section.dataset.color;
             ScrollTrigger.create({
@@ -1011,11 +1461,11 @@
                 start: 'top 50%',
                 end: 'bottom 50%',
                 onEnter: () => {
-                    const c = document.documentElement.classList.contains('dark') ? (darkBgMap[lightColor] || '#1c1714') : lightColor;
+                    const c = document.documentElement.classList.contains('dark') ? (darkBgMap[lightColor] || '#16120e') : lightColor;
                     gsap.to('body', { backgroundColor: c, duration: 0.5 });
                 },
                 onEnterBack: () => {
-                    const c = document.documentElement.classList.contains('dark') ? (darkBgMap[lightColor] || '#1c1714') : lightColor;
+                    const c = document.documentElement.classList.contains('dark') ? (darkBgMap[lightColor] || '#16120e') : lightColor;
                     gsap.to('body', { backgroundColor: c, duration: 0.5 });
                 }
             });
@@ -1045,16 +1495,345 @@
             });
         });
 
-        // Horizontal scroll removed — works section is now vertical case-study layout
+        // ===== SCROLL PROGRESS BAR =====
+        const scrollProgress = document.getElementById('scroll-progress');
+        window.addEventListener('scroll', () => {
+            const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+            scrollProgress.style.width = pct + '%';
+        }, { passive: true });
+
+        // ===== NAV ENTRANCE =====
+        gsap.from('#site-nav', { opacity: 0, y: -24, duration: 0.9, delay: 2.8, ease: 'power2.out' });
+
+        // ===== PORTRAIT 3D TILT ON MOUSE =====
+        const portraitWrap = document.querySelector('.portrait-wrap');
+        if (portraitWrap) {
+            portraitWrap.classList.add('tilt-3d');
+            portraitWrap.style.perspective = '800px';
+            const portraitImg = portraitWrap.querySelector('img');
+            portraitWrap.addEventListener('mousemove', (e) => {
+                const rect = portraitWrap.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+                gsap.to(portraitImg, {
+                    rotateY: x * 12,
+                    rotateX: -y * 8,
+                    duration: 0.4,
+                    ease: 'power2.out'
+                });
+            });
+            portraitWrap.addEventListener('mouseleave', () => {
+                gsap.to(portraitImg, {
+                    rotateY: 0,
+                    rotateX: 0,
+                    duration: 0.8,
+                    ease: 'elastic.out(1, 0.4)'
+                });
+            });
+        }
+
+        // ===== BIO HIGHLIGHT SWEEP ANIMATION =====
+        const highlightSpans = document.querySelectorAll('#about span[style*="background:"]');
+        highlightSpans.forEach(span => {
+            // Convert solid bg to gradient for sweep effect
+            const bgColor = span.style.background || span.style.backgroundColor;
+            if (bgColor) {
+                span.style.background = `linear-gradient(to right, ${bgColor} 50%, transparent 50%)`;
+                span.classList.add('highlight-sweep');
+            }
+        });
+        const highlightObs = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Stagger the sweeps
+                    const sweepEls = entry.target.querySelectorAll('.highlight-sweep');
+                    sweepEls.forEach((el, i) => {
+                        setTimeout(() => el.classList.add('swept'), i * 200);
+                    });
+                    highlightObs.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 });
+        const aboutBio = document.querySelector('#about .flex.flex-col.gap-4');
+        if (aboutBio) highlightObs.observe(aboutBio);
+
+        // ===== TOOL ICON BOUNCE-IN =====
+        const toolIcons = document.querySelectorAll('#about .tool-icon');
+        gsap.from(toolIcons, {
+            scrollTrigger: { trigger: toolIcons[0], start: 'top 85%' },
+            scale: 0,
+            opacity: 0,
+            stagger: 0.12,
+            duration: 0.6,
+            ease: 'elastic.out(1, 0.5)',
+            immediateRender: false
+        });
+
+        // ===== ABOUT: "DIGITAL MARKETER" SLIDE FROM LEFT =====
+        gsap.from('#about > h2', {
+            scrollTrigger: { trigger: '#about > h2', start: 'top 82%' },
+            x: -80, opacity: 0, duration: 1.1, ease: 'power3.out',
+            immediateRender: false
+        });
+
+        // ===== SECTION HEADING LETTER-SPLIT ANIMATIONS =====
+        const bubbleTitles = document.querySelectorAll('.bubble-title');
+        bubbleTitles.forEach(title => {
+            const text = title.textContent;
+            title.innerHTML = [...text].map(c =>
+                c === ' ' ? ' ' : `<span class="split-letter">${c}</span>`
+            ).join('');
+            const letters = title.querySelectorAll('.split-letter');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        letters.forEach((letter, i) => {
+                            setTimeout(() => letter.classList.add('is-visible'), i * 40);
+                        });
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.2 });
+            observer.observe(title);
+        });
+
+        // ===== TIMELINE LINE DRAW =====
+        const timelineLine = document.getElementById('timeline-line');
+        if (timelineLine) {
+            gsap.to(timelineLine, {
+                scaleY: 1,
+                scrollTrigger: {
+                    trigger: '#resume .relative.grid',
+                    start: 'top 70%',
+                    end: 'bottom 30%',
+                    scrub: 0.8
+                },
+                ease: 'none'
+            });
+        }
+
+        // ===== EXPERIENCE CARDS SLIDE-IN =====
+        const resumeLeftBlocks = document.querySelectorAll('#resume .flex.flex-col.gap-16:first-child > .reveal');
+        gsap.utils.toArray(resumeLeftBlocks).forEach((block, i) => {
+            gsap.from(block, {
+                scrollTrigger: { trigger: block, start: 'top 85%' },
+                x: -50, opacity: 0, duration: 0.8, delay: i * 0.1,
+                ease: 'power3.out',
+                immediateRender: false
+            });
+        });
+
+        // ===== SKILL TAG STAGGERED POP-IN =====
+        const skillTags = document.querySelectorAll('.skill-tag-anim');
+        const skillObs = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const tags = entry.target.querySelectorAll('.skill-tag-anim');
+                    tags.forEach((tag, i) => {
+                        setTimeout(() => tag.classList.add('is-popped'), i * 80);
+                    });
+                    skillObs.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 });
+        const skillsGrid = document.getElementById('skills-grid');
+        if (skillsGrid) skillObs.observe(skillsGrid);
+
+        // ===== IMAGE MASK REVEAL =====
+        document.querySelectorAll('.img-mask-reveal').forEach((el, i) => {
+            // Ensure relative positioning for overlay
+            el.style.position = 'relative';
+            ScrollTrigger.create({
+                trigger: el,
+                start: 'top 85%',
+                once: true,
+                onEnter: () => {
+                    setTimeout(() => {
+                        // Create and append overlay
+                        const overlay = document.createElement('div');
+                        overlay.style.cssText = `
+                            position:absolute; inset:0; z-index:2;
+                            background: ${document.documentElement.classList.contains('dark') ? '#2c1f16' : '#e8c9a8'};
+                            transform-origin: right;
+                        `;
+                        el.appendChild(overlay);
+                        
+                        // Make media visible under the overlay
+                        const media = el.querySelector('img, video');
+                        if (media) {
+                            gsap.set(media, { opacity: 1 });
+                            gsap.fromTo(media, { scale: 1.15 }, { scale: 1, duration: 1.1, ease: 'power2.out' });
+                        }
+
+                        // Slide overlay off to reveal image
+                        gsap.fromTo(overlay,
+                            { scaleX: 1 },
+                            { scaleX: 0, duration: 0.8, ease: 'power3.inOut', onComplete: () => overlay.remove() }
+                        );
+                    }, (i % 3) * 150);
+                }
+            });
+        });
+
+
+        // ===== WORKS: PROJECT TITLE TEXT SCRAMBLE =====
+        const scrambleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%';
+        function textScramble(el) {
+            const originalText = el.textContent;
+            let iterations = 0;
+            const maxIterations = originalText.length * 2;
+            const interval = setInterval(() => {
+                el.textContent = originalText.split('').map((char, idx) => {
+                    if (idx < iterations / 2) return originalText[idx];
+                    return scrambleChars[Math.floor(Math.random() * scrambleChars.length)];
+                }).join('');
+                iterations++;
+                if (iterations >= maxIterations) {
+                    clearInterval(interval);
+                    el.textContent = originalText;
+                }
+            }, 30);
+        }
+
+        gsap.utils.toArray('#works .project-title').forEach(el => {
+            ScrollTrigger.create({
+                trigger: el,
+                start: 'top 90%',
+                once: true,
+                onEnter: () => {
+                    gsap.from(el, {
+                        x: -60, opacity: 0, duration: 0.85, ease: 'power3.out',
+                        immediateRender: false,
+                        onStart: () => textScramble(el)
+                    });
+                }
+            });
+        });
+
+        // ===== PHOTOGRAPHY MASONRY WATERFALL STAGGER =====
+        const photoItems = document.querySelectorAll('#photography .break-inside-avoid');
+        photoItems.forEach((item, i) => {
+            gsap.from(item, {
+                scrollTrigger: { trigger: item, start: 'top 90%' },
+                y: 60,
+                opacity: 0,
+                scale: 0.95,
+                duration: 0.7,
+                delay: i * 0.12,
+                ease: 'power3.out',
+                immediateRender: false
+            });
+        });
+
+        // ===== FOOTER: "THANK YOU" STROKE FILL ANIMATION =====
+        ScrollTrigger.create({
+            trigger: '#footer-title',
+            start: 'top 80%',
+            once: true,
+            onEnter: () => {
+                gsap.from('#footer-title', {
+                    opacity: 0, scale: 0.85, duration: 1.2, ease: 'power3.out',
+                    immediateRender: false
+                });
+                setTimeout(() => {
+                    document.getElementById('footer-title').classList.add('filled');
+                }, 600);
+            }
+        });
+
+        // ===== FOOTER SOCIAL BUTTONS: STAGGER POP-IN =====
+        const footerSocials = document.querySelectorAll('#contact .flex.justify-center.gap-6 a');
+        gsap.from(footerSocials, {
+            scrollTrigger: { trigger: '#contact .flex.justify-center.gap-6', start: 'top 85%' },
+            scale: 0, opacity: 0, stagger: 0.1, duration: 0.5, ease: 'back.out(1.8)',
+            immediateRender: false
+        });
+
+        // ===== MAGNETIC HOVER — ALL CTAs + FOOTER SOCIAL =====
+        const magneticElements = document.querySelectorAll('#contact .flex.justify-center.gap-6 a, .tool-icon, #dark-toggle, .nav-logo');
+        magneticElements.forEach(btn => {
+            btn.classList.add('magnetic-btn');
+            btn.addEventListener('mousemove', (e) => {
+                const r = btn.getBoundingClientRect();
+                const strength = btn.closest('#contact') ? 0.4 : 0.25;
+                gsap.to(btn, {
+                    x: (e.clientX - r.left - r.width / 2) * strength,
+                    y: (e.clientY - r.top - r.height / 2) * strength,
+                    duration: 0.2, ease: 'power2.out'
+                });
+            });
+            btn.addEventListener('mouseleave', () => {
+                gsap.to(btn, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.3)' });
+            });
+        });
+
+        // ===== FOOTER SCRIPT TEXT: GENTLE FLOAT =====
+        gsap.to('#contact .font-script', {
+            scrollTrigger: { trigger: '#contact', start: 'top 80%' },
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power2.out',
+            immediateRender: false
+        });
+        gsap.from('#contact .font-script', {
+            scrollTrigger: { trigger: '#contact', start: 'top 80%' },
+            y: 20, opacity: 0, duration: 0.8, delay: 0.3, ease: 'power2.out',
+            immediateRender: false
+        });
+
+        // ===== MARQUEE SECTION FADE IN =====
+        gsap.utils.toArray('.marquee-track').forEach((track, i) => {
+            gsap.from(track, {
+                scrollTrigger: { trigger: track, start: 'top 90%' },
+                opacity: 0, y: 24, duration: 0.7, delay: i * 0.15,
+                immediateRender: false
+            });
+        });
+
+        // ===== PORTRAIT GENTLE FLOAT =====
+        gsap.to('.portrait-wrap', {
+            y: -10, duration: 2.8, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 3
+        });
+
+        // ===== COUNTER ANIMATION (for "1000+" in resume) =====
+        document.querySelectorAll('#resume li').forEach(li => {
+            const match = li.textContent.match(/(\d{3,})\+?/);
+            if (match) {
+                const num = parseInt(match[1]);
+                const plus = li.textContent.includes(num + '+') ? '+' : '';
+                const fullText = li.textContent;
+                const numStr = match[0];
+                ScrollTrigger.create({
+                    trigger: li,
+                    start: 'top 85%',
+                    once: true,
+                    onEnter: () => {
+                        const counter = { val: 0 };
+                        gsap.to(counter, {
+                            val: num,
+                            duration: 1.5,
+                            ease: 'power2.out',
+                            onUpdate: () => {
+                                li.textContent = fullText.replace(numStr, Math.round(counter.val) + plus);
+                            },
+                            onComplete: () => {
+                                li.textContent = fullText;
+                            }
+                        });
+                    }
+                });
+            }
+        });
 
         // ===== DARK MODE TOGGLE =====
         const darkToggle = document.getElementById('dark-toggle');
         const htmlEl = document.documentElement;
 
         const darkSectionColors = {
-            '#f5efe6': '#1c1714',
-            '#e8c9a8': '#2c1f16',
-            '#ede4d8': '#1a1410',
+            '#f5efe6': '#16120e',
+            '#e8c9a8': '#251c14',
+            '#ede4d8': '#1e1810',
             '#111111': '#111111',
         };
 
@@ -1065,7 +1844,7 @@
                 return r.top <= mid && r.bottom >= mid;
             });
             const color = visible ? visible.dataset.color : '#f5efe6';
-            return isDark ? (darkSectionColors[color] || '#1c1714') : color;
+            return isDark ? (darkSectionColors[color] || '#16120e') : color;
         }
 
         function applyDark(isDark) {
