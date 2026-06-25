@@ -14,8 +14,8 @@
             theme: {
                 extend: {
                     colors: {
-                        cream: "#f4ede4",
-                        pink: "#f8d5e0",
+                        cream: "#f5efe6",
+                        pink: "#e8c9a8",
                         black: "#111111",
                         darkGray: "#1f1f1f",
                     },
@@ -32,7 +32,7 @@
     <style>
         /* ===== BASE ===== */
         html { scroll-behavior: auto; } /* Lenis handles smooth scroll */
-        body { margin: 0; overflow-x: hidden; cursor: none; background-color: #f4ede4; transition: background-color 0.5s ease; color: #111; }
+        body { margin: 0; overflow-x: hidden; cursor: none; background-color: #f5efe6; transition: background-color 0.5s ease; color: #111; }
         img, video { -webkit-user-drag: none; pointer-events: none; }
         a img, a video { pointer-events: auto; }
         * { -webkit-user-select: none; user-select: none; }
@@ -52,7 +52,7 @@
             content: "➔"; color: white; display: block; font-size: 14px; font-weight: bold;
             transform: rotate(-45deg);
         }
-        .hovered-cursor { width: 56px; height: 56px; background: #f8d5e0; }
+        .hovered-cursor { width: 56px; height: 56px; background: #e8c9a8; }
         .hovered-cursor::after { color: #111; }
 
         @media (hover: none), (pointer: coarse) {
@@ -68,7 +68,7 @@
             transition: background 0.4s, backdrop-filter 0.4s, box-shadow 0.4s;
         }
         #site-nav.scrolled {
-            background: rgba(244,237,228,0.85);
+            background: rgba(245,239,230,0.88);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             box-shadow: 0 2px 20px rgba(0,0,0,0.07);
@@ -98,7 +98,7 @@
         .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
         .nav-mobile-menu {
             display: none; position: fixed; inset: 0; z-index: 998;
-            background: #f4ede4; flex-direction: column; align-items: center; justify-content: center;
+            background: #f5efe6; flex-direction: column; align-items: center; justify-content: center;
             gap: 40px;
         }
         .nav-mobile-menu.open { display: flex; }
@@ -111,7 +111,7 @@
         .bubble-title {
             font-family: 'Lilita One', cursive;
             font-weight: 400;
-            color: #ffc4d9;
+            color: #d4956a;
             -webkit-text-stroke: 1.5px black;
             filter: drop-shadow(2px 2px 0px black);
             text-transform: uppercase;
@@ -136,7 +136,7 @@
         }
         .skip-link:focus { top: 16px; }
         a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
-            outline: 3px solid #f8a4c8; outline-offset: 3px; border-radius: 2px;
+            outline: 3px solid #c4845a; outline-offset: 3px; border-radius: 2px;
         }
 
         /* ===== TOOL ICONS ===== */
@@ -206,6 +206,78 @@
             .sticker-float, .sticker-float-r, .bounce-arrow, .marquee-track { animation: none !important; }
             .reveal, .reveal-left, .reveal-right { transition: none !important; opacity: 1 !important; transform: none !important; }
         }
+
+        /* ===== DARK MODE TOGGLE BUTTON ===== */
+        #dark-toggle {
+            background: none; border: none; cursor: pointer;
+            width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; transition: background 0.2s; color: #111; padding: 0; flex-shrink: 0;
+        }
+        #dark-toggle:hover { background: rgba(0,0,0,0.07); }
+        .dark-icon-sun { display: none; }
+        .dark-icon-moon { display: block; }
+
+        /* ===== DARK MODE ===== */
+        html.dark body { background-color: #1c1714 !important; color: #f0e8df; }
+        html.dark #site-nav.scrolled { background: rgba(28,23,20,0.92) !important; box-shadow: 0 2px 20px rgba(0,0,0,0.4); }
+        html.dark .nav-logo { color: #f0e8df !important; -webkit-text-stroke-color: #f0e8df; }
+        html.dark .nav-links a { color: #f0e8df; }
+        html.dark .nav-links a::after { background: #f0e8df; }
+        html.dark .nav-hamburger span { background: #f0e8df; }
+        html.dark .nav-mobile-menu { background: #1c1714; }
+        html.dark .nav-mobile-menu a { color: #f0e8df; }
+        html.dark #dark-toggle { color: #f0e8df; }
+        html.dark #dark-toggle:hover { background: rgba(255,255,255,0.08); }
+        html.dark .dark-icon-sun { display: block; }
+        html.dark .dark-icon-moon { display: none; }
+
+        /* Dark section backgrounds */
+        html.dark #main-content  { background-color: #1c1714 !important; }
+        html.dark #about         { background-color: #2c1f16 !important; }
+        html.dark #resume        { background-color: #221a13 !important; }
+        html.dark #works         { background-color: #1a1410 !important; }
+        html.dark #photography   { background-color: #1a1410 !important; }
+        html.dark section[data-color="#e8c9a8"] { background-color: #2c2118 !important; }
+
+        /* Dark text overrides */
+        html.dark .text-\[\#222\]    { color: #f0e8df !important; }
+        html.dark .text-\[\#111\]    { color: #f0e8df !important; }
+        html.dark .text-\[\#444\]    { color: rgba(240,232,223,0.55) !important; }
+        html.dark .text-black        { color: #f0e8df !important; }
+        html.dark .text-gray-500     { color: rgba(240,232,223,0.45) !important; }
+        html.dark .text-gray-700     { color: rgba(240,232,223,0.6) !important; }
+        html.dark .text-black\/50    { color: rgba(240,232,223,0.5) !important; }
+        html.dark .text-black\/40    { color: rgba(240,232,223,0.4) !important; }
+        html.dark .text-black\/35    { color: rgba(240,232,223,0.35) !important; }
+        html.dark .text-\[\#1c1c1c\]\/40 { color: rgba(240,232,223,0.3) !important; }
+
+        /* Dark border / bg overrides */
+        html.dark .border-black\/10   { border-color: rgba(240,232,223,0.1) !important; }
+        html.dark .border-black\/20   { border-color: rgba(240,232,223,0.15) !important; }
+        html.dark .border-gray-200   { border-color: rgba(240,232,223,0.15) !important; }
+        html.dark .bg-white           { background-color: #2c2118 !important; }
+        html.dark .bg-\[\#f5efe6\]   { background-color: #221a13 !important; }
+        html.dark .bg-cream           { background-color: #221a13 !important; }
+        html.dark .bg-pink            { background-color: #2c1f16 !important; }
+        html.dark .tool-icon          { border-color: rgba(240,232,223,0.25); box-shadow: 4px 4px 0px rgba(240,232,223,0.15); }
+        html.dark .rounded-2xl.overflow-hidden { box-shadow: none; }
+        html.dark .bg-\[\#1f1f1f\]   { background-color: #3d2b1e !important; }
+
+        /* Dark resume date label */
+        html.dark .bg-\[\#f5efe6\]   { background-color: #2c2118 !important; }
+
+        /* Dark bubble title */
+        html.dark .bubble-title { color: #c4845a; -webkit-text-stroke-color: rgba(240,232,223,0.8); filter: drop-shadow(2px 2px 0px rgba(240,232,223,0.3)); }
+
+        /* Dark cursor hover */
+        html.dark .hovered-cursor { background: #3d2b1e !important; }
+
+        /* Dark hero text */
+        html.dark #hero-title { color: #f0e8df; }
+        html.dark #hero-subtitle p { color: #f0e8df; }
+
+        /* Dark scrollbar */
+        html.dark ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); }
     </style>
 </head>
 <body class="font-body antialiased">
@@ -231,8 +303,14 @@
             <li><a href="#works" class="hover-target">Work</a></li>
             <li><a href="#contact" class="hover-target">Contact</a></li>
         </ul>
-        <div class="nav-hamburger hover-target" id="nav-hamburger" role="button" tabindex="0" aria-label="Open menu" aria-expanded="false" aria-controls="nav-mobile-menu">
-            <span></span><span></span><span></span>
+        <div class="flex items-center gap-2">
+            <button id="dark-toggle" class="hover-target" aria-label="Toggle dark mode">
+                <svg class="dark-icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                <svg class="dark-icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            </button>
+            <div class="nav-hamburger hover-target" id="nav-hamburger" role="button" tabindex="0" aria-label="Open menu" aria-expanded="false" aria-controls="nav-mobile-menu">
+                <span></span><span></span><span></span>
+            </div>
         </div>
     </nav>
     <!-- Mobile Menu -->
@@ -244,20 +322,20 @@
     </div>
 
     <!-- Hero Section -->
-    <section id="main-content" class="panel min-h-screen relative flex items-center justify-center p-4 bg-cream overflow-hidden scroll-section" data-color="#f4ede4">
+    <section id="main-content" class="panel min-h-screen relative flex items-center justify-center p-4 bg-cream overflow-hidden scroll-section" data-color="#f5efe6">
 
         <!-- Pink curved arrow + Name (top-right, like Framer) -->
         <div class="hidden sm:flex absolute top-[10%] right-[8%] md:top-[15%] md:right-[12%] z-20 items-start gap-0" id="hero-name-group">
             <svg width="80" height="80" class="flex-shrink-0 parallax" viewBox="0 0 80 80" fill="none" data-speed="-0.5">
-                <path d="M10 70 C20 30, 50 10, 70 25" stroke="#f8a4c8" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-                <path d="M65 18 L72 26 L60 28" stroke="#f8a4c8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M10 70 C20 30, 50 10, 70 25" stroke="#c4845a" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                <path d="M65 18 L72 26 L60 28" stroke="#c4845a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
             </svg>
-            <span class="font-script text-3xl md:text-5xl text-[#f8a4c8] transform rotate-[-5deg] -ml-2 mt-1" style="filter: drop-shadow(0 1px 2px rgba(0,0,0,0.06));">Aditi Vijay</span>
+            <span class="font-script text-3xl md:text-5xl text-[#c4845a] transform rotate-[-5deg] -ml-2 mt-1" style="filter: drop-shadow(0 1px 2px rgba(0,0,0,0.06));">Aditi Vijay</span>
         </div>
 
         <!-- Pink year (bottom-left, like Framer) -->
         <div class="absolute bottom-12 left-10 md:bottom-20 md:left-24 z-20" id="hero-year">
-            <span class="font-script text-4xl md:text-5xl text-[#f8a4c8] transform rotate-[-8deg] inline-block">2026</span>
+            <span class="font-script text-4xl md:text-5xl text-[#c4845a] transform rotate-[-8deg] inline-block">2026</span>
         </div>
 
         <div class="text-center z-10 relative mt-16 flex flex-col items-center">
@@ -267,25 +345,25 @@
                     <!-- Hand-drawn star outline (pink) — top-left -->
                     <div class="absolute -top-12 -left-10 md:-top-16 md:-left-14 parallax sticker-float" data-speed="1.2">
                         <svg width="50" height="50" viewBox="0 0 50 50" fill="none">
-                            <path d="M25 4 L29 18 L44 18 L32 27 L36 42 L25 33 L14 42 L18 27 L6 18 L21 18 Z" stroke="#f8a4c8" stroke-width="2" stroke-linejoin="round" fill="none"/>
+                            <path d="M25 4 L29 18 L44 18 L32 27 L36 42 L25 33 L14 42 L18 27 L6 18 L21 18 Z" stroke="#c4845a" stroke-width="2" stroke-linejoin="round" fill="none"/>
                         </svg>
                     </div>
                     <!-- Sparkle star (pink, 4-pointed) — top-right area -->
                     <div class="absolute -top-6 right-[20%] parallax sticker-float-r" data-speed="-1">
                         <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                            <path d="M14 2 L16 11 L25 14 L16 17 L14 26 L12 17 L3 14 L12 11 Z" fill="#f8a4c8"/>
+                            <path d="M14 2 L16 11 L25 14 L16 17 L14 26 L12 17 L3 14 L12 11 Z" fill="#c4845a"/>
                         </svg>
                     </div>
                     <!-- Small sparkle (pink) — left of title -->
                     <div class="absolute top-[40%] -left-8 md:-left-12 parallax sticker-float" data-speed="0.8">
                         <svg width="20" height="20" viewBox="0 0 28 28" fill="none">
-                            <path d="M14 2 L16 11 L25 14 L16 17 L14 26 L12 17 L3 14 L12 11 Z" fill="#f8a4c8"/>
+                            <path d="M14 2 L16 11 L25 14 L16 17 L14 26 L12 17 L3 14 L12 11 Z" fill="#c4845a"/>
                         </svg>
                     </div>
                     <!-- Small smile/curl doodle — bottom right -->
                     <div class="absolute -bottom-6 right-[15%] parallax" data-speed="1.5">
                         <svg width="30" height="20" viewBox="0 0 30 20" fill="none">
-                            <path d="M4 4 C10 18, 22 18, 28 8" stroke="#f8a4c8" stroke-width="2" stroke-linecap="round" fill="none"/>
+                            <path d="M4 4 C10 18, 22 18, 28 8" stroke="#c4845a" stroke-width="2" stroke-linecap="round" fill="none"/>
                         </svg>
                     </div>
                 </div>
@@ -297,7 +375,7 @@
                 <p class="font-bold text-xs sm:text-xl md:text-3xl uppercase tracking-wide sm:tracking-widest relative z-10 px-2 whitespace-nowrap" style="font-family: 'Space Grotesk', sans-serif;">Digital Marketing Professional</p>
                 <!-- Wavy pink underline (like Framer reference) -->
                 <svg class="absolute -bottom-3 left-1/2 -translate-x-1/2 z-0" width="100%" height="10" viewBox="0 0 400 10" preserveAspectRatio="none" fill="none">
-                    <path d="M0 5 Q50 0 100 5 Q150 10 200 5 Q250 0 300 5 Q350 10 400 5" stroke="#f8a4c8" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                    <path d="M0 5 Q50 0 100 5 Q150 10 200 5 Q250 0 300 5 Q350 10 400 5" stroke="#c4845a" stroke-width="2.5" stroke-linecap="round" fill="none"/>
                 </svg>
             </div>
         </div>
@@ -310,7 +388,7 @@
     </section>
 
     <!-- About Section -->
-    <section id="about" class="panel relative py-12 md:py-20 px-5 md:px-12 lg:px-20 bg-pink scroll-section overflow-hidden" data-color="#f8d5e0">
+    <section id="about" class="panel relative py-12 md:py-20 px-5 md:px-12 lg:px-20 bg-pink scroll-section overflow-hidden" data-color="#e8c9a8">
 
         <!-- Brush stroke doodles — top left (matching Framer reference) -->
         <div class="absolute top-0 left-0 pointer-events-none z-10" style="transform: translate(-10px, -10px);">
@@ -358,16 +436,16 @@
             </svg>
         </div>
 
-        <h2 class="font-display text-[12vw] md:text-[9vw] leading-[0.85] mb-12 text-left text-[#f8d5e0] tracking-tighter uppercase relative z-10" style="-webkit-text-stroke: 2px #111; text-shadow: 3px 3px 0px #111; font-family: 'Lilita One', cursive;">DIGITAL MARKETER</h2>
+        <h2 class="font-display text-[12vw] md:text-[9vw] leading-[0.85] mb-12 text-left text-[#e8c9a8] tracking-tighter uppercase relative z-10" style="-webkit-text-stroke: 2px #111; text-shadow: 3px 3px 0px #111; font-family: 'Lilita One', cursive;">DIGITAL MARKETER</h2>
 
         <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 relative z-10 items-center">
 
             <!-- Left: Bio text & Tools -->
             <div class="flex flex-col justify-center gap-6 md:gap-10 relative z-20 lg:pl-4 reveal-left">
                 <div class="text-[15px] md:text-[17px] lg:text-[19px] leading-relaxed font-medium text-[#222] flex flex-col gap-4">
-                    <p>Hey, I'm <span class="font-bold">Aditi</span>, and I'm obsessed with <span style="background:#fca5a5; padding: 2px 8px; border-radius: 6px;" class="font-bold text-black">social media</span>. I help brands grow online by creating content that grabs attention and keeps people engaged.</p>
+                    <p>Hey, I'm <span class="font-bold">Aditi</span>, and I'm obsessed with <span style="background:#d4956a; padding: 2px 8px; border-radius: 6px;" class="font-bold text-black">social media</span>. I help brands grow online by creating content that grabs attention and keeps people engaged.</p>
                     <p>From <span style="background:#fde047; padding: 2px 8px; border-radius: 6px;" class="font-bold text-black">scroll-stopping Reels</span> to planning complete <span class="font-bold">content calendars</span>, I make sure every piece of content looks great and serves a purpose.</p>
-                    <p>As an artist and <span style="background:#fca5a5; padding: 2px 8px; border-radius: 6px;" class="font-bold text-black">social media marketer</span>, I bring both <span class="font-bold">creativity and strategy</span> to the table. My goal is simple: help brands go from being overlooked to becoming <span style="background:#fde047; padding: 2px 8px; border-radius: 6px;" class="font-bold text-black">memorable and impactful</span> online.</p>
+                    <p>As an artist and <span style="background:#d4956a; padding: 2px 8px; border-radius: 6px;" class="font-bold text-black">social media marketer</span>, I bring both <span class="font-bold">creativity and strategy</span> to the table. My goal is simple: help brands go from being overlooked to becoming <span style="background:#fde047; padding: 2px 8px; border-radius: 6px;" class="font-bold text-black">memorable and impactful</span> online.</p>
                     <p>In today's digital world, every business needs a strong online presence that feels authentic, engaging, and relatable — that's exactly what I help create. So, if you're ready to make your brand stand out, <span class="font-bold">let's make it happen.</span></p>
                 </div>
 
@@ -489,8 +567,8 @@
                     <!-- Theme color swatches — black, pink, cream (actual page theme colors) -->
                     <div class="flex items-center gap-2" style="margin-left: 28px;">
                         <div class="w-9 h-9 md:w-11 md:h-11 rounded-full" style="background:#111111; border: 2px solid #111;"></div>
-                        <div class="w-9 h-9 md:w-11 md:h-11 rounded-full" style="background:#f8d5e0; border: 2px solid rgba(0,0,0,0.25);"></div>
-                        <div class="w-9 h-9 md:w-11 md:h-11 rounded-full" style="background:#f4ede4; border: 2px solid rgba(0,0,0,0.18);"></div>
+                        <div class="w-9 h-9 md:w-11 md:h-11 rounded-full" style="background:#e8c9a8; border: 2px solid rgba(0,0,0,0.25);"></div>
+                        <div class="w-9 h-9 md:w-11 md:h-11 rounded-full" style="background:#f5efe6; border: 2px solid rgba(0,0,0,0.18);"></div>
                     </div>
 
                     <!-- Hand-drawn "6" whose tail IS the arrow pointing up at the swatches — single SVG path -->
@@ -518,7 +596,7 @@
     </section>
 
     <!-- Resume / Timeline Section -->
-    <section id="resume" class="panel py-20 bg-cream scroll-section relative" data-color="#f4ede4">
+    <section id="resume" class="panel py-20 bg-cream scroll-section relative" data-color="#f5efe6">
         <style>
             /* SVG icon size in contact list */
             .contact-icon { width: 32px; height: 32px; flex-shrink: 0; }
@@ -583,15 +661,15 @@
                     <div class="reveal" style="transition-delay:0.2s">
                         <h2 class="bubble-title text-6xl mb-8 tracking-wide">SKILLS</h2>
                         <div class="flex flex-wrap gap-3">
-                            <span class="bg-[#1f1f1f] text-[#f8d5e0] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105">Digital Marketing</span>
-                            <span class="bg-[#1f1f1f] text-[#f8d5e0] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105">Social Media Marketing</span>
-                            <span class="bg-[#1f1f1f] text-[#f8d5e0] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105">Email Marketing</span>
-                            <span class="bg-[#1f1f1f] text-[#f8d5e0] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105">Content Creation</span>
-                            <span class="bg-[#1f1f1f] text-[#f8d5e0] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105">SEO &amp; Backlinking</span>
-                            <span class="bg-[#1f1f1f] text-[#f8d5e0] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105">Google Analytics</span>
-                            <span class="bg-[#1f1f1f] text-[#f8d5e0] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105">CRM Tools</span>
-                            <span class="bg-[#1f1f1f] text-[#f8d5e0] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105">Canva Design</span>
-                            <span class="bg-[#1f1f1f] text-[#f8d5e0] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105">Visual Branding</span>
+                            <span class="bg-[#1f1f1f] text-[#e8c9a8] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105">Digital Marketing</span>
+                            <span class="bg-[#1f1f1f] text-[#e8c9a8] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105">Social Media Marketing</span>
+                            <span class="bg-[#1f1f1f] text-[#e8c9a8] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105">Email Marketing</span>
+                            <span class="bg-[#1f1f1f] text-[#e8c9a8] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105">Content Creation</span>
+                            <span class="bg-[#1f1f1f] text-[#e8c9a8] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105">SEO &amp; Backlinking</span>
+                            <span class="bg-[#1f1f1f] text-[#e8c9a8] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105">Google Analytics</span>
+                            <span class="bg-[#1f1f1f] text-[#e8c9a8] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105">CRM Tools</span>
+                            <span class="bg-[#1f1f1f] text-[#e8c9a8] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105">Canva Design</span>
+                            <span class="bg-[#1f1f1f] text-[#e8c9a8] px-5 py-2.5 rounded text-lg font-medium hover-target transition hover:scale-105">Visual Branding</span>
                         </div>
                     </div>
 
@@ -623,7 +701,7 @@
                         <!-- Job 1 -->
                         <div class="mb-16 pt-2 relative">
                             <div class="lg:hidden font-semibold text-gray-500 text-sm mb-2">Mar 2026 – Present</div>
-                            <div class="hidden lg:block absolute -left-[152px] top-1 w-[130px] text-center font-bold text-gray-700 text-[15px] leading-snug bg-[#f4ede4] py-1 px-1 z-10">Mar 2026–Present</div>
+                            <div class="hidden lg:block absolute -left-[152px] top-1 w-[130px] text-center font-bold text-gray-700 text-[15px] leading-snug bg-cream py-1 px-1 z-10">Mar 2026–Present</div>
                             <h3 class="font-bold text-[1.7rem] text-gray-800 mb-1">Social Media Management Intern</h3>
                             <p class="text-gray-500 mb-4 text-lg italic">TalkNLock</p>
                             <ul class="list-disc pl-5 space-y-2 text-gray-700 text-base lg:text-[1.05rem]">
@@ -639,7 +717,7 @@
                         <!-- Job 2 -->
                         <div class="mb-16 pt-2 relative">
                             <div class="lg:hidden font-semibold text-gray-500 text-sm mb-2">July 2025 – Sept 2025</div>
-                            <div class="hidden lg:block absolute -left-[152px] top-1 w-[130px] text-center font-bold text-gray-700 text-[15px] leading-snug bg-[#f4ede4] py-1 px-1 z-10">July 2025–Sept 2025</div>
+                            <div class="hidden lg:block absolute -left-[152px] top-1 w-[130px] text-center font-bold text-gray-700 text-[15px] leading-snug bg-cream py-1 px-1 z-10">July 2025–Sept 2025</div>
                             <h3 class="font-bold text-[1.7rem] text-gray-800 mb-1">Digital Marketing Intern</h3>
                             <p class="text-gray-500 mb-4 text-lg italic">Lokmat</p>
                             <ul class="list-disc pl-5 space-y-2 text-gray-700 text-base lg:text-[1.05rem]">
@@ -655,7 +733,7 @@
                         <!-- Job 3 -->
                         <div class="mb-16 relative">
                             <div class="lg:hidden font-semibold text-gray-500 text-sm mb-2">July 2020 – April 2024</div>
-                            <div class="hidden lg:block absolute -left-[152px] top-1 w-[130px] text-center font-bold text-gray-700 text-[15px] leading-snug bg-[#f4ede4] py-1 px-1 z-10">July 2020–April 2024</div>
+                            <div class="hidden lg:block absolute -left-[152px] top-1 w-[130px] text-center font-bold text-gray-700 text-[15px] leading-snug bg-cream py-1 px-1 z-10">July 2020–April 2024</div>
                             <h3 class="font-bold text-[1.7rem] text-gray-800 mb-1">Accountant</h3>
                             <p class="text-gray-500 mb-4 text-lg italic">Bandikui School</p>
                             <ul class="list-disc pl-5 space-y-2 text-gray-700 text-base lg:text-[1.05rem]">
@@ -674,7 +752,7 @@
     </section>
 
     <!-- Projects (Horizontal Scroll) -->
-    <section id="works" class="panel scroll-section bg-[#f0ede8] text-black" data-color="#f0ede8">
+    <section id="works" class="panel scroll-section bg-[#ede4d8] text-black" data-color="#ede4d8">
 
         <!-- Section heading -->
         <div class="px-6 lg:px-20 pt-20 pb-2">
@@ -769,7 +847,7 @@
     </section>
 
     <!-- Photography & Videography Section -->
-    <section id="photography" class="panel py-20 bg-[#f0ede8] text-black scroll-section" data-color="#f0ede8">
+    <section id="photography" class="panel py-20 bg-[#ede4d8] text-black scroll-section" data-color="#ede4d8">
         <div class="px-6 lg:px-20 mb-10">
             <h2 class="bubble-title text-[8vw] hover-target reveal">PHOTOGRAPHY &amp; VIDEOGRAPHY</h2>
             <p class="text-black/50 font-medium mt-2 reveal">Behind-the-lens — personal photography, product styling, and content shoots.</p>
@@ -791,7 +869,7 @@
     </section>
 
     <!-- Rolling Marquee Section -->
-    <section class="py-8 bg-[#f8d5e0] overflow-hidden scroll-section" data-color="#f8d5e0">
+    <section class="py-8 bg-[#e8c9a8] overflow-hidden scroll-section" data-color="#e8c9a8">
         <div class="overflow-hidden mb-4">
             <div class="marquee-track">
                 <span class="font-display text-5xl uppercase text-black">Digital Marketing ✦</span>
@@ -831,21 +909,21 @@
     <!-- Footer -->
     <footer id="contact" class="py-28 bg-[#111] text-center scroll-section relative overflow-hidden" data-color="#111111">
         <!-- Big THANK YOU -->
-        <h2 class="font-display text-[20vw] leading-none uppercase text-transparent mb-8 select-none reveal" id="footer-title" style="-webkit-text-stroke: 1.5px #f8d5e0;">THANK YOU</h2>
+        <h2 class="font-display text-[20vw] leading-none uppercase text-transparent mb-8 select-none reveal" id="footer-title" style="-webkit-text-stroke: 1.5px #e8c9a8;">THANK YOU</h2>
 
-        <p class="font-script text-4xl text-[#f8d5e0] mb-10">Let's grow your brand together</p>
+        <p class="font-script text-4xl text-[#e8c9a8] mb-10">Let's grow your brand together</p>
 
         <div class="flex justify-center gap-6 mb-10">
-            <a href="https://linkedin.com/in/aditivijay11" target="_blank" aria-label="Aditi Vijay on LinkedIn" class="w-14 h-14 bg-[#f8d5e0] text-black rounded-full flex items-center justify-center hover:scale-110 transition-transform hover-target font-bold">
+            <a href="https://linkedin.com/in/aditivijay11" target="_blank" aria-label="Aditi Vijay on LinkedIn" class="w-14 h-14 bg-[#e8c9a8] text-black rounded-full flex items-center justify-center hover:scale-110 transition-transform hover-target font-bold">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.37V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zm1.78 13.02H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45C23.21 24 24 23.23 24 22.28V1.72C24 .77 23.21 0 22.22 0z"/></svg>
             </a>
-            <a href="https://www.instagram.com/bas.kar_chinki/" target="_blank" aria-label="Aditi Vijay on Instagram" class="w-14 h-14 bg-[#f8d5e0] text-black rounded-full flex items-center justify-center hover:scale-110 transition-transform hover-target">
+            <a href="https://www.instagram.com/bas.kar_chinki/" target="_blank" aria-label="Aditi Vijay on Instagram" class="w-14 h-14 bg-[#e8c9a8] text-black rounded-full flex items-center justify-center hover:scale-110 transition-transform hover-target">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
             </a>
-            <a href="mailto:aditivijay642@gmail.com" aria-label="Email Aditi Vijay" class="w-14 h-14 bg-[#f8d5e0] text-black rounded-full flex items-center justify-center hover:scale-110 transition-transform hover-target">
+            <a href="mailto:aditivijay642@gmail.com" aria-label="Email Aditi Vijay" class="w-14 h-14 bg-[#e8c9a8] text-black rounded-full flex items-center justify-center hover:scale-110 transition-transform hover-target">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
             </a>
-            <a href="tel:+918239525203" aria-label="Call Aditi Vijay" class="w-14 h-14 bg-[#f8d5e0] text-black rounded-full flex items-center justify-center hover:scale-110 transition-transform hover-target">
+            <a href="tel:+918239525203" aria-label="Call Aditi Vijay" class="w-14 h-14 bg-[#e8c9a8] text-black rounded-full flex items-center justify-center hover:scale-110 transition-transform hover-target">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.18 6.18l.95-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             </a>
         </div>
@@ -925,14 +1003,21 @@
 
         // ===== BACKGROUND COLOR TRANSITIONS =====
         const sections = document.querySelectorAll('.scroll-section');
+        const darkBgMap = { '#f5efe6':'#1c1714', '#e8c9a8':'#2c1f16', '#ede4d8':'#1a1410', '#111111':'#111111' };
         sections.forEach(section => {
-            const color = section.dataset.color;
+            const lightColor = section.dataset.color;
             ScrollTrigger.create({
                 trigger: section,
                 start: 'top 50%',
                 end: 'bottom 50%',
-                onEnter: () => gsap.to('body', { backgroundColor: color, duration: 0.5 }),
-                onEnterBack: () => gsap.to('body', { backgroundColor: color, duration: 0.5 })
+                onEnter: () => {
+                    const c = document.documentElement.classList.contains('dark') ? (darkBgMap[lightColor] || '#1c1714') : lightColor;
+                    gsap.to('body', { backgroundColor: c, duration: 0.5 });
+                },
+                onEnterBack: () => {
+                    const c = document.documentElement.classList.contains('dark') ? (darkBgMap[lightColor] || '#1c1714') : lightColor;
+                    gsap.to('body', { backgroundColor: c, duration: 0.5 });
+                }
             });
         });
 
@@ -961,6 +1046,37 @@
         });
 
         // Horizontal scroll removed — works section is now vertical case-study layout
+
+        // ===== DARK MODE TOGGLE =====
+        const darkToggle = document.getElementById('dark-toggle');
+        const htmlEl = document.documentElement;
+
+        const darkSectionColors = {
+            '#f5efe6': '#1c1714',
+            '#e8c9a8': '#2c1f16',
+            '#ede4d8': '#1a1410',
+            '#111111': '#111111',
+        };
+
+        function getCurrentBgColor(isDark) {
+            const mid = window.innerHeight / 2;
+            const visible = [...sections].find(s => {
+                const r = s.getBoundingClientRect();
+                return r.top <= mid && r.bottom >= mid;
+            });
+            const color = visible ? visible.dataset.color : '#f5efe6';
+            return isDark ? (darkSectionColors[color] || '#1c1714') : color;
+        }
+
+        function applyDark(isDark) {
+            htmlEl.classList.toggle('dark', isDark);
+            localStorage.setItem('darkMode', isDark ? '1' : '0');
+            gsap.set('body', { backgroundColor: getCurrentBgColor(isDark) });
+        }
+
+        if (localStorage.getItem('darkMode') === '1') applyDark(true);
+
+        darkToggle.addEventListener('click', () => applyDark(!htmlEl.classList.contains('dark')));
     </script>
 
     <!-- Download & Copy Protection -->
