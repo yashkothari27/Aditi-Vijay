@@ -177,6 +177,12 @@
             transition: all 0.3s ease;
             white-space: nowrap;
         }
+        .project-badge-sm {
+            font-size: 0.58rem;
+            padding: 3px 10px;
+            letter-spacing: 0.08em;
+        }
+        html.dark .brand-logo-bag-central { filter: invert(1) brightness(1.4); }
         .project-card:hover .project-badge {
             border-color: rgba(0,0,0,0.35);
             color: rgba(0,0,0,0.8);
@@ -1079,9 +1085,12 @@
                         <span class="font-headline text-sm font-bold text-black/25 tracking-widest">01</span>
                         <h3 class="font-headline font-black text-[11vw] md:text-[5.5vw] leading-[0.9] uppercase text-black project-title">BAG CENTRAL</h3>
                     </div>
-                    <div class="flex items-center gap-3 mb-1">
-                        <span class="project-badge">Brand Design</span>
-                        <span class="project-badge">Instagram</span>
+                    <div class="flex flex-col items-end gap-2 mb-1">
+                        <img src="public/assets/The_Bag_Central_Final_File_Main_Logo.svg" alt="The Bag Central logo" class="brand-logo-bag-central h-12 md:h-16 w-auto object-contain"/>
+                        <div class="flex items-center gap-2">
+                            <span class="project-badge project-badge-sm">Brand Design</span>
+                            <span class="project-badge project-badge-sm">Instagram</span>
+                        </div>
                     </div>
                 </div>
                 <p class="font-body text-black/50 text-sm md:text-base mb-6 max-w-xl">Instagram stories and post designs for a fashion accessories brand — building a bold, recognizable visual identity.</p>
@@ -1125,9 +1134,12 @@
                         <span class="font-headline text-sm font-bold text-black/25 tracking-widest">02</span>
                         <h3 class="font-headline font-black text-[11vw] md:text-[5.5vw] leading-[0.9] uppercase text-black project-title">TRIMURTI</h3>
                     </div>
-                    <div class="flex items-center gap-3 mb-1">
-                        <span class="project-badge">Restaurant</span>
-                        <span class="project-badge">Social Media</span>
+                    <div class="flex flex-col items-end gap-2 mb-1">
+                        <img src="public/assets/Trimurti%20Doors.jpg" alt="Trimurti Doors World logo" class="h-16 w-16 md:h-20 md:w-20 rounded-full object-cover flex-shrink-0"/>
+                        <div class="flex items-center gap-2">
+                            <span class="project-badge project-badge-sm">Social Media</span>
+                            <span class="project-badge project-badge-sm">Branding</span>
+                        </div>
                     </div>
                 </div>
                 <p class="font-body text-black/50 text-sm md:text-base mb-6 max-w-xl">Complete social media presence for a restaurant brand — engaging food content, Reels, and post designs that drive footfall.</p>
@@ -1155,14 +1167,17 @@
                         <span class="font-headline text-sm font-bold text-black/25 tracking-widest">03</span>
                         <h3 class="font-headline font-black text-[11vw] md:text-[5.5vw] leading-[0.9] uppercase text-black project-title">AUROROMA</h3>
                     </div>
-                    <div class="flex items-center gap-3 mb-1">
-                        <span class="project-badge">Social Media</span>
-                        <span class="project-badge">Branding</span>
+                    <div class="flex flex-col items-end gap-2 mb-1">
+                        <img src="public/assets/Aurooroma_FINAL_Logo1.avif" alt="Auroroma — Elements of Purity logo" class="h-14 md:h-16 w-auto object-contain"/>
+                        <div class="flex items-center gap-2">
+                            <span class="project-badge project-badge-sm">Social Media</span>
+                            <span class="project-badge project-badge-sm">Branding</span>
+                        </div>
                     </div>
                 </div>
                 <p class="font-body text-black/50 text-sm md:text-base mb-6 max-w-xl">Visual branding and social media content for a lifestyle brand — curating a cohesive aesthetic that resonates with the target audience.</p>
                 <div class="grid grid-cols-12 gap-3 md:gap-4">
-                    <a href="public/assets/auroroma-posts.pdf" target="_blank" rel="noopener" aria-label="Auroroma posts PDF" class="col-span-12 md:col-span-7 relative rounded-2xl overflow-hidden group/pdf block h-56 md:h-[420px] project-img-wrap img-mask-reveal">
+                    <a href="public/assets/auroroma-posts.pdf" target="_blank" rel="noopener" aria-label="Auroroma posts PDF" class="col-span-12 relative rounded-2xl overflow-hidden group/pdf block h-56 md:h-[420px] project-img-wrap img-mask-reveal">
                         <img src="public/assets/auroroma-posts-cover.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Auroroma posts PDF"/>
                         <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover/pdf:opacity-100 transition-opacity duration-400 flex items-end p-6">
                             <span class="font-bold text-white text-sm uppercase tracking-widest flex items-center gap-2">
@@ -1172,9 +1187,6 @@
                         </div>
                         <span class="absolute top-3 right-3 bg-black/50 backdrop-blur-md rounded-full px-3 py-1.5 text-white text-xs font-bold">PDF · 5 pages</span>
                     </a>
-                    <div class="col-span-12 md:col-span-5 rounded-2xl overflow-hidden img-mask-reveal project-img-wrap h-56 md:h-[420px]">
-                        <video src="public/assets/creative-video-2.mp4" autoplay muted loop playsinline preload="metadata" class="w-full h-full object-cover" aria-label="Marketing reel"></video>
-                    </div>
                 </div>
             </div>
 
