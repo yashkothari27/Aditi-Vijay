@@ -4,11 +4,18 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
     <title>Aditi Vijay | Digital Marketing Portfolio</title>
+    <meta name="description" content="Aditi Vijay is a digital marketing professional specializing in social media management, content creation, and brand strategy. View selected work in Instagram content, SEO, and campaign design."/>
+    <meta property="og:title" content="Aditi Vijay | Digital Marketing Portfolio"/>
+    <meta property="og:description" content="Digital marketing professional specializing in social media management, content creation, and brand strategy."/>
+    <meta property="og:image" content="public/assets/girl-portrait.png"/>
+    <meta property="og:type" content="website"/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23f5efe6'/%3E%3Ctext x='50' y='68' font-family='Georgia,serif' font-weight='700' font-size='52' text-anchor='middle' fill='%23111111'%3EAV%3C/text%3E%3C/svg%3E"/>
     <script>
         document.documentElement.classList.add('js-active');
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;700&family=League+Gothic&family=Dancing+Script:wght@400;700&family=Lilita+One&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=League+Gothic&family=Dancing+Script:wght@400;700&family=Lilita+One&display=swap" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
@@ -45,11 +52,11 @@
 
         /* ===== CUSTOM CURSOR ===== */
         .custom-cursor {
-            position: fixed; top: -100px; left: -100px; width: 32px; height: 32px; background: black;
+            position: fixed; top: 0; left: 0; width: 32px; height: 32px; background: black;
             border-radius: 50%; pointer-events: none; z-index: 10000;
             display: flex; align-items: center; justify-content: center;
-            transform: translate(-50%, -50%);
             opacity: 0;
+            will-change: transform;
             transition: width 0.25s cubic-bezier(.4,0,.2,1), height 0.25s cubic-bezier(.4,0,.2,1), background 0.25s, opacity 0.2s;
             mix-blend-mode: multiply;
         }
@@ -241,6 +248,22 @@
             transform: translateY(-4px);
             box-shadow: 0 20px 60px rgba(0,0,0,0.12);
         }
+        /* ===== SPOTLIGHT CARD (cursor-following glow, ported from 21st.dev pattern) ===== */
+        .project-img-wrap::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 5;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            background: radial-gradient(280px circle at var(--spot-x, 50%) var(--spot-y, 50%), rgba(232,201,168,0.35), transparent 70%);
+            mix-blend-mode: soft-light;
+        }
+        .project-img-wrap:hover::after { opacity: 1; }
+        @media (hover: none), (pointer: coarse) {
+            .project-img-wrap::after { display: none; }
+        }
         .project-img {
             transition: transform 0.6s cubic-bezier(.4,0,.2,1);
         }
@@ -300,6 +323,39 @@
 
         /* ===== HERO ===== */
         .hero-title { font-size: clamp(2.4rem, 16vw, 11rem); }
+        /* Ambient aurora background, ported from 21st.dev's Aurora Background hero pattern */
+        .hero-aurora-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(70px);
+            opacity: 0.55;
+            will-change: transform;
+        }
+        .hero-aurora-blob-1 {
+            width: 46vw; height: 46vw; top: -12%; left: -8%;
+            background: radial-gradient(circle, #e8c9a8, transparent 70%);
+            animation: aurora-drift-a 24s ease-in-out infinite;
+        }
+        .hero-aurora-blob-2 {
+            width: 38vw; height: 38vw; bottom: -14%; right: -6%;
+            background: radial-gradient(circle, #d4956a, transparent 70%);
+            animation: aurora-drift-b 28s ease-in-out infinite;
+        }
+        .hero-aurora-blob-3 {
+            width: 30vw; height: 30vw; top: 28%; left: 55%;
+            background: radial-gradient(circle, #fbcfe8, transparent 70%);
+            opacity: 0.4;
+            animation: aurora-drift-c 32s ease-in-out infinite;
+        }
+        @keyframes aurora-drift-a { 0%, 100% { transform: translate(0,0) scale(1); } 50% { transform: translate(4%, 6%) scale(1.08); } }
+        @keyframes aurora-drift-b { 0%, 100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-5%, -4%) scale(1.1); } }
+        @keyframes aurora-drift-c { 0%, 100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-6%, 5%) scale(0.95); } }
+        html.dark .hero-aurora-blob-1 { background: radial-gradient(circle, #7a4e30, transparent 70%); }
+        html.dark .hero-aurora-blob-2 { background: radial-gradient(circle, #c4845a, transparent 70%); opacity: 0.4; }
+        html.dark .hero-aurora-blob-3 { background: radial-gradient(circle, #5c2f3a, transparent 70%); opacity: 0.3; }
+        @keyframes orbit-spin { to { transform: rotate(360deg); } }
+        .hero-orbit-ring-slow { animation: orbit-spin 40s linear infinite; }
+        .hero-orbit-ring-fast { animation: orbit-spin 26s linear infinite reverse; }
         @media (max-width: 380px) {
             #hero-subtitle p { white-space: normal; line-height: 1.3; }
         }
@@ -339,7 +395,7 @@
 
         /* ===== REDUCED MOTION ===== */
         @media (prefers-reduced-motion: reduce) {
-            .sticker-float, .sticker-float-r, .bounce-arrow, .marquee-track { animation: none !important; }
+            .sticker-float, .sticker-float-r, .bounce-arrow, .marquee-track, .hero-orbit-ring-slow, .hero-orbit-ring-fast, .hero-aurora-blob { animation: none !important; }
             .reveal, .reveal-left, .reveal-right { transition: none !important; opacity: 1 !important; transform: none !important; }
             #scroll-progress { display: none; }
         }
@@ -578,6 +634,19 @@
             background-position: 0% 0;
         }
 
+        /* ===== FOOTER ROTATING WORD (ported from 21st.dev's TextRotate pattern) ===== */
+        .footer-rotate-pill {
+            background: #e8c9a8;
+            color: #111;
+            padding: 2px 16px;
+            border-radius: 100px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            vertical-align: middle;
+        }
+        html.dark .footer-rotate-pill { background: #c4845a; color: #16120e; }
+
         /* ===== MAGNETIC BUTTON ===== */
         .magnetic-btn {
             transition: transform 0.15s ease-out;
@@ -647,7 +716,7 @@
 
     <!-- Floating Navigation -->
     <nav id="site-nav">
-        <a href="#" class="nav-logo hover-target">AV ✦</a>
+        <a href="#main-content" class="nav-logo hover-target">AV ✦</a>
         <ul class="nav-links">
             <li><a href="#about" class="hover-target">About</a></li>
             <li><a href="#resume" class="hover-target">Resume</a></li>
@@ -673,7 +742,13 @@
     </div>
 
     <!-- Hero Section -->
-    <section id="main-content" class="panel min-h-screen relative flex items-center justify-center p-4 bg-cream overflow-hidden scroll-section" data-color="#f5efe6">
+    <section id="main-content" class="panel min-h-[100dvh] relative flex items-center justify-center p-4 bg-cream overflow-hidden scroll-section" data-color="#f5efe6">
+        <!-- Aurora ambient background (ported from 21st.dev's Aurora Background hero pattern) -->
+        <div class="hero-aurora absolute inset-0 z-0 pointer-events-none" aria-hidden="true">
+            <div class="hero-aurora-blob hero-aurora-blob-1"></div>
+            <div class="hero-aurora-blob hero-aurora-blob-2"></div>
+            <div class="hero-aurora-blob hero-aurora-blob-3"></div>
+        </div>
         <!-- Floating Particles -->
         <div id="hero-particles" class="absolute inset-0 pointer-events-none z-0" aria-hidden="true"></div>
 
@@ -721,7 +796,18 @@
                     </div>
                 </div>
 
-                <h1 class="hero-title font-display leading-[0.75] uppercase tracking-tighter m-0 text-black" id="hero-title">PORTFOLIO</h1>
+                <!-- Rotating orbit emblem — hand-drawn rings behind the hero title, like a scrapbook centerpiece -->
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-[560px] aspect-square pointer-events-none z-0 parallax" id="hero-orbit" data-speed="0.6" aria-hidden="true">
+                    <svg viewBox="0 0 200 200" class="w-full h-full hero-orbit-ring-slow" fill="none">
+                        <ellipse cx="100" cy="100" rx="96" ry="80" stroke="#c4845a" stroke-width="1.5" stroke-dasharray="3 6" opacity="0.5" transform="rotate(-12 100 100)"/>
+                    </svg>
+                    <svg viewBox="0 0 200 200" class="w-full h-full hero-orbit-ring-fast" fill="none" style="position:absolute; inset:0;">
+                        <ellipse cx="100" cy="100" rx="72" ry="88" stroke="#d4956a" stroke-width="1.5" opacity="0.6" transform="rotate(20 100 100)"/>
+                        <circle cx="100" cy="12" r="4" fill="#c4845a"/>
+                    </svg>
+                </div>
+
+                <h1 class="hero-title font-display leading-[0.75] uppercase tracking-tighter m-0 text-black relative z-10" id="hero-title">PORTFOLIO</h1>
             </div>
 
             <div class="inline-block relative mt-8" id="hero-subtitle">
@@ -799,7 +885,7 @@
                     <p>Hey, I'm <span class="font-bold">Aditi</span>, and I'm obsessed with <span style="background:#d4956a; padding: 2px 8px; border-radius: 6px;" class="font-bold text-black">social media</span>. I help brands grow online by creating content that grabs attention and keeps people engaged.</p>
                     <p>From <span style="background:#fde047; padding: 2px 8px; border-radius: 6px;" class="font-bold text-black">scroll-stopping Reels</span> to planning complete <span class="font-bold">content calendars</span>, I make sure every piece of content looks great and serves a purpose.</p>
                     <p>As an artist and <span style="background:#d4956a; padding: 2px 8px; border-radius: 6px;" class="font-bold text-black">social media marketer</span>, I bring both <span class="font-bold">creativity and strategy</span> to the table. My goal is simple: help brands go from being overlooked to becoming <span style="background:#fde047; padding: 2px 8px; border-radius: 6px;" class="font-bold text-black">memorable and impactful</span> online.</p>
-                    <p>In today's digital world, every business needs a strong online presence that feels authentic, engaging, and relatable — that's exactly what I help create. So, if you're ready to make your brand stand out, <span class="font-bold">let's make it happen.</span></p>
+                    <p>In today's digital world, every business needs a strong online presence that feels authentic, engaging, and relatable. That's exactly what I help create. So, if you're ready to make your brand stand out, <span class="font-bold">let's make it happen.</span></p>
                 </div>
 
                 <!-- View Resume Button -->
@@ -1000,7 +1086,7 @@
                     <div>
                         <h2 class="bubble-title text-6xl mb-8 tracking-wide">EDUCATION</h2>
                         <div class="flex gap-5">
-                            <div class="flex-shrink-0 font-semibold text-gray-500 text-[15px] leading-snug w-[100px] pt-1">2024–2026</div>
+                            <div class="flex-shrink-0 font-semibold text-gray-500 text-[15px] leading-snug w-[100px] pt-1">2024-2026</div>
                             <div>
                                 <h3 class="font-bold text-2xl lg:text-[1.6rem] text-gray-800 mb-1 leading-snug">MBA in Business Administration</h3>
                                 <p class="text-gray-500 mb-4 text-lg italic">International School of Informatics &amp; Management</p>
@@ -1056,8 +1142,8 @@
 
                         <!-- Job 1 -->
                         <div class="mb-16 pt-2 relative">
-                            <div class="lg:hidden font-semibold text-gray-500 text-sm mb-2">Mar 2026 – Present</div>
-                            <div class="hidden lg:block absolute timeline-date top-1 text-center font-bold text-gray-700 text-[15px] leading-snug bg-cream py-1 px-1 z-10">Mar 2026–Present</div>
+                            <div class="lg:hidden font-semibold text-gray-500 text-sm mb-2">Mar 2026 - Present</div>
+                            <div class="hidden lg:block absolute timeline-date top-1 text-center font-bold text-gray-700 text-[15px] leading-snug bg-cream py-1 px-1 z-10">Mar 2026-Present</div>
                             <h3 class="font-bold text-[1.7rem] text-gray-800 mb-1">Social Media Management</h3>
                             <p class="text-gray-500 mb-4 text-lg italic">TalkNLock</p>
                             <ul class="list-disc pl-5 space-y-2 text-gray-700 text-base lg:text-[1.05rem]">
@@ -1072,8 +1158,8 @@
 
                         <!-- Job 2 -->
                         <div class="mb-16 pt-2 relative">
-                            <div class="lg:hidden font-semibold text-gray-500 text-sm mb-2">Mar 2026 – June 2026</div>
-                            <div class="hidden lg:block absolute timeline-date top-1 text-center font-bold text-gray-700 text-[15px] leading-snug bg-cream py-1 px-1 z-10">Mar 2026–June 2026</div>
+                            <div class="lg:hidden font-semibold text-gray-500 text-sm mb-2">Mar 2026 - June 2026</div>
+                            <div class="hidden lg:block absolute timeline-date top-1 text-center font-bold text-gray-700 text-[15px] leading-snug bg-cream py-1 px-1 z-10">Mar 2026-June 2026</div>
                             <h3 class="font-bold text-[1.7rem] text-gray-800 mb-1">Social Media Management Intern</h3>
                             <p class="text-gray-500 mb-4 text-lg italic">Merge Consultancy</p>
                             <ul class="list-disc pl-5 space-y-2 text-gray-700 text-base lg:text-[1.05rem]">
@@ -1086,12 +1172,12 @@
 
                         <!-- Job 3 -->
                         <div class="mb-16 relative">
-                            <div class="lg:hidden font-semibold text-gray-500 text-sm mb-2">July 2025 – Sept 2025</div>
-                            <div class="hidden lg:block absolute timeline-date top-1 text-center font-bold text-gray-700 text-[15px] leading-snug bg-cream py-1 px-1 z-10">July 2025–Sept 2025</div>
+                            <div class="lg:hidden font-semibold text-gray-500 text-sm mb-2">July 2025 - Sept 2025</div>
+                            <div class="hidden lg:block absolute timeline-date top-1 text-center font-bold text-gray-700 text-[15px] leading-snug bg-cream py-1 px-1 z-10">July 2025-Sept 2025</div>
                             <h3 class="font-bold text-[1.7rem] text-gray-800 mb-1">Digital Marketing Intern</h3>
                             <p class="text-gray-500 mb-4 text-lg italic">Lokmat</p>
                             <ul class="list-disc pl-5 space-y-2 text-gray-700 text-base lg:text-[1.05rem]">
-                                <li>Executed SEO strategy — blog optimization, backlinking &amp; keyword research</li>
+                                <li>Executed SEO strategy: blog optimization, backlinking &amp; keyword research</li>
                                 <li>Analyzed website performance using Google Search Console</li>
                                 <li>Created engaging social media content and reels</li>
                                 <li>Designed marketing creatives using Canva</li>
@@ -1137,7 +1223,7 @@
                         </div>
                     </div>
                 </div>
-                <p class="font-body text-black/50 text-sm md:text-base mb-6 max-w-xl">Instagram stories and post designs for a fashion accessories brand — building a bold, recognizable visual identity.</p>
+                <p class="font-body text-black/50 text-sm md:text-base mb-6 max-w-xl">Instagram stories and post designs for a fashion accessories brand, building a bold, recognizable visual identity.</p>
                 <div class="grid grid-cols-12 gap-3 md:gap-4">
                     <a href="public/assets/Bag%20Central%20Stories.pdf" target="_blank" rel="noopener" aria-label="Bag Central stories PDF" class="col-span-12 md:col-span-4 relative rounded-2xl overflow-hidden group/pdf block h-56 md:h-[420px] project-img-wrap img-mask-reveal">
                         <img src="public/assets/bag-central-stories.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central story"/>
@@ -1160,13 +1246,13 @@
                         <span class="absolute top-3 right-3 bg-black/50 backdrop-blur-md rounded-full px-3 py-1.5 text-white text-xs font-bold">PDF · 3 pages</span>
                     </a>
                     <div class="col-span-4 rounded-2xl overflow-hidden img-mask-reveal project-img-wrap h-56 md:h-[420px]">
-                        <img src="public/assets/bag-central-story-1.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central Instagram story — From an idea"/>
+                        <img src="public/assets/bag-central-story-1.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central Instagram story: From an idea"/>
                     </div>
                     <div class="col-span-4 rounded-2xl overflow-hidden img-mask-reveal project-img-wrap h-56 md:h-[420px]">
-                        <img src="public/assets/bag-central-story-2.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central Instagram story — To an icon"/>
+                        <img src="public/assets/bag-central-story-2.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central Instagram story: To an icon"/>
                     </div>
                     <div class="col-span-4 rounded-2xl overflow-hidden img-mask-reveal project-img-wrap h-56 md:h-[420px]">
-                        <img src="public/assets/bag-central-story-3.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central Instagram story — Over the drama campaign shot"/>
+                        <img src="public/assets/bag-central-story-3.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central Instagram story: Over the drama campaign shot"/>
                     </div>
                 </div>
             </div>
@@ -1186,7 +1272,7 @@
                         </div>
                     </div>
                 </div>
-                <p class="font-body text-black/50 text-sm md:text-base mb-6 max-w-xl">Complete social media presence for a restaurant brand — engaging food content, Reels, and post designs that drive footfall.</p>
+                <p class="font-body text-black/50 text-sm md:text-base mb-6 max-w-xl">Complete social media presence for a restaurant brand, engaging food content, Reels, and post designs that drive footfall.</p>
                 <div class="grid grid-cols-12 gap-3 md:gap-4">
                     <a href="public/assets/trimurti-posts.pdf" target="_blank" rel="noopener" aria-label="Trimurti posts PDF" class="col-span-12 md:col-span-8 relative rounded-2xl overflow-hidden group/pdf block h-56 md:h-[420px] project-img-wrap img-mask-reveal">
                         <img src="public/assets/trimurti-posts-cover.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Trimurti posts PDF"/>
@@ -1212,14 +1298,14 @@
                         <h3 class="font-headline font-black text-[11vw] md:text-[5.5vw] leading-[0.9] uppercase text-black project-title">AUROROMA</h3>
                     </div>
                     <div class="flex flex-col items-end gap-2 mb-1">
-                        <img src="public/assets/Aurooroma_FINAL_Logo1.avif" alt="Auroroma — Elements of Purity logo" class="h-14 md:h-16 w-auto object-contain"/>
+                        <img src="public/assets/Aurooroma_FINAL_Logo1.avif" alt="Auroroma: Elements of Purity logo" class="h-14 md:h-16 w-auto object-contain"/>
                         <div class="flex items-center gap-2">
                             <span class="project-badge project-badge-sm">Social Media</span>
                             <span class="project-badge project-badge-sm">Branding</span>
                         </div>
                     </div>
                 </div>
-                <p class="font-body text-black/50 text-sm md:text-base mb-6 max-w-xl">Visual branding and social media content for a lifestyle brand — curating a cohesive aesthetic that resonates with the target audience.</p>
+                <p class="font-body text-black/50 text-sm md:text-base mb-6 max-w-xl">Visual branding and social media content for a lifestyle brand, curating a cohesive aesthetic that resonates with the target audience.</p>
                 <div class="grid grid-cols-12 gap-3 md:gap-4">
                     <a href="public/assets/auroroma-posts.pdf" target="_blank" rel="noopener" aria-label="Auroroma posts PDF" class="col-span-12 relative rounded-2xl overflow-hidden group/pdf block h-56 md:h-[420px] project-img-wrap img-mask-reveal">
                         <img src="public/assets/auroroma-posts-cover.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Auroroma posts PDF"/>
@@ -1241,7 +1327,7 @@
     <section id="photography" class="panel py-20 bg-[#ede4d8] text-black scroll-section" data-color="#ede4d8">
         <div class="px-6 lg:px-20 mb-10">
             <h2 class="bubble-title text-[8vw] hover-target reveal">PHOTOGRAPHY &amp; VIDEOGRAPHY</h2>
-            <p class="text-black/50 font-medium mt-2 reveal">Behind-the-lens — personal photography, product styling, and content shoots.</p>
+            <p class="text-black/50 font-medium mt-2 reveal">Behind-the-lens: personal photography, product styling, and content shoots.</p>
         </div>
         <div class="px-6 lg:px-20 columns-2 md:columns-3 gap-4 space-y-4">
             <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
@@ -1259,6 +1345,9 @@
             <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
                 <img src="public/assets/photo-bts-shoot.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Behind the scenes product shoot"/>
             </div>
+            <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
+                <video src="public/assets/IMG_6736.MP4" autoplay muted loop playsinline preload="metadata" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:9/16;" aria-label="Content shoot video"></video>
+            </div>
         </div>
     </section>
 
@@ -1266,7 +1355,7 @@
     <section id="instagram-reels" class="panel py-20 bg-[#f5efe6] text-black scroll-section" data-color="#f5efe6">
         <div class="px-6 lg:px-20 mb-10">
             <h2 class="bubble-title text-[8vw] hover-target reveal">INSTAGRAM REELS</h2>
-            <p class="text-black/50 font-medium mt-2 reveal">Scroll-stopping short-form content — crafted to engage, entertain, and drive results.</p>
+            <p class="text-black/50 font-medium mt-2 reveal">Scroll-stopping short-form content, crafted to engage, entertain, and drive results.</p>
         </div>
         <div class="px-6 lg:px-20">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-start">
@@ -1335,7 +1424,7 @@
         <!-- Big THANK YOU -->
         <h2 class="font-display text-[20vw] leading-none uppercase text-transparent mb-8 select-none" id="footer-title" style="-webkit-text-stroke: 1.5px #e8c9a8;">THANK YOU</h2>
 
-        <p class="font-script text-4xl text-[#e8c9a8] mb-10">Let's grow your brand together</p>
+        <p class="font-script text-4xl text-[#e8c9a8] mb-10">Let's grow your <span id="footer-rotate-word" class="inline-block footer-rotate-pill">brand</span> together</p>
 
         <div class="flex justify-center gap-6 mb-10">
             <a href="https://linkedin.com/in/aditivijay11" target="_blank" aria-label="Aditi Vijay on LinkedIn" class="w-14 h-14 bg-[#e8c9a8] text-black rounded-full flex items-center justify-center hover:scale-110 transition-transform hover-target font-bold">
@@ -1373,6 +1462,10 @@
 
         // ===== GSAP INIT =====
         gsap.registerPlugin(ScrollTrigger);
+        // Display webfonts (League Gothic, Lilita One, Space Grotesk) can swap in after
+        // ScrollTriggers are first computed, resizing headings and shifting everything
+        // below — refresh once they're actually loaded so trigger positions stay correct.
+        document.fonts.ready.then(() => ScrollTrigger.refresh());
 
         // ===== PAGE LOADER =====
         const pageLoader = document.getElementById('page-loader');
@@ -1436,6 +1529,7 @@
         gsap.set('#hero-stickers > *', { scale: 0 });
         gsap.set('#hero-name-group', { opacity: 0, x: 40 });
         gsap.set('#hero-year', { opacity: 0, x: -30 });
+        gsap.set('#hero-orbit', { opacity: 0, scale: 0.85 });
 
         // Split hero title into individual letter spans
         const heroTitleEl = document.getElementById('hero-title');
@@ -1464,6 +1558,7 @@
 
             tl.to('#hero-name-group', { opacity: 1, x: 0, duration: 0.7 }, '-=0.45')
               .to('#hero-year', { opacity: 1, x: 0, duration: 0.6 }, '-=0.55')
+              .to('#hero-orbit', { opacity: 1, scale: 1, duration: 0.9, ease: 'power2.out' }, '-=0.5')
               .to('#hero-stickers > *', { opacity: 1, scale: 1, stagger: 0.12, duration: 0.5, ease: 'back.out(1.7)' }, '-=0.2');
         }
 
@@ -1502,9 +1597,13 @@
 
         // ===== CUSTOM CURSOR =====
         const cursor = document.getElementById('custom-cursor');
+        gsap.set(cursor, { xPercent: -50, yPercent: -50 });
+        const cursorX = gsap.quickTo(cursor, 'x', { duration: 0.15, ease: 'power2.out' });
+        const cursorY = gsap.quickTo(cursor, 'y', { duration: 0.15, ease: 'power2.out' });
         document.addEventListener('mousemove', (e) => {
             cursor.classList.add('cursor-active');
-            gsap.to(cursor, { left: e.clientX, top: e.clientY, duration: 0.15, ease: 'power2.out' });
+            cursorX(e.clientX);
+            cursorY(e.clientY);
         });
         const hoverTargets = document.querySelectorAll('.hover-target, a, button');
         hoverTargets.forEach(t => {
@@ -1870,6 +1969,35 @@
                 gsap.to(btn, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.3)' });
             });
         });
+
+        // ===== PROJECT CARD SPOTLIGHT (cursor-following glow) =====
+        document.querySelectorAll('.project-img-wrap').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const r = card.getBoundingClientRect();
+                card.style.setProperty('--spot-x', `${e.clientX - r.left}px`);
+                card.style.setProperty('--spot-y', `${e.clientY - r.top}px`);
+            });
+        });
+
+        // ===== FOOTER ROTATING WORD (ported from 21st.dev's TextRotate pattern) =====
+        const rotateWordEl = document.getElementById('footer-rotate-word');
+        if (rotateWordEl && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            const rotateWords = ['brand', 'reach', 'content', 'story', 'audience'];
+            let rotateIndex = 0;
+            setInterval(() => {
+                rotateIndex = (rotateIndex + 1) % rotateWords.length;
+                gsap.to(rotateWordEl, {
+                    y: -16, opacity: 0, duration: 0.3, ease: 'power2.in',
+                    onComplete: () => {
+                        rotateWordEl.textContent = rotateWords[rotateIndex];
+                        gsap.fromTo(rotateWordEl,
+                            { y: 16, opacity: 0 },
+                            { y: 0, opacity: 1, duration: 0.45, ease: 'back.out(1.7)' }
+                        );
+                    }
+                });
+            }, 2200);
+        }
 
         // ===== FOOTER SCRIPT TEXT: GENTLE FLOAT =====
         gsap.to('#contact .font-script', {
