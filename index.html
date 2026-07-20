@@ -52,21 +52,23 @@
 
         /* ===== CUSTOM CURSOR ===== */
         .custom-cursor {
-            position: fixed; top: 0; left: 0; width: 32px; height: 32px; background: black;
+            position: fixed; top: 0; left: 0; width: 32px; height: 32px;
+            background: url("public/assets/frog-cursor.svg") center/contain no-repeat;
             border-radius: 50%; pointer-events: none; z-index: 10000;
             display: flex; align-items: center; justify-content: center;
             opacity: 0;
             will-change: transform;
             transition: width 0.25s cubic-bezier(.4,0,.2,1), height 0.25s cubic-bezier(.4,0,.2,1), background 0.25s, opacity 0.2s;
-            mix-blend-mode: multiply;
         }
         .custom-cursor.cursor-active { opacity: 1; }
-        .custom-cursor::after {
-            content: "➔"; color: white; display: block; font-size: 14px; font-weight: bold;
+        .custom-cursor::after { content: ""; }
+        .hovered-cursor {
+            width: 56px; height: 56px; background: #e8c9a8;
+        }
+        .hovered-cursor::after {
+            content: "➔"; color: #111; display: block; font-size: 14px; font-weight: bold;
             transform: rotate(-45deg);
         }
-        .hovered-cursor { width: 56px; height: 56px; background: #e8c9a8; }
-        .hovered-cursor::after { color: #111; }
         .custom-cursor.mail-hovered::after {
             content: "✉" !important;
             transform: none !important;
@@ -183,6 +185,85 @@
         }
         @media (max-width: 767px) {
             .reel-card { height: 520px; }
+        }
+
+        /* ===== IPHONE REEL MOCKUP ===== */
+        .phone-reel-link {
+            display: block;
+            text-decoration: none;
+            outline-offset: 4px;
+        }
+        .phone-reel {
+            position: relative;
+            width: 100%;
+            max-width: 300px;
+            aspect-ratio: 9 / 19.5;
+            margin: 0 auto;
+            background: #0a0a0a;
+            border-radius: 2.8rem;
+            padding: 12px;
+            box-shadow:
+                0 0 0 2px rgba(255,255,255,0.06) inset,
+                0 20px 50px rgba(0,0,0,0.25);
+            transition: transform 0.4s cubic-bezier(.4,0,.2,1), box-shadow 0.4s ease;
+        }
+        .phone-reel:hover {
+            transform: translateY(-6px);
+            box-shadow:
+                0 0 0 2px rgba(255,255,255,0.08) inset,
+                0 28px 60px rgba(0,0,0,0.35);
+        }
+        .phone-reel-screen {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 2.1rem;
+            overflow: hidden;
+            background: #000;
+        }
+        .phone-reel-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .phone-reel-island { display: none; }
+        .phone-reel-overlay {
+            position: absolute;
+            inset: auto 0 0 0;
+            padding: 14px 16px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #fff;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background: linear-gradient(to top, rgba(0,0,0,0.65), transparent);
+            z-index: 2;
+            opacity: 0.85;
+            transition: opacity 0.3s ease;
+        }
+        .phone-reel:hover .phone-reel-overlay { opacity: 1; }
+        .phone-reel-play {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+            background: rgba(0,0,0,0.15);
+        }
+        .phone-reel:hover .phone-reel-play,
+        .phone-reel.is-playing .phone-reel-play { opacity: 0; }
+        .phone-reel:not(.is-playing) .phone-reel-play { opacity: 1; }
+        .phone-reel-play svg { width: 44px; height: 44px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4)); }
+        @media (hover: none) {
+            .phone-reel-play { display: none; }
         }
 
         /* ===== SCROLLBAR ===== */
@@ -542,11 +623,6 @@
             letter-spacing: 0.04em;
             overflow: hidden;
         }
-        .page-loader .loader-letter {
-            display: inline-block;
-            opacity: 0;
-            transform: translateY(100%);
-        }
         html.dark .page-loader { background: #0d0a08; }
 
         /* ===== FLOATING PARTICLES ===== */
@@ -692,6 +768,36 @@
             .timeline-line { transform: scaleY(1) !important; }
             #footer-title { background-position: 0% 0 !important; }
             .playlist-item:hover { transform: none !important; }
+        }
+
+        /* ===== DOODLE CANVAS ===== */
+        .doodle-wrap { max-width: 900px; width: 100%; padding: 0 24px; }
+        .doodle-toolbar { display: flex; justify-content: center; gap: 10px; margin-bottom: 18px; }
+        .doodle-btn {
+            padding: 10px 24px;
+            border-radius: 999px;
+            border: 2px solid #111;
+            background: transparent;
+            color: #111;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease;
+        }
+        .doodle-btn:hover { transform: translateY(-2px); }
+        .doodle-btn.active { background: #111; color: #f5efe6; }
+        .doodle-canvas {
+            width: 100%;
+            height: 380px;
+            background: #fff;
+            border: 2px solid #111;
+            border-radius: 1.5rem;
+            touch-action: none;
+            cursor: crosshair;
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.9);
         }
     </style>
 </head>
@@ -900,46 +1006,6 @@
                     </a>
                 </div>
 
-                <!-- Tool Icons — 4 cols on mobile, 2 cols on desktop -->
-                <div class="grid grid-cols-4 lg:grid-cols-2 gap-4 w-fit parallax" data-speed="1.2">
-                    <div class="flex flex-col items-center gap-1.5">
-                        <div class="tool-icon hover-target w-[60px] h-[60px] md:w-[70px] md:h-[70px] lg:w-[80px] lg:h-[80px]" aria-hidden="true" style="background:linear-gradient(145deg,#7B2FBE,#00C4CC);">
-                            <svg width="36" height="36" viewBox="0 0 100 100" fill="none">
-                                <circle cx="50" cy="50" r="42" fill="white" fill-opacity="0.2"/>
-                                <text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="44" fill="white">Ca</text>
-                            </svg>
-                        </div>
-                        <span class="text-[10px] font-semibold text-[#444] uppercase tracking-wide">Canva</span>
-                    </div>
-                    <div class="flex flex-col items-center gap-1.5">
-                        <div class="tool-icon hover-target w-[60px] h-[60px] md:w-[70px] md:h-[70px] lg:w-[80px] lg:h-[80px] bg-white" aria-hidden="true">
-                            <svg width="44" height="36" viewBox="0 0 44 36" fill="none">
-                                <rect x="2" y="18" width="8" height="16" rx="4" fill="#F9AB00"/>
-                                <rect x="18" y="10" width="8" height="24" rx="4" fill="#E37400"/>
-                                <rect x="34" y="2" width="8" height="32" rx="4" fill="#E37400"/>
-                            </svg>
-                        </div>
-                        <span class="text-[10px] font-semibold text-[#444] uppercase tracking-wide">Analytics</span>
-                    </div>
-                    <div class="flex flex-col items-center gap-1.5">
-                        <div class="tool-icon hover-target w-[60px] h-[60px] md:w-[70px] md:h-[70px] lg:w-[80px] lg:h-[80px]" aria-hidden="true" style="background:linear-gradient(145deg,#0F9D58,#34A853);">
-                            <svg width="44" height="38" viewBox="0 0 44 38" fill="none">
-                                <circle cx="17" cy="16" r="12" stroke="white" stroke-width="3.5" fill="none"/>
-                                <line x1="26" y1="25" x2="42" y2="36" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
-                            </svg>
-                        </div>
-                        <span class="text-[10px] font-semibold text-[#444] uppercase tracking-wide">SEO</span>
-                    </div>
-                    <div class="flex flex-col items-center gap-1.5">
-                        <div class="tool-icon hover-target w-[60px] h-[60px] md:w-[70px] md:h-[70px] lg:w-[80px] lg:h-[80px]" aria-hidden="true" style="background:linear-gradient(145deg,#EA4335,#FF6B35);">
-                            <svg width="46" height="34" viewBox="0 0 46 34" fill="none">
-                                <rect x="2" y="2" width="42" height="30" rx="4" stroke="white" stroke-width="3" fill="none"/>
-                                <path d="M2 8l21 13 21-13" stroke="white" stroke-width="3" stroke-linecap="round"/>
-                            </svg>
-                        </div>
-                        <span class="text-[10px] font-semibold text-[#444] uppercase tracking-wide">Email</span>
-                    </div>
-                </div>
             </div>
 
             <!-- Center: Portrait — transparent PNG cutout, no card -->
@@ -1118,18 +1184,72 @@
                     <!-- Tools Block -->
                     <div>
                         <h2 class="bubble-title text-6xl mb-8 tracking-wide">TOOLS</h2>
-                        <div class="flex gap-3">
-                            <div class="w-[68px] h-[68px] rounded-xl transition flex items-center justify-center" style="background:linear-gradient(135deg,#7B2FBE,#00C4CC);" aria-label="Canva" role="img">
-                                <svg viewBox="0 0 88 88" width="68" height="68" aria-hidden="true"><text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="34" fill="white">Ca</text></svg>
+                        <div class="flex flex-wrap gap-4">
+                            <div class="tool-icon hover-target w-[68px] h-[68px]" style="background:linear-gradient(135deg,#7B2FBE,#00C4CC);" aria-label="Canva" role="img">
+                                <svg viewBox="0 0 24 24" width="34" height="34" aria-hidden="true" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zM6.962 7.68c.754 0 1.337.549 1.405 1.2.069.583-.171 1.097-.822 1.406-.343.171-.48.172-.549.069-.034-.069 0-.137.069-.206.617-.514.617-.926.548-1.508-.034-.378-.308-.618-.583-.618-1.2 0-2.914 2.674-2.674 4.629.103.754.549 1.646 1.509 1.646.308 0 .65-.103.96-.24.5-.264.799-.47 1.097-.8-.073-.885.704-2.046 1.851-2.046.515 0 .926.205.96.583.068.514-.377.582-.514.582s-.378-.034-.378-.17c-.034-.138.309-.07.275-.378-.035-.206-.24-.274-.446-.274-.72 0-1.131.994-1.029 1.611.035.275.172.549.447.549.205 0 .514-.31.617-.755.068-.308.343-.514.583-.514.102 0 .17.034.205.171v.138c-.034.137-.137.548-.102.651 0 .069.034.171.17.171.092 0 .436-.18.777-.459.117-.59.253-1.298.253-1.357.034-.24.137-.48.617-.48.103 0 .171.034.205.171v.138l-.136.617c.445-.583 1.097-.994 1.508-.994.172 0 .309.102.309.274 0 .103 0 .274-.069.446-.137.377-.309.96-.412 1.474 0 .137.035.274.207.274.171 0 .685-.206 1.096-.754l.007-.004c-.002-.068-.007-.134-.007-.202 0-.411.035-.754.104-.994.068-.274.411-.514.617-.514.103 0 .205.069.205.171 0 .035 0 .103-.034.137-.137.446-.24.857-.24 1.269 0 .24.034.582.102.788 0 .034.035.069.07.069.068 0 .548-.445.89-1.028-.308-.206-.48-.549-.48-.96 0-.72.446-1.097.858-1.097.343 0 .617.24.617.72 0 .308-.103.65-.274.96h.102a.77.77 0 0 0 .584-.24.293.293 0 0 1 .134-.117c.335-.425.83-.74 1.41-.74.48 0 .924.205.959.582.068.515-.378.618-.515.618l-.002-.002c-.138 0-.377-.035-.377-.172 0-.137.309-.068.274-.376-.034-.206-.24-.275-.446-.275-.686 0-1.13.891-1.028 1.611.034.275.171.583.445.583.206 0 .515-.308.652-.754.068-.274.343-.514.583-.514.103 0 .17.034.205.171 0 .069 0 .206-.137.652-.17.308-.171.48-.137.617.034.274.171.48.309.583.034.034.068.102.068.102 0 .069-.034.138-.137.138-.034 0-.068 0-.103-.035-.514-.205-.72-.548-.789-.891-.205.24-.445.377-.72.377-.445 0-.89-.411-.96-.926a1.609 1.609 0 0 1 .075-.649c-.203.13-.422.203-.623.203h-.17c-.447.652-.927 1.098-1.27 1.303a.896.896 0 0 1-.377.104c-.068 0-.171-.035-.205-.104-.095-.152-.156-.392-.193-.667-.481.527-1.145.805-1.453.805-.343 0-.548-.206-.582-.55v-.376c.102-.754.377-1.2.377-1.337a.074.074 0 0 0-.069-.07c-.24 0-1.028.824-1.166 1.373l-.103.445c-.068.309-.377.515-.582.515-.103 0-.172-.035-.206-.172v-.137l.046-.233c-.435.31-.87.508-1.075.508-.308 0-.48-.172-.514-.412-.206.274-.445.412-.754.412-.352 0-.696-.24-.862-.593-.244.275-.523.553-.852.764-.48.309-1.028.549-1.68.549-.582 0-1.097-.309-1.371-.583-.412-.377-.651-.96-.686-1.509-.205-1.68.823-3.84 2.4-4.8.378-.205.755-.343 1.132-.343zm9.77 3.291c-.104 0-.172.172-.172.343 0 .274.137.583.309.755a1.74 1.74 0 0 0 .102-.583c0-.343-.137-.515-.24-.515z"/></svg>
                             </div>
-                            <div class="w-[68px] h-[68px] rounded-xl transition flex items-center justify-center" style="background:white; border:2px solid #ddd;" aria-label="Google" role="img">
-                                <svg viewBox="0 0 88 88" width="68" height="68" aria-hidden="true"><text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="34" fill="#4285F4">G</text></svg>
+                            <div class="tool-icon hover-target w-[68px] h-[68px]" style="background:#fff;" aria-label="Google Analytics" role="img">
+                                <svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path fill="#F9AB00" d="M22.84 2.9982v17.9987c.0086 1.6473-1.3197 2.9897-2.967 2.9984a2.9808 2.9808 0 01-.3677-.0208c-1.528-.226-2.6477-1.5558-2.6105-3.1V3.1204c-.0369-1.5458 1.0856-2.8762 2.6157-3.1 1.6361-.1915 3.1178.9796 3.3093 2.6158.014.1201.0208.241.0202.3619z"/><path fill="#E37400" d="M4.1326 18.0548c-1.6417 0-2.9726 1.331-2.9726 2.9726C1.16 22.6691 2.4909 24 4.1326 24s2.9726-1.3309 2.9726-2.9726-1.331-2.9726-2.9726-2.9726zm7.8728-9.0098c-.0171 0-.0342 0-.0513.0003-1.6495.0904-2.9293 1.474-2.891 3.1256v7.9846c0 2.167.9535 3.4825 2.3505 3.763 1.6118.3266 3.1832-.7152 3.5098-2.327.04-.1974.06-.3983.0593-.5998v-8.9585c.003-1.6474-1.33-2.9852-2.9773-2.9882z"/></svg>
                             </div>
-                            <div class="w-[68px] h-[68px] rounded-xl transition flex items-center justify-center" style="background:#0F9D58;" aria-label="SEO" role="img">
-                                <svg viewBox="0 0 88 88" width="68" height="68" aria-hidden="true"><text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="20" fill="white">SEO</text></svg>
+                            <div class="tool-icon hover-target w-[68px] h-[68px]" style="background:#0F9D58;" aria-label="SEO" role="img">
+                                <svg viewBox="0 0 44 38" width="40" height="34" aria-hidden="true" fill="none"><circle cx="17" cy="16" r="12" stroke="white" stroke-width="3.5"/><line x1="26" y1="25" x2="42" y2="36" stroke="white" stroke-width="3.5" stroke-linecap="round"/></svg>
                             </div>
-                            <div class="w-[68px] h-[68px] rounded-xl transition flex items-center justify-center" style="background:#FF6B35;" aria-label="CRM" role="img">
+                            <div class="tool-icon hover-target w-[68px] h-[68px]" style="background:#FF6B35;" aria-label="CRM" role="img">
                                 <svg viewBox="0 0 88 88" width="68" height="68" aria-hidden="true"><text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="18" fill="white">CRM</text></svg>
+                            </div>
+                            <div class="tool-icon hover-target w-[68px] h-[68px]" style="background:#101010;" aria-label="ElevenLabs" role="img">
+                                <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="white"><path d="M4.6035 0v24h4.9317V0zm9.8613 0v24h4.9317V0z"/></svg>
+                            </div>
+                            <div class="tool-icon hover-target w-[68px] h-[68px]" style="background:#fff;" aria-label="Gemini" role="img">
+                                <svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true">
+                                    <defs><linearGradient id="gemgrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#4285F4"/><stop offset="50%" stop-color="#9B72CB"/><stop offset="100%" stop-color="#D96570"/></linearGradient></defs>
+                                    <path fill="url(#gemgrad)" d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81"/>
+                                </svg>
+                            </div>
+                            <div class="tool-icon hover-target w-[68px] h-[68px]" style="background:linear-gradient(135deg,#EA4335,#FBBC05);" aria-label="Microsoft Office" role="img">
+                                <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" fill="white"><path d="M21.53 4.306v15.363q0 .807-.472 1.433-.472.627-1.253.85l-6.888 1.974q-.136.037-.29.055-.156.019-.293.019-.396 0-.72-.105-.321-.106-.656-.292l-4.505-2.544q-.248-.137-.391-.366-.143-.23-.143-.515 0-.434.304-.738.304-.305.739-.305h5.831V4.964l-4.38 1.563q-.533.187-.856.658-.322.472-.322 1.03v8.078q0 .496-.248.912-.25.416-.683.651l-2.072 1.13q-.286.148-.571.148-.497 0-.844-.347-.348-.347-.348-.844V6.563q0-.62.33-1.19.328-.571.874-.881L11.07.285q.248-.136.534-.21.285-.075.57-.075.211 0 .38.031.166.031.364.093l6.888 1.899q.384.11.7.329.317.217.547.52.23.305.353.67.125.367.125.764zm-1.588 15.363V4.306q0-.273-.16-.478-.163-.204-.423-.28l-3.388-.93q-.397-.111-.794-.23-.397-.117-.794-.216v19.68l4.976-1.427q.26-.074.422-.28.161-.204.161-.477z"/></svg>
+                            </div>
+                            <div class="tool-icon hover-target w-[68px] h-[68px]" style="background:#101010;" aria-label="CapCut" role="img">
+                                <svg viewBox="0 0 32 24" width="36" height="27" aria-hidden="true"><path fill="white" d="M 31.056 4.979 V 0.215 l -5.73 3.008 v -0.178 C 25.326 1.146 23.965 0 21.994 0 H 3.831 C 1.755 0 0.5 1.146 0.5 3.045 v 4.8 L 8.523 12 L 0.5 16.191 v 4.8 C 0.5 22.854 1.755 24 3.831 24 h 18.162 c 1.97 0 3.33 -1.146 3.33 -3.009 v -0.25 l 5.731 3.044 V 18.95 L 17.73 12 l 13.327 -7.021 Z M 13.11 14.363 l 9.852 5.16 H 3.22 l 9.888 -5.16 Z m 9.78 -9.885 L 13.109 9.6 L 3.222 4.478 h 19.666 Z"/></svg>
+                            </div>
+                            <div class="tool-icon hover-target w-[68px] h-[68px]" style="background:linear-gradient(135deg,#0064E0,#0081FB);" aria-label="Meta" role="img">
+                                <svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true" fill="white"><path d="M6.915 4.03c-1.968 0-3.683 1.28-4.871 3.113C.704 9.208 0 11.883 0 14.449c0 .706.07 1.369.21 1.973a6.624 6.624 0 0 0 .265.86 5.297 5.297 0 0 0 .371.761c.696 1.159 1.818 1.927 3.593 1.927 1.497 0 2.633-.671 3.965-2.444.76-1.012 1.144-1.626 2.663-4.32l.756-1.339.186-.325c.061.1.121.196.183.3l2.152 3.595c.724 1.21 1.665 2.556 2.47 3.314 1.046.987 1.992 1.22 3.06 1.22 1.075 0 1.876-.355 2.455-.843a3.743 3.743 0 0 0 .81-.973c.542-.939.861-2.127.861-3.745 0-2.72-.681-5.357-2.084-7.45-1.282-1.912-2.957-2.93-4.716-2.93-1.047 0-2.088.467-3.053 1.308-.652.57-1.257 1.29-1.82 2.05-.69-.875-1.335-1.547-1.958-2.056-1.182-.966-2.315-1.303-3.454-1.303zm10.16 2.053c1.147 0 2.188.758 2.992 1.999 1.132 1.748 1.647 4.195 1.647 6.4 0 1.548-.368 2.9-1.839 2.9-.58 0-1.027-.23-1.664-1.004-.496-.601-1.343-1.878-2.832-4.358l-.617-1.028a44.908 44.908 0 0 0-1.255-1.98c.07-.109.141-.224.211-.327 1.12-1.667 2.118-2.602 3.358-2.602zm-10.201.553c1.265 0 2.058.791 2.675 1.446.307.327.737.871 1.234 1.579l-1.02 1.566c-.757 1.163-1.882 3.017-2.837 4.338-1.191 1.649-1.81 1.817-2.486 1.817-.524 0-1.038-.237-1.383-.794-.263-.426-.464-1.13-.464-2.046 0-2.221.63-4.535 1.66-6.088.454-.687.964-1.226 1.533-1.533a2.264 2.264 0 0 1 1.088-.285z"/></svg>
+                            </div>
+                            <div class="tool-icon hover-target w-[68px] h-[68px]" style="background:#CC785C;" aria-label="Claude" role="img">
+                                <svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" fill="white"><path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"/></svg>
+                            </div>
+                            <div class="tool-icon hover-target w-[68px] h-[68px]" style="background:#101010;" aria-label="ChatGPT" role="img">
+                                <svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" fill="white"><path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"/></svg>
+                            </div>
+                            <div class="tool-icon hover-target w-[68px] h-[68px]" style="background:#001E36;" aria-label="Photoshop" role="img">
+                                <svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" fill="#31A8FF"><path d="M9.85 8.42c-.37-.15-.77-.21-1.18-.2-.26 0-.49 0-.68.01-.2-.01-.34 0-.41.01v3.36c.14.01.27.02.39.02h.53c.39 0 .78-.06 1.15-.18.32-.09.6-.28.82-.53.21-.25.31-.59.31-1.03.01-.31-.07-.62-.23-.89-.17-.26-.41-.46-.7-.57zM19.75.3H4.25C1.9.3 0 2.2 0 4.55v14.899c0 2.35 1.9 4.25 4.25 4.25h15.5c2.35 0 4.25-1.9 4.25-4.25V4.55C24 2.2 22.1.3 19.75.3zm-7.391 11.65c-.399.56-.959.98-1.609 1.22-.68.25-1.43.34-2.25.34-.24 0-.4 0-.5-.01s-.24-.01-.43-.01v3.209c.01.07-.04.131-.11.141H5.52c-.08 0-.12-.041-.12-.131V6.42c0-.07.03-.11.1-.11.17 0 .33 0 .56-.01.24-.01.49-.01.76-.02s.56-.01.87-.02c.31-.01.61-.01.91-.01.82 0 1.5.1 2.06.31.5.17.96.45 1.34.82.32.32.57.71.73 1.14.149.42.229.85.229 1.3.001.86-.199 1.57-.6 2.13zm7.091 3.89c-.28.4-.671.709-1.12.891-.49.209-1.09.318-1.811.318-.459 0-.91-.039-1.359-.129-.35-.061-.7-.17-1.02-.32-.07-.039-.121-.109-.111-.189v-1.74c0-.029.011-.07.041-.09.029-.02.06-.01.09.01.39.23.8.391 1.24.49.379.1.779.15 1.18.15.38 0 .65-.051.83-.141.16-.07.27-.24.27-.42 0-.141-.08-.27-.24-.4-.16-.129-.489-.279-.979-.471-.51-.18-.979-.42-1.42-.719-.31-.221-.569-.51-.761-.85-.159-.32-.239-.67-.229-1.021 0-.43.12-.84.341-1.21.25-.4.619-.72 1.049-.92.469-.239 1.059-.349 1.769-.349.41 0 .83.03 1.24.09.3.04.59.12.86.23.039.01.08.05.1.09.01.04.02.08.02.12v1.63c0 .04-.02.08-.05.1-.09.02-.14.02-.18 0-.3-.16-.62-.27-.96-.34-.37-.08-.74-.13-1.12-.13-.2-.01-.41.02-.601.07-.129.03-.24.1-.31.2-.05.08-.08.18-.08.27s.04.18.101.26c.09.11.209.2.34.27.229.12.47.23.709.33.541.18 1.061.43 1.541.73.33.209.6.49.789.83.16.318.24.67.23 1.029.011.471-.129.94-.389 1.331z"/></svg>
+                            </div>
+                            <div class="tool-icon hover-target w-[68px] h-[68px]" style="background:linear-gradient(135deg,#7B2FBE,#00C4CC);" aria-label="Microsoft Copilot" role="img">
+                                <svg viewBox="0 0 120 120" width="38" height="38" aria-hidden="true" fill="none">
+                                    <path fill="url(#copgrad-a)" d="M85.855 18.313A11.574 11.574 0 0 0 74.75 10h-3.379a11.574 11.574 0 0 0-11.384 9.485L54.2 51.018l1.436-4.913a11.574 11.574 0 0 1 11.11-8.327H86.38l8.235 3.207 7.937-3.207h-2.316a11.574 11.574 0 0 1-11.105-8.313z"/>
+                                    <path fill="url(#copgrad-b)" d="M36.326 101.64A11.574 11.574 0 0 0 47.445 110h7.176c6.276 0 11.409-5.002 11.57-11.277l.781-30.405-1.634 5.583a11.574 11.574 0 0 1-11.108 8.321H34.432l-7.058-3.829-7.641 3.83h2.278c5.154 0 9.687 3.408 11.119 8.36z"/>
+                                    <path fill="url(#copgrad-c)" d="M74.248 10H34.15c-11.457 0-18.33 15.142-22.913 30.283-5.43 17.939-12.534 41.93 8.02 41.93H36.57c5.174 0 9.716-3.421 11.138-8.396 3.01-10.531 8.286-28.903 12.43-42.889 2.105-7.107 3.86-13.211 6.551-17.012C68.2 11.785 70.715 10 74.248 10"/>
+                                    <path fill="url(#copgrad-d)" d="M74.248 10H34.15c-11.457 0-18.33 15.142-22.913 30.283-5.43 17.939-12.534 41.93 8.02 41.93H36.57c5.174 0 9.716-3.421 11.138-8.396 3.01-10.531 8.286-28.903 12.43-42.889 2.105-7.107 3.86-13.211 6.551-17.012C68.2 11.785 70.715 10 74.248 10"/>
+                                    <path fill="url(#copgrad-e)" d="M46.744 110h40.099c11.456 0 18.33-15.144 22.913-30.288 5.429-17.942 12.533-41.937-8.02-41.937H84.422a11.576 11.576 0 0 0-11.138 8.396c-3.01 10.533-8.286 28.909-12.43 42.897-2.106 7.109-3.86 13.214-6.552 17.016-1.51 2.131-4.025 3.916-7.558 3.916"/>
+                                    <path fill="url(#copgrad-f)" d="M46.744 110h40.099c11.456 0 18.33-15.144 22.913-30.288 5.429-17.942 12.533-41.937-8.02-41.937H84.422a11.576 11.576 0 0 0-11.138 8.396c-3.01 10.533-8.286 28.909-12.43 42.897-2.106 7.109-3.86 13.214-6.552 17.016-1.51 2.131-4.025 3.916-7.558 3.916"/>
+                                    <defs>
+                                        <radialGradient id="copgrad-a" cx="0" cy="0" r="1" gradientTransform="matrix(-27.40125 -33.47302 31.47539 -25.76598 95.512 51.286)" gradientUnits="userSpaceOnUse"><stop offset=".096" stop-color="#00AEFF"/><stop offset=".773" stop-color="#2253CE"/><stop offset="1" stop-color="#0736C4"/></radialGradient>
+                                        <radialGradient id="copgrad-b" cx="0" cy="0" r="1" gradientTransform="rotate(51.84 -70.254 70.14)scale(39.9779 38.7796)" gradientUnits="userSpaceOnUse"><stop stop-color="#FFB657"/><stop offset=".634" stop-color="#FF5F3D"/><stop offset=".923" stop-color="#C02B3C"/></radialGradient>
+                                        <radialGradient id="copgrad-e" cx="0" cy="0" r="1" gradientTransform="matrix(-31.67773 90.58917 -108.5232 -37.949 103.796 30.703)" gradientUnits="userSpaceOnUse"><stop offset=".066" stop-color="#8C48FF"/><stop offset=".5" stop-color="#F2598A"/><stop offset=".896" stop-color="#FFB152"/></radialGradient>
+                                        <linearGradient id="copgrad-c" x1="31.75" x2="37.471" y1="18.75" y2="84.938" gradientUnits="userSpaceOnUse"><stop offset=".156" stop-color="#0D91E1"/><stop offset=".487" stop-color="#52B471"/><stop offset=".652" stop-color="#98BD42"/><stop offset=".937" stop-color="#FFC800"/></linearGradient>
+                                        <linearGradient id="copgrad-d" x1="36.75" x2="39.874" y1="10" y2="82.213" gradientUnits="userSpaceOnUse"><stop stop-color="#3DCBFF"/><stop offset=".247" stop-color="#0588F7" stop-opacity="0"/></linearGradient>
+                                        <linearGradient id="copgrad-f" x1="106.964" x2="106.923" y1="33.365" y2="53.037" gradientUnits="userSpaceOnUse"><stop offset=".058" stop-color="#F8ADFA"/><stop offset=".708" stop-color="#A86EDD" stop-opacity="0"/></linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <div class="tool-icon hover-target w-[68px] h-[68px]" style="background:#fff;" aria-label="Clipdrop" role="img">
+                                <img src="public/assets/clipdrop-icon.png" width="36" height="36" alt="" aria-hidden="true">
+                            </div>
+                            <div class="tool-icon hover-target w-[68px] h-[68px]" style="background:#E60023;" aria-label="Pinterest" role="img">
+                                <svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" fill="white"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.39 18.592.026 11.985.026L12.017 0z"/></svg>
+                            </div>
+                            <div class="tool-icon hover-target w-[68px] h-[68px]" style="background:#101010;" aria-label="VN Video Editor" role="img">
+                                <svg viewBox="0 0 88 88" width="68" height="68" aria-hidden="true"><text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="24" fill="white">VN</text></svg>
                             </div>
                         </div>
                     </div>
@@ -1225,35 +1345,49 @@
                     </div>
                 </div>
                 <p class="font-body text-black/50 text-sm md:text-base mb-6 max-w-xl">Instagram stories and post designs for a fashion accessories brand, building a bold, recognizable visual identity.</p>
-                <div class="grid grid-cols-12 gap-3 md:gap-4">
-                    <a href="public/assets/Bag%20Central%20Stories.pdf" target="_blank" rel="noopener" aria-label="Bag Central stories PDF" class="col-span-12 md:col-span-4 relative rounded-2xl overflow-hidden group/pdf block h-56 md:h-[420px] project-img-wrap img-mask-reveal">
-                        <img src="public/assets/bag-central-stories.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central story"/>
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover/pdf:opacity-100 transition-opacity duration-400 flex items-end p-6">
-                            <span class="font-bold text-white text-sm uppercase tracking-widest flex items-center gap-2">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
-                                View PDF
-                            </span>
+                <div class="flex flex-col md:flex-row md:items-center gap-4">
+                    <a href="https://www.instagram.com/thebagcentral_/" target="_blank" rel="noopener" aria-label="Visit The Bag Central on Instagram" class="phone-reel-link hover-target md:flex-shrink-0 mx-auto md:mx-0" style="width:100%; max-width:210px;">
+                        <div class="phone-reel" style="max-width:210px;">
+                            <div class="phone-reel-screen">
+                                <div class="phone-reel-island" aria-hidden="true"></div>
+                                <img class="phone-reel-video" style="object-position: top;" src="public/assets/IMG_7036.PNG" loading="lazy" decoding="async" alt="The Bag Central Instagram profile">
+                                <div class="phone-reel-overlay">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+                                    Instagram
+                                </div>
+                            </div>
                         </div>
-                        <span class="absolute top-3 right-3 bg-black/50 backdrop-blur-md rounded-full px-3 py-1.5 text-white text-xs font-bold">PDF · 5 pages</span>
                     </a>
-                    <a href="public/assets/bag-central-posts.pdf" target="_blank" rel="noopener" aria-label="Bag Central posts PDF" class="col-span-12 md:col-span-8 relative rounded-2xl overflow-hidden group/pdf block h-56 md:h-[420px] project-img-wrap img-mask-reveal">
-                        <img src="public/assets/bag-central-posts-cover.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central posts PDF"/>
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover/pdf:opacity-100 transition-opacity duration-400 flex items-end p-6">
-                            <span class="font-bold text-white text-sm uppercase tracking-widest flex items-center gap-2">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
-                                View PDF
-                            </span>
+                    <div class="grid grid-cols-12 gap-3 md:gap-4 flex-1">
+                        <a href="public/assets/Bag%20Central%20Stories.pdf" target="_blank" rel="noopener" aria-label="Bag Central stories PDF" class="col-span-12 md:col-span-6 relative rounded-2xl overflow-hidden group/pdf block h-56 md:h-[420px] project-img-wrap img-mask-reveal">
+                            <img src="public/assets/bag-central-stories.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central story"/>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover/pdf:opacity-100 transition-opacity duration-400 flex items-end p-6">
+                                <span class="font-bold text-white text-sm uppercase tracking-widest flex items-center gap-2">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+                                    View PDF
+                                </span>
+                            </div>
+                            <span class="absolute top-3 right-3 bg-black/50 backdrop-blur-md rounded-full px-3 py-1.5 text-white text-xs font-bold">PDF · 5 pages</span>
+                        </a>
+                        <a href="public/assets/bag-central-posts.pdf" target="_blank" rel="noopener" aria-label="Bag Central posts PDF" class="col-span-12 md:col-span-6 relative rounded-2xl overflow-hidden group/pdf block h-56 md:h-[420px] project-img-wrap img-mask-reveal">
+                            <img src="public/assets/bag-central-posts-cover.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central posts PDF"/>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover/pdf:opacity-100 transition-opacity duration-400 flex items-end p-6">
+                                <span class="font-bold text-white text-sm uppercase tracking-widest flex items-center gap-2">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+                                    View PDF
+                                </span>
+                            </div>
+                            <span class="absolute top-3 right-3 bg-black/50 backdrop-blur-md rounded-full px-3 py-1.5 text-white text-xs font-bold">PDF · 3 pages</span>
+                        </a>
+                        <div class="col-span-4 rounded-2xl overflow-hidden img-mask-reveal project-img-wrap h-56 md:h-[200px]">
+                            <img src="public/assets/bag-central-story-1.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central Instagram story: From an idea"/>
                         </div>
-                        <span class="absolute top-3 right-3 bg-black/50 backdrop-blur-md rounded-full px-3 py-1.5 text-white text-xs font-bold">PDF · 3 pages</span>
-                    </a>
-                    <div class="col-span-4 rounded-2xl overflow-hidden img-mask-reveal project-img-wrap h-56 md:h-[420px]">
-                        <img src="public/assets/bag-central-story-1.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central Instagram story: From an idea"/>
-                    </div>
-                    <div class="col-span-4 rounded-2xl overflow-hidden img-mask-reveal project-img-wrap h-56 md:h-[420px]">
-                        <img src="public/assets/bag-central-story-2.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central Instagram story: To an icon"/>
-                    </div>
-                    <div class="col-span-4 rounded-2xl overflow-hidden img-mask-reveal project-img-wrap h-56 md:h-[420px]">
-                        <img src="public/assets/bag-central-story-3.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central Instagram story: Over the drama campaign shot"/>
+                        <div class="col-span-4 rounded-2xl overflow-hidden img-mask-reveal project-img-wrap h-56 md:h-[200px]">
+                            <img src="public/assets/bag-central-story-2.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central Instagram story: To an icon"/>
+                        </div>
+                        <div class="col-span-4 rounded-2xl overflow-hidden img-mask-reveal project-img-wrap h-56 md:h-[200px]">
+                            <img src="public/assets/bag-central-story-3.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central Instagram story: Over the drama campaign shot"/>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1274,19 +1408,33 @@
                     </div>
                 </div>
                 <p class="font-body text-black/50 text-sm md:text-base mb-6 max-w-xl">Complete social media presence for a restaurant brand, engaging food content, Reels, and post designs that drive footfall.</p>
-                <div class="grid grid-cols-12 gap-3 md:gap-4">
-                    <a href="public/assets/trimurti-posts.pdf" target="_blank" rel="noopener" aria-label="Trimurti posts PDF" class="col-span-12 md:col-span-8 relative rounded-2xl overflow-hidden group/pdf block h-56 md:h-[420px] project-img-wrap img-mask-reveal">
-                        <img src="public/assets/trimurti-posts-cover.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Trimurti posts PDF"/>
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover/pdf:opacity-100 transition-opacity duration-400 flex items-end p-6">
-                            <span class="font-bold text-white text-sm uppercase tracking-widest flex items-center gap-2">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
-                                View PDF
-                            </span>
+                <div class="flex flex-col md:flex-row md:items-center gap-4">
+                    <a href="https://www.instagram.com/trimurtidoors_/" target="_blank" rel="noopener" aria-label="Visit Trimurti Doors on Instagram" class="phone-reel-link hover-target md:flex-shrink-0 mx-auto md:mx-0" style="width:100%; max-width:210px;">
+                        <div class="phone-reel" style="max-width:210px;">
+                            <div class="phone-reel-screen">
+                                <div class="phone-reel-island" aria-hidden="true"></div>
+                                <img class="phone-reel-video" style="object-position: top;" src="public/assets/IMG_7037.PNG" loading="lazy" decoding="async" alt="Trimurti Doors Instagram profile">
+                                <div class="phone-reel-overlay">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+                                    Instagram
+                                </div>
+                            </div>
                         </div>
-                        <span class="absolute top-3 right-3 bg-black/50 backdrop-blur-md rounded-full px-3 py-1.5 text-white text-xs font-bold">PDF · 8 pages</span>
                     </a>
-                    <div class="col-span-12 md:col-span-4 rounded-2xl overflow-hidden img-mask-reveal project-img-wrap h-56 md:h-[420px]">
-                        <video src="public/assets/trimurti-reel-1.mp4" autoplay muted loop playsinline preload="metadata" class="w-full h-full object-cover" aria-label="Trimurti reel"></video>
+                    <div class="grid grid-cols-12 gap-3 md:gap-4 flex-1">
+                        <a href="public/assets/trimurti-posts.pdf" target="_blank" rel="noopener" aria-label="Trimurti posts PDF" class="col-span-12 md:col-span-8 relative rounded-2xl overflow-hidden group/pdf block h-56 md:h-[420px] project-img-wrap img-mask-reveal">
+                            <img src="public/assets/trimurti-posts-cover.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Trimurti posts PDF"/>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover/pdf:opacity-100 transition-opacity duration-400 flex items-end p-6">
+                                <span class="font-bold text-white text-sm uppercase tracking-widest flex items-center gap-2">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+                                    View PDF
+                                </span>
+                            </div>
+                            <span class="absolute top-3 right-3 bg-black/50 backdrop-blur-md rounded-full px-3 py-1.5 text-white text-xs font-bold">PDF · 8 pages</span>
+                        </a>
+                        <div class="col-span-12 md:col-span-4 rounded-2xl overflow-hidden img-mask-reveal project-img-wrap h-56 md:h-[420px]">
+                            <video src="public/assets/trimurti-reel-1.mp4" autoplay muted loop playsinline preload="metadata" class="w-full h-full object-cover" aria-label="Trimurti reel"></video>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1307,17 +1455,31 @@
                     </div>
                 </div>
                 <p class="font-body text-black/50 text-sm md:text-base mb-6 max-w-xl">Visual branding and social media content for a lifestyle brand, curating a cohesive aesthetic that resonates with the target audience.</p>
-                <div class="grid grid-cols-12 gap-3 md:gap-4">
-                    <a href="public/assets/auroroma-posts.pdf" target="_blank" rel="noopener" aria-label="Auroroma posts PDF" class="col-span-12 relative rounded-2xl overflow-hidden group/pdf block h-56 md:h-[420px] project-img-wrap img-mask-reveal">
-                        <img src="public/assets/auroroma-posts-cover.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Auroroma posts PDF"/>
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover/pdf:opacity-100 transition-opacity duration-400 flex items-end p-6">
-                            <span class="font-bold text-white text-sm uppercase tracking-widest flex items-center gap-2">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
-                                View PDF · 5 pages
-                            </span>
+                <div class="flex flex-col md:flex-row md:items-center gap-4">
+                    <a href="https://www.instagram.com/aurooroma/" target="_blank" rel="noopener" aria-label="Visit Auroroma on Instagram" class="phone-reel-link hover-target md:flex-shrink-0 mx-auto md:mx-0" style="width:100%; max-width:210px;">
+                        <div class="phone-reel" style="max-width:210px;">
+                            <div class="phone-reel-screen">
+                                <div class="phone-reel-island" aria-hidden="true"></div>
+                                <img class="phone-reel-video" style="object-position: top;" src="public/assets/IMG_7039.PNG" loading="lazy" decoding="async" alt="Auroroma Instagram profile">
+                                <div class="phone-reel-overlay">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+                                    Instagram
+                                </div>
+                            </div>
                         </div>
-                        <span class="absolute top-3 right-3 bg-black/50 backdrop-blur-md rounded-full px-3 py-1.5 text-white text-xs font-bold">PDF · 5 pages</span>
                     </a>
+                    <div class="grid grid-cols-12 gap-3 md:gap-4 flex-1">
+                        <a href="public/assets/auroroma-posts.pdf" target="_blank" rel="noopener" aria-label="Auroroma posts PDF" class="col-span-12 relative rounded-2xl overflow-hidden group/pdf block h-56 md:h-[420px] project-img-wrap img-mask-reveal">
+                            <img src="public/assets/auroroma-posts-cover.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Auroroma posts PDF"/>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover/pdf:opacity-100 transition-opacity duration-400 flex items-end p-6">
+                                <span class="font-bold text-white text-sm uppercase tracking-widest flex items-center gap-2">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+                                    View PDF · 5 pages
+                                </span>
+                            </div>
+                            <span class="absolute top-3 right-3 bg-black/50 backdrop-blur-md rounded-full px-3 py-1.5 text-white text-xs font-bold">PDF · 5 pages</span>
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -1361,26 +1523,105 @@
         <div class="px-6 lg:px-20">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-start">
                 <!-- Reel 1 -->
-                <div class="reel-card reveal">
-                    <div class="reel-embed-wrapper">
-                        <iframe src="https://www.instagram.com/reel/DZpvixDp5aq/embed/" frameborder="0" scrolling="no" allowtransparency="true" allowfullscreen="true" loading="lazy" class="reel-iframe"></iframe>
+                <a href="https://www.instagram.com/reel/DZpvixDp5aq/" target="_blank" rel="noopener" aria-label="Watch this Instagram reel" class="phone-reel-link reveal hover-target">
+                    <div class="phone-reel">
+                        <div class="phone-reel-screen">
+                            <div class="phone-reel-island" aria-hidden="true"></div>
+                            <video class="phone-reel-video" src="public/assets/Video-991.mp4" muted loop playsinline preload="metadata"></video>
+                            <div class="phone-reel-play" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                            </div>
+                            <div class="phone-reel-overlay">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+                                Watch on Instagram
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </a>
                 <!-- Reel 2 -->
-                <div class="reel-card reveal">
-                    <div class="reel-embed-wrapper">
-                        <iframe src="https://www.instagram.com/reel/DZ5SQoiSkdo/embed/" frameborder="0" scrolling="no" allowtransparency="true" allowfullscreen="true" loading="lazy" class="reel-iframe"></iframe>
+                <a href="https://www.instagram.com/reel/DZ5SQoiSkdo/" target="_blank" rel="noopener" aria-label="Watch this Instagram reel" class="phone-reel-link reveal hover-target">
+                    <div class="phone-reel">
+                        <div class="phone-reel-screen">
+                            <div class="phone-reel-island" aria-hidden="true"></div>
+                            <video class="phone-reel-video" src="public/assets/Video-982.mp4" muted loop playsinline preload="metadata"></video>
+                            <div class="phone-reel-play" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                            </div>
+                            <div class="phone-reel-overlay">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+                                Watch on Instagram
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </a>
                 <!-- Reel 3 -->
-                <div class="reel-card reveal">
-                    <div class="reel-embed-wrapper">
-                        <iframe src="https://www.instagram.com/reel/DaKIQt_vUPH/embed/" frameborder="0" scrolling="no" allowtransparency="true" allowfullscreen="true" loading="lazy" class="reel-iframe"></iframe>
+                <a href="https://www.instagram.com/reel/DaKIQt_vUPH/" target="_blank" rel="noopener" aria-label="Watch this Instagram reel" class="phone-reel-link reveal hover-target">
+                    <div class="phone-reel">
+                        <div class="phone-reel-screen">
+                            <div class="phone-reel-island" aria-hidden="true"></div>
+                            <video class="phone-reel-video" src="public/assets/Video-793.mp4" muted loop playsinline preload="metadata"></video>
+                            <div class="phone-reel-play" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                            </div>
+                            <div class="phone-reel-overlay">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+                                Watch on Instagram
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </a>
+                <!-- Reel 4 -->
+                <a href="https://www.instagram.com/reel/DaNdw-hJ4tf/" target="_blank" rel="noopener" aria-label="Watch this Instagram reel" class="phone-reel-link reveal hover-target">
+                    <div class="phone-reel">
+                        <div class="phone-reel-screen">
+                            <div class="phone-reel-island" aria-hidden="true"></div>
+                            <video class="phone-reel-video" src="public/assets/Video-809.mp4" muted loop playsinline preload="metadata"></video>
+                            <div class="phone-reel-play" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                            </div>
+                            <div class="phone-reel-overlay">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+                                Watch on Instagram
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <!-- Reel 5 -->
+                <a href="https://www.instagram.com/reel/DNC7f1jTms7/" target="_blank" rel="noopener" aria-label="Watch this Instagram reel" class="phone-reel-link reveal hover-target">
+                    <div class="phone-reel">
+                        <div class="phone-reel-screen">
+                            <div class="phone-reel-island" aria-hidden="true"></div>
+                            <video class="phone-reel-video" src="public/assets/Video-996.mp4" muted loop playsinline preload="metadata"></video>
+                            <div class="phone-reel-play" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                            </div>
+                            <div class="phone-reel-overlay">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+                                Watch on Instagram
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <!-- Reel 6 -->
+                <a href="https://www.instagram.com/reel/DNC7EPATGJY/" target="_blank" rel="noopener" aria-label="Watch this Instagram reel" class="phone-reel-link reveal hover-target">
+                    <div class="phone-reel">
+                        <div class="phone-reel-screen">
+                            <div class="phone-reel-island" aria-hidden="true"></div>
+                            <video class="phone-reel-video" src="public/assets/Video-637.mp4" muted loop playsinline preload="metadata"></video>
+                            <div class="phone-reel-play" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                            </div>
+                            <div class="phone-reel-overlay">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+                                Watch on Instagram
+                            </div>
+                        </div>
+                    </div>
+                </a>
             </div>
         </div>
     </section>
+
 
     <!-- Rolling Marquee Section -->
     <section class="py-8 bg-[#e8c9a8] overflow-hidden scroll-section" data-color="#e8c9a8">
@@ -1417,6 +1658,21 @@
                 <span class="font-display text-5xl uppercase text-[#1c1c1c]/40">Display Ads ✦</span>
                 <span class="font-display text-5xl uppercase text-[#1c1c1c]/40">Strategy ✦</span>
             </div>
+        </div>
+    </section>
+
+    <!-- Doodle Canvas -->
+    <section id="doodle" class="panel py-20 bg-[#f5efe6] text-black text-center scroll-section" data-color="#f5efe6">
+        <h2 class="bubble-title text-[8vw] hover-target reveal">LEAVE A DOODLE</h2>
+        <p class="text-black/50 font-medium mt-2 mb-8 reveal">Before you go — scribble something.</p>
+
+        <div class="doodle-wrap mx-auto reveal">
+            <div class="doodle-toolbar">
+                <button id="drawBtn" class="doodle-btn active hover-target" type="button">Draw</button>
+                <button id="eraseBtn" class="doodle-btn hover-target" type="button">Erase</button>
+                <button id="clearBtn" class="doodle-btn hover-target" type="button">Clear</button>
+            </div>
+            <canvas id="doodleCanvas" class="doodle-canvas"></canvas>
         </div>
     </section>
 
@@ -1472,18 +1728,34 @@
         const pageLoader = document.getElementById('page-loader');
         const loaderTextEl = document.getElementById('loader-text');
         const loaderName = 'ADITI VIJAY';
-        // Build loader letters
-        loaderTextEl.innerHTML = [...loaderName].map(c =>
-            c === ' ' ? ' ' : `<span class="loader-letter">${c}</span>`
-        ).join('');
-        // Animate loader
-        const loaderTL = gsap.timeline({
+        const loaderScrambleChars = '!@#$%^&*|?/.';
+        loaderTextEl.textContent = '';
+        // Scramble-reveal the name (no external plugin needed), then slide the loader away
+        const scrambleState = { progress: 0 };
+        gsap.to(scrambleState, {
+            progress: 1,
+            duration: 1.5,
+            delay: 0.3,
+            ease: 'none',
+            onUpdate: () => {
+                const revealCount = Math.floor(scrambleState.progress * loaderName.length);
+                let out = '';
+                for (let i = 0; i < loaderName.length; i++) {
+                    if (loaderName[i] === ' ' || i < revealCount) {
+                        out += loaderName[i];
+                    } else {
+                        out += loaderScrambleChars[Math.floor(Math.random() * loaderScrambleChars.length)];
+                    }
+                }
+                loaderTextEl.textContent = out;
+            },
             onComplete: () => {
-                // Slide loader up
+                loaderTextEl.textContent = loaderName;
                 gsap.to(pageLoader, {
                     yPercent: -100,
                     duration: 0.8,
                     ease: 'power4.inOut',
+                    delay: 0.4,
                     onComplete: () => {
                         pageLoader.style.display = 'none';
                         // Start hero animations after loader
@@ -1492,23 +1764,6 @@
                 });
             }
         });
-        loaderTL
-            .to('.loader-letter', {
-                opacity: 1,
-                y: 0,
-                stagger: 0.06,
-                duration: 0.5,
-                ease: 'back.out(1.6)',
-                delay: 0.3
-            })
-            .to('.loader-letter', {
-                opacity: 0,
-                y: -30,
-                stagger: 0.03,
-                duration: 0.3,
-                ease: 'power2.in',
-                delay: 0.5
-            });
 
         // ===== FLOATING PARTICLES (HERO) =====
         const particlesContainer = document.getElementById('hero-particles');
@@ -2089,6 +2344,127 @@
         if (localStorage.getItem('darkMode') === '1') applyDark(true);
 
         darkToggle.addEventListener('click', () => applyDark(!htmlEl.classList.contains('dark')));
+
+        // ===== PHONE REEL MOCKUPS: hover-to-play (desktop), autoplay (touch) =====
+        const canHover = window.matchMedia('(hover: hover)').matches;
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        document.querySelectorAll('.phone-reel').forEach((phone) => {
+            const video = phone.querySelector('video.phone-reel-video');
+            if (!video) return;
+            video.addEventListener('loadedmetadata', () => { video.currentTime = 0.1; }, { once: true });
+            if (canHover) {
+                phone.addEventListener('mouseenter', () => {
+                    phone.classList.add('is-playing');
+                    video.currentTime = 0;
+                    video.play().catch(() => {});
+                });
+                phone.addEventListener('mouseleave', () => {
+                    phone.classList.remove('is-playing');
+                    video.pause();
+                    video.currentTime = 0;
+                });
+            } else if (!reducedMotion) {
+                video.setAttribute('autoplay', '');
+                video.play().catch(() => {});
+                phone.classList.add('is-playing');
+            }
+        });
+
+        // ===== DOODLE CANVAS =====
+        (function () {
+            const canvas = document.getElementById('doodleCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            function resizeCanvas() {
+                canvas.width = canvas.clientWidth;
+                canvas.height = canvas.clientHeight;
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            let mode = 'draw'; // draw | erase
+            let isDrawing = false;
+            let lastPos = null;
+
+            const drawBtn = document.getElementById('drawBtn');
+            const eraseBtn = document.getElementById('eraseBtn');
+            const clearBtn = document.getElementById('clearBtn');
+
+            function setMode(newMode) {
+                mode = newMode;
+                drawBtn.classList.toggle('active', mode === 'draw');
+                eraseBtn.classList.toggle('active', mode === 'erase');
+            }
+
+            drawBtn.addEventListener('click', () => setMode('draw'));
+            eraseBtn.addEventListener('click', () => setMode('erase'));
+            clearBtn.addEventListener('click', () => ctx.clearRect(0, 0, canvas.width, canvas.height));
+
+            function getPos(e) {
+                const rect = canvas.getBoundingClientRect();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                return {
+                    x: ((clientX - rect.left) * canvas.width) / rect.width,
+                    y: ((clientY - rect.top) * canvas.height) / rect.height,
+                };
+            }
+
+            function handleStart(e) {
+                if (e.button !== undefined && e.button !== 0) return;
+                e.preventDefault();
+                isDrawing = true;
+                lastPos = getPos(e);
+            }
+
+            function handleMove(e) {
+                if (!isDrawing) return;
+                e.preventDefault();
+                const pos = getPos(e);
+
+                if (mode === 'draw') {
+                    ctx.strokeStyle = '#ee413d';
+                    ctx.lineWidth = 40;
+                    ctx.lineCap = 'round';
+                    ctx.lineJoin = 'round';
+
+                    ctx.beginPath();
+                    ctx.moveTo(lastPos.x, lastPos.y);
+                    ctx.lineTo(pos.x, pos.y);
+                    ctx.stroke();
+                } else {
+                    // Smooth round eraser
+                    ctx.save();
+                    ctx.globalCompositeOperation = 'destination-out';
+
+                    ctx.beginPath();
+                    ctx.arc(pos.x, pos.y, 40, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.restore();
+                }
+
+                lastPos = pos;
+            }
+
+            function handleEnd() {
+                isDrawing = false;
+                lastPos = null;
+            }
+
+            // Mouse events
+            canvas.addEventListener('mousedown', handleStart);
+            canvas.addEventListener('mousemove', handleMove);
+            canvas.addEventListener('mouseup', handleEnd);
+            canvas.addEventListener('mouseleave', handleEnd);
+
+            // Touch events
+            canvas.addEventListener('touchstart', handleStart, { passive: false });
+            canvas.addEventListener('touchmove', handleMove, { passive: false });
+            canvas.addEventListener('touchend', handleEnd);
+            canvas.addEventListener('touchcancel', handleEnd);
+        })();
     </script>
 
     <!-- Download & Copy Protection -->
