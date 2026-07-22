@@ -2584,6 +2584,7 @@
 
         // ===== COUNTER ANIMATION (for "1000+" in resume) =====
         document.querySelectorAll('#resume li').forEach(li => {
+            if (li.children.length > 0) return; // skip rows with icons/links (e.g. contact list)
             const match = li.textContent.match(/(\d{3,})\+?/);
             if (match) {
                 const num = parseInt(match[1]);
