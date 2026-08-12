@@ -694,6 +694,82 @@
             transform: scaleY(0);
         }
 
+        /* ===== 3D PHOTO RING ===== */
+        /* Purely a visual showcase: every photo here is also a real, focusable link in the
+           grid below, so the ring is aria-hidden and holds no controls of its own. That
+           keeps a spinning carousel from becoming a keyboard trap or a duplicate listing.
+           Sizes are driven by custom properties so one rule set covers all breakpoints. */
+        .pcar-scene {
+            --radius: 440px;
+            --item-w: 165px;
+            --item-h: 225px;
+            --pop-z: 90px;
+            --pop-scale: 1.18;
+            position: relative;
+            width: 100%;
+            height: 520px;
+            perspective: 1250px;
+            overflow: hidden;
+        }
+        .pcar {
+            position: absolute;
+            inset: 0;
+            transform-style: preserve-3d;
+            animation: pcar-spin 46s linear infinite;
+        }
+        /* Without this you cannot hover a moving target. */
+        .pcar-scene:hover .pcar { animation-play-state: paused; }
+
+        .pcar-item {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: var(--item-w);
+            height: var(--item-h);
+            margin-top: calc(var(--item-h) / -2);
+            margin-left: calc(var(--item-w) / -2);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.22);
+            transform: rotateY(var(--angle)) translateZ(var(--radius));
+            transition: transform 0.55s cubic-bezier(.2,.8,.2,1), box-shadow 0.55s ease;
+        }
+        /* Pops toward the viewer as well as scaling, so it reads as depth, not just size. */
+        .pcar-item:hover {
+            transform: rotateY(var(--angle)) translateZ(calc(var(--radius) + var(--pop-z))) scale(var(--pop-scale));
+            box-shadow: 0 26px 60px rgba(0,0,0,0.38);
+        }
+        .pcar-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        @keyframes pcar-spin {
+            from { transform: rotateY(0deg); }
+            to   { transform: rotateY(360deg); }
+        }
+        html.dark .pcar-item { box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+
+        @media (max-width: 1024px) {
+            .pcar-scene {
+                --radius: 320px; --item-w: 140px; --item-h: 190px;
+                --pop-z: 70px; --pop-scale: 1.15;
+                height: 430px; perspective: 1000px;
+            }
+        }
+        @media (max-width: 640px) {
+            .pcar-scene {
+                --radius: 200px; --item-w: 96px; --item-h: 130px;
+                --pop-z: 50px; --pop-scale: 1.12;
+                height: 320px; perspective: 700px;
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .pcar { animation: none; }
+            .pcar-item, .pcar-item:hover { transition: none; }
+        }
+
         /* ===== IMAGE MASK REVEAL ===== */
         .img-mask-reveal {
             position: relative;
@@ -922,6 +998,24 @@
 
     <!-- Photography & Videography Section -->
     <section id="photography" class="panel py-20 bg-[#ede4d8] text-black scroll-section" data-color="#ede4d8">
+
+        <!-- 3D photo ring. Decorative showcase; the grid below is the accessible gallery,
+             so this is hidden from assistive tech rather than announced twice. -->
+        <div class="pcar-scene mb-14" aria-hidden="true">
+            <div class="pcar">
+                <div class="pcar-item" style="--angle:0deg"><img src="public/assets/photography/photo-still-life.jpg" alt="" loading="lazy" decoding="async"/></div>
+                <div class="pcar-item" style="--angle:36deg"><img src="public/assets/photography/photo-cocktail.jpg" alt="" loading="lazy" decoding="async"/></div>
+                <div class="pcar-item" style="--angle:72deg"><img src="public/assets/photography/jaipur-patrika-gate-night.jpg" alt="" loading="lazy" decoding="async"/></div>
+                <div class="pcar-item" style="--angle:108deg"><img src="public/assets/photography/bougainvillea-sky.jpg" alt="" loading="lazy" decoding="async"/></div>
+                <div class="pcar-item" style="--angle:144deg"><img src="public/assets/photography/sunset-street.jpg" alt="" loading="lazy" decoding="async"/></div>
+                <div class="pcar-item" style="--angle:180deg"><img src="public/assets/photography/breathe-neon-sign.jpg" alt="" loading="lazy" decoding="async"/></div>
+                <div class="pcar-item" style="--angle:216deg"><img src="public/assets/photography/photo-pasta-dinner.jpg" alt="" loading="lazy" decoding="async"/></div>
+                <div class="pcar-item" style="--angle:252deg"><img src="public/assets/photography/mirror-selfie-camera.jpg" alt="" loading="lazy" decoding="async"/></div>
+                <div class="pcar-item" style="--angle:288deg"><img src="public/assets/photography/resort-pergola-dusk.jpg" alt="" loading="lazy" decoding="async"/></div>
+                <div class="pcar-item" style="--angle:324deg"><img src="public/assets/photography/photo-bts-shoot.jpg" alt="" loading="lazy" decoding="async"/></div>
+            </div>
+        </div>
+
         <div class="px-6 lg:px-20 columns-2 md:columns-3 gap-4 space-y-4">
             <a href="public/assets/photography/photo-still-life.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
                 <img src="public/assets/photography/photo-still-life.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Still life photography"/>
