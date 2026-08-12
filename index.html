@@ -2490,19 +2490,26 @@
         });
 
         // ===== PHOTOGRAPHY MASONRY WATERFALL STAGGER =====
+        // The hidden state is set up front rather than by a from() tween, so a photo is
+        // never painted visible and then snapped back to opacity 0 when its tween starts.
+        // Batching staggers only the photos entering together; a per-item delay would
+        // accumulate across the whole grid and leave the last ones waiting seconds.
         const photoItems = document.querySelectorAll('#photography .break-inside-avoid');
-        photoItems.forEach((item, i) => {
-            gsap.from(item, {
-                scrollTrigger: { trigger: item, start: 'top 90%' },
-                y: 60,
-                opacity: 0,
-                scale: 0.95,
-                duration: 0.7,
-                delay: i * 0.12,
-                ease: 'power3.out',
-                immediateRender: false
-            });
-        });
+        if (photoItems.length) {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                gsap.set(photoItems, { clearProps: 'all' });
+            } else {
+                gsap.set(photoItems, { y: 60, opacity: 0, scale: 0.95 });
+                ScrollTrigger.batch(photoItems, {
+                    start: 'top 90%',
+                    once: true,
+                    onEnter: batch => gsap.to(batch, {
+                        y: 0, opacity: 1, scale: 1,
+                        duration: 0.7, stagger: 0.08, ease: 'power3.out', overwrite: true
+                    })
+                });
+            }
+        }
 
         // ===== FOOTER: "THANK YOU" STROKE FILL ANIMATION =====
         ScrollTrigger.create({
