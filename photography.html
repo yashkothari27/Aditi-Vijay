@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
     <title>Photography &amp; Videography | Aditi Vijay</title>
-    <meta name="description" content="Aditi Vijay's photography and videography work — personal photography, product styling, content shoots, and Instagram Reels."/>
+    <meta name="description" content="Aditi Vijay's photography and videography work, personal photography, product styling, content shoots, and Instagram Reels."/>
     <meta property="og:title" content="Photography &amp; Videography | Aditi Vijay"/>
     <meta property="og:description" content="Personal photography, product styling, content shoots, and Instagram Reels."/>
     <meta property="og:image" content="public/assets/girl-portrait.png"/>
@@ -14,31 +14,13 @@
     <script>
         document.documentElement.classList.add('js-active');
     </script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Prebuilt Tailwind (see tailwind.config.js to regenerate). Replaces the Play CDN,
+         which shipped the compiler to the browser and rebuilt this CSS on every page load. -->
+    <link rel="stylesheet" href="tailwind.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=League+Gothic&family=Dancing+Script:wght@400;700&family=Lilita+One&display=swap" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
-    <script id="tailwind-config">
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        cream: "#f5efe6",
-                        pink: "#e8c9a8",
-                        black: "#111111",
-                        darkGray: "#1f1f1f",
-                    },
-                    fontFamily: {
-                        display: ["League Gothic", "sans-serif"],
-                        body: ["Plus Jakarta Sans", "sans-serif"],
-                        script: ["Dancing Script", "cursive"],
-                        headline: ["Space Grotesk", "sans-serif"]
-                    }
-                }
-            }
-        }
-    </script>
     <style>
         /* ===== BASE ===== */
         html { scroll-behavior: auto; } /* Lenis handles smooth scroll */
@@ -103,6 +85,15 @@
             color: #111; text-decoration: none; letter-spacing: -0.03em;
             -webkit-text-stroke: 1px #111;
         }
+        .nav-status {
+            display: none; align-items: center; gap: 6px; margin-left: 14px;
+            padding: 5px 12px; border-radius: 9999px; background: rgba(0,0,0,0.05);
+            font-family: 'Space Grotesk', sans-serif; font-size: 0.7rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.06em; color: rgba(17,17,17,0.75);
+        }
+        .nav-status-dot { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; flex-shrink: 0; }
+        @media (min-width: 900px) { .nav-status { display: inline-flex; } }
+        html.dark .nav-status { background: rgba(255,255,255,0.08); color: rgba(240,232,223,0.55); }
         .nav-links { display: flex; gap: 28px; list-style: none; margin: 0; padding: 0; }
         .nav-links a {
             font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem;
@@ -399,7 +390,7 @@
         html.dark .project-img-wrap:hover {
             box-shadow: 0 20px 60px rgba(0,0,0,0.35);
         }
-        html.dark #works .font-body.text-black\/50 { color: rgba(240,232,223,0.45) !important; }
+        html.dark #works .font-body.text-black\/60 { color: rgba(240,232,223,0.45) !important; }
         html.dark #works .font-headline.text-black\/25 { color: rgba(240,232,223,0.2) !important; }
         html.dark #works .text-black\/30 { color: rgba(240,232,223,0.25) !important; }
         html.dark #works .bg-black\/15 { background-color: rgba(240,232,223,0.1) !important; }
@@ -491,10 +482,12 @@
         }
 
         /* ===== SCROLL PROGRESS BAR ===== */
+        /* Scaled on the compositor rather than resized: animating width relayouts every scroll frame. */
         #scroll-progress {
-            position: fixed; top: 0; left: 0; width: 0%; height: 3px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 3px;
             background: linear-gradient(90deg, #d4956a, #c4845a, #e8c9a8);
-            z-index: 10001; pointer-events: none; will-change: width;
+            z-index: 10001; pointer-events: none;
+            transform: scaleX(0); transform-origin: 0 50%; will-change: transform;
         }
 
         /* ===== HERO LETTER SPLIT ===== */
@@ -556,7 +549,7 @@
         html.dark #resume li         { color: rgba(240,232,223,0.8); }
         html.dark #resume p          { color: rgba(240,232,223,0.8); }
         html.dark #resume .hover\:text-black:hover { color: #f0e8df !important; }
-        html.dark .text-black\/50    { color: rgba(240,232,223,0.5) !important; }
+        html.dark .text-black\/60    { color: rgba(240,232,223,0.5) !important; }
         html.dark .text-black\/40    { color: rgba(240,232,223,0.4) !important; }
         html.dark .text-black\/35    { color: rgba(240,232,223,0.35) !important; }
         html.dark .text-\[\#1c1c1c\]\/40 { color: rgba(240,232,223,0.3) !important; }
@@ -897,7 +890,10 @@
 
     <!-- Floating Navigation -->
     <nav id="site-nav">
-        <a href="index.html" class="nav-logo hover-target">AV ✦</a>
+        <div style="display:flex; align-items:center;">
+            <a href="index.html" class="nav-logo hover-target">AV ✦</a>
+            <span class="nav-status"><span class="nav-status-dot"></span>Available for work</span>
+        </div>
         <ul class="nav-links">
             <li><a href="index.html#about" class="hover-target">About</a></li>
             <li><a href="index.html#resume" class="hover-target">Resume</a></li>
@@ -927,81 +923,104 @@
     <!-- Photography & Videography Section -->
     <section id="photography" class="panel py-20 bg-[#ede4d8] text-black scroll-section" data-color="#ede4d8">
         <div class="px-6 lg:px-20 columns-2 md:columns-3 gap-4 space-y-4">
-            <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
+            <a href="public/assets/photography/photo-still-life.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
                 <img src="public/assets/photography/photo-still-life.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Still life photography"/>
-            </div>
-            <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
+                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
+            </a>
+            <a href="public/assets/photography/photo-cocktail.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
                 <img src="public/assets/photography/photo-cocktail.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:9/16;" alt="Cocktail drink styling"/>
-            </div>
-            <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
+                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
+            </a>
+            <a href="public/assets/photography/photo-mirror-selfie.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
                 <img src="public/assets/photography/photo-mirror-selfie.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:9/16;" alt="Mirror selfie photography"/>
-            </div>
-            <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
+                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
+            </a>
+            <a href="public/assets/photography/photo-pasta-dinner.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
                 <img src="public/assets/photography/photo-pasta-dinner.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Food styling photography"/>
-            </div>
-            <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
+                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
+            </a>
+            <a href="public/assets/photography/photo-bts-shoot.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
                 <img src="public/assets/photography/photo-bts-shoot.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Behind the scenes product shoot"/>
-            </div>
+                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
+            </a>
             <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
                 <video src="public/assets/videography/IMG_6736.MP4" autoplay muted loop playsinline preload="metadata" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:9/16;" aria-label="Content shoot video"></video>
             </div>
-            <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
+            <a href="public/assets/photography/mirror-selfie-camera.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
                 <img src="public/assets/photography/mirror-selfie-camera.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:9/16;" alt="Mirror selfie with camera"/>
-            </div>
-            <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
+                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
+            </a>
+            <a href="public/assets/photography/jaipur-patrika-gate-night.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
                 <img src="public/assets/photography/jaipur-patrika-gate-night.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:4/3;" alt="Patrika Gate, Jaipur at night"/>
-            </div>
-            <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
+                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
+            </a>
+            <a href="public/assets/photography/jaipur-patrika-gate-marble.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
                 <img src="public/assets/photography/jaipur-patrika-gate-marble.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Marble archway detail, Jaipur"/>
-            </div>
-            <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
+                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
+            </a>
+            <a href="public/assets/photography/pizza-dinner.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
                 <img src="public/assets/photography/pizza-dinner.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:9/16;" alt="Pizza dinner styling"/>
-            </div>
-            <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
+                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
+            </a>
+            <a href="public/assets/photography/jaipur-pigeons-gate.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
                 <img src="public/assets/photography/jaipur-pigeons-gate.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Pigeons flying over a city gate"/>
-            </div>
-            <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
+                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
+            </a>
+            <a href="public/assets/photography/dog-in-the-park.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
                 <img src="public/assets/photography/dog-in-the-park.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Dog exploring the park"/>
-            </div>
-            <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
+                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
+            </a>
+            <a href="public/assets/photography/flower-in-hand.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
                 <img src="public/assets/photography/flower-in-hand.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Holding a wildflower"/>
-            </div>
-            <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
+                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
+            </a>
+            <a href="public/assets/photography/cayo-lounge-night.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
                 <img src="public/assets/photography/cayo-lounge-night.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:9/16;" alt="Lounge ambience at night"/>
-            </div>
-            <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
+                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
+            </a>
+            <a href="public/assets/photography/resort-pergola-dusk.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
                 <img src="public/assets/photography/resort-pergola-dusk.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Resort pergola at dusk"/>
-            </div>
-            <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
+                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
+            </a>
+            <a href="public/assets/photography/resort-gate-dusk.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
                 <img src="public/assets/photography/resort-gate-dusk.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Resort entrance at dusk"/>
-            </div>
-            <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
+                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
+            </a>
+            <a href="public/assets/photography/bougainvillea-sky.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
                 <img src="public/assets/photography/bougainvillea-sky.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Bougainvillea against the sky"/>
-            </div>
-            <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
+                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
+            </a>
+            <a href="public/assets/photography/sunset-street.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
                 <img src="public/assets/photography/sunset-street.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="City street at sunset"/>
-            </div>
-            <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
+                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
+            </a>
+            <a href="public/assets/photography/breathe-neon-sign.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
                 <img src="public/assets/photography/breathe-neon-sign.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Breathe neon sign"/>
-            </div>
-            <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
+                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
+            </a>
+            <a href="public/assets/photography/studio-bts-props.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
                 <img src="public/assets/photography/studio-bts-props.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Studio props behind the scenes"/>
-            </div>
+                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
+            </a>
             <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
                 <video src="public/assets/videography/bougainvillea-clip.mp4" autoplay muted loop playsinline preload="metadata" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:9/16;" aria-label="Bougainvillea in bloom, video clip"></video>
             </div>
-            <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
+            <a href="public/assets/brands/bag-central/shoot-01.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
                 <img src="public/assets/brands/bag-central/shoot-01.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:2/3;" alt="Product styling shoot, denim bag"/>
-            </div>
-            <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
+                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
+            </a>
+            <a href="public/assets/brands/bag-central/shoot-02.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
                 <img src="public/assets/brands/bag-central/shoot-02.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:2/3;" alt="Product styling shoot, denim bag"/>
-            </div>
-            <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
+                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
+            </a>
+            <a href="public/assets/brands/bag-central/shoot-03.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
                 <img src="public/assets/brands/bag-central/shoot-03.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:2/3;" alt="Product styling shoot, denim bag"/>
-            </div>
-            <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
+                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
+            </a>
+            <a href="public/assets/brands/bag-central/shoot-04.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
                 <img src="public/assets/brands/bag-central/shoot-04.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:2/3;" alt="Product styling shoot, denim bag"/>
-            </div>
+                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
+            </a>
             <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
                 <video src="public/assets/brands/bag-central/bts-video.mp4" autoplay muted loop playsinline preload="metadata" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:16/9;" aria-label="Behind the scenes, studio product shoot"></video>
             </div>
@@ -1012,7 +1031,7 @@
     <section class="panel py-20 bg-[#f5efe6] text-black scroll-section" data-color="#f5efe6">
         <div class="px-6 lg:px-20 mb-10">
             <h2 class="bubble-title text-[8vw] hover-target reveal">FOLLOW ME LIVE</h2>
-            <p class="text-black/50 font-medium mt-2 reveal">Whatever I post next shows up here first — follow along in real time.</p>
+            <p class="text-black/60 font-medium mt-2 reveal">Whatever I post next shows up here first. Follow along in real time.</p>
         </div>
         <div class="px-6 lg:px-20 grid grid-cols-1 md:grid-cols-2 gap-6">
             <a href="https://www.instagram.com/chinki.iiiii?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener" class="live-card live-card-instagram hover-target reveal-left" aria-label="Follow Chinki on Instagram">
@@ -1023,7 +1042,7 @@
                     <span class="live-dot">Live</span>
                 </div>
                 <p class="live-card-handle">@chinki.iiiii</p>
-                <p class="live-card-sub">Personal Instagram — reels, stories, and whatever I'm shooting this week.</p>
+                <p class="live-card-sub">Personal Instagram: reels, stories, and whatever I'm shooting this week.</p>
                 <span class="live-card-cta">Follow on Instagram ➔</span>
             </a>
             <a href="https://www.snapchat.com/add/avijay4065" target="_blank" rel="noopener" class="live-card live-card-snapchat hover-target reveal-right" aria-label="Add avijay4065 on Snapchat">
@@ -1034,7 +1053,7 @@
                     <span class="live-dot">Live</span>
                 </div>
                 <p class="live-card-handle">avijay4065</p>
-                <p class="live-card-sub">Snapchat stories — daily behind-the-scenes, no filter.</p>
+                <p class="live-card-sub">Snapchat stories: daily behind-the-scenes, no filter.</p>
                 <span class="live-card-cta">Add on Snapchat ➔</span>
             </a>
         </div>
@@ -1158,9 +1177,6 @@
         const nav = document.getElementById('site-nav');
         const hamburger = document.getElementById('nav-hamburger');
         const mobileMenu = document.getElementById('nav-mobile-menu');
-        window.addEventListener('scroll', () => {
-            nav.classList.toggle('scrolled', window.scrollY > 60);
-        }, { passive: true });
         function toggleMobileMenu() {
             const isOpen = hamburger.classList.toggle('open');
             mobileMenu.classList.toggle('open', isOpen);
@@ -1220,45 +1236,71 @@
         revealEls.forEach(el => revealObs.observe(el));
 
         // ===== MOUSE PARALLAX =====
-        const parallaxItems = document.querySelectorAll('.parallax');
-        document.addEventListener('mousemove', (e) => {
-            const x = (e.clientX - window.innerWidth / 2) / 50;
-            const y = (e.clientY - window.innerHeight / 2) / 50;
-            parallaxItems.forEach(item => {
-                if (getComputedStyle(item).display === 'none') return;
-                const speed = parseFloat(item.dataset.speed) || 1;
-                gsap.to(item, { x: x * speed, y: y * speed, duration: 0.6, ease: 'power2.out' });
-            });
-        });
+        // Pointer-driven, so it never binds on touch. quickTo reuses one tween per element
+        // instead of allocating a new one per item per mousemove, and offsetParent replaces
+        // getComputedStyle so hidden items don't force a style recalc on every event.
+        const pointerFine = window.matchMedia('(hover: hover) and (pointer: fine)');
+        if (pointerFine.matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            const parallaxItems = [...document.querySelectorAll('.parallax')].map(item => ({
+                el: item,
+                speed: parseFloat(item.dataset.speed) || 1,
+                xTo: gsap.quickTo(item, 'x', { duration: 0.6, ease: 'power2.out' }),
+                yTo: gsap.quickTo(item, 'y', { duration: 0.6, ease: 'power2.out' })
+            }));
+            document.addEventListener('mousemove', (e) => {
+                const x = (e.clientX - window.innerWidth / 2) / 50;
+                const y = (e.clientY - window.innerHeight / 2) / 50;
+                for (const item of parallaxItems) {
+                    if (item.el.offsetParent === null) continue;
+                    item.xTo(x * item.speed);
+                    item.yTo(y * item.speed);
+                }
+            }, { passive: true });
+        }
 
-        // ===== SCROLL PROGRESS BAR =====
+        // ===== SCROLL-DRIVEN NAV STATE + PROGRESS BAR =====
+        // Both run off Lenis' single scroll callback instead of separate window scroll
+        // listeners, so each scroll frame does one read and two compositor-only writes.
         const scrollProgress = document.getElementById('scroll-progress');
-        window.addEventListener('scroll', () => {
-            const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
-            scrollProgress.style.width = pct + '%';
-        }, { passive: true });
+        let navScrolled = null;
+        function onScrollFrame(scrollY) {
+            const isScrolled = scrollY > 60;
+            if (isScrolled !== navScrolled) {
+                navScrolled = isScrolled;
+                nav.classList.toggle('scrolled', isScrolled);
+            }
+            const max = document.documentElement.scrollHeight - window.innerHeight;
+            const p = max > 0 ? Math.min(scrollY / max, 1) : 0;
+            scrollProgress.style.transform = `scaleX(${p})`;
+        }
+        lenis.on('scroll', ({ scroll }) => onScrollFrame(scroll));
+        onScrollFrame(window.scrollY);
 
         // ===== NAV ENTRANCE =====
         gsap.from('#site-nav', { opacity: 0, y: -24, duration: 0.9, delay: 2.8, ease: 'power2.out' });
 
         // ===== PORTRAIT 3D TILT ON MOUSE =====
         const portraitWrap = document.querySelector('.portrait-wrap');
-        if (portraitWrap) {
+        if (portraitWrap && pointerFine.matches) {
             portraitWrap.classList.add('tilt-3d');
             portraitWrap.style.perspective = '800px';
             const portraitImg = portraitWrap.querySelector('img');
-            portraitWrap.addEventListener('mousemove', (e) => {
-                const rect = portraitWrap.getBoundingClientRect();
-                const x = (e.clientX - rect.left) / rect.width - 0.5;
-                const y = (e.clientY - rect.top) / rect.height - 0.5;
-                gsap.to(portraitImg, {
-                    rotateY: x * 12,
-                    rotateX: -y * 8,
-                    duration: 0.4,
-                    ease: 'power2.out'
-                });
+            // Rect is read on enter, not on every move, so the tilt never reads layout mid-gesture.
+            let portraitRect = null;
+            const rotYTo = gsap.quickTo(portraitImg, 'rotateY', { duration: 0.4, ease: 'power2.out' });
+            const rotXTo = gsap.quickTo(portraitImg, 'rotateX', { duration: 0.4, ease: 'power2.out' });
+            portraitWrap.addEventListener('mouseenter', () => {
+                portraitRect = portraitWrap.getBoundingClientRect();
             });
+            portraitWrap.addEventListener('mousemove', (e) => {
+                if (!portraitRect) portraitRect = portraitWrap.getBoundingClientRect();
+                const x = (e.clientX - portraitRect.left) / portraitRect.width - 0.5;
+                const y = (e.clientY - portraitRect.top) / portraitRect.height - 0.5;
+                rotYTo(x * 12);
+                rotXTo(-y * 8);
+            }, { passive: true });
             portraitWrap.addEventListener('mouseleave', () => {
+                portraitRect = null;
                 gsap.to(portraitImg, {
                     rotateY: 0,
                     rotateX: 0,
@@ -1473,32 +1515,40 @@
             immediateRender: false
         });
 
-        // ===== MAGNETIC HOVER — ALL CTAs + FOOTER SOCIAL =====
-        const magneticElements = document.querySelectorAll('#contact .flex.justify-center.gap-6 a, .tool-icon, #dark-toggle, .nav-logo');
-        magneticElements.forEach(btn => {
-            btn.classList.add('magnetic-btn');
-            btn.addEventListener('mousemove', (e) => {
-                const r = btn.getBoundingClientRect();
+        // ===== MAGNETIC HOVER: ALL CTAs + FOOTER SOCIAL =====
+        // Hover-only effects, so nothing is bound on touch devices where they can never fire.
+        if (pointerFine.matches) {
+            const magneticElements = document.querySelectorAll('#contact .flex.justify-center.gap-6 a, .tool-icon, #dark-toggle, .nav-logo');
+            magneticElements.forEach(btn => {
+                btn.classList.add('magnetic-btn');
                 const strength = btn.closest('#contact') ? 0.4 : 0.25;
-                gsap.to(btn, {
-                    x: (e.clientX - r.left - r.width / 2) * strength,
-                    y: (e.clientY - r.top - r.height / 2) * strength,
-                    duration: 0.2, ease: 'power2.out'
+                const xTo = gsap.quickTo(btn, 'x', { duration: 0.2, ease: 'power2.out' });
+                const yTo = gsap.quickTo(btn, 'y', { duration: 0.2, ease: 'power2.out' });
+                let r = null;
+                btn.addEventListener('mouseenter', () => { r = btn.getBoundingClientRect(); });
+                btn.addEventListener('mousemove', (e) => {
+                    if (!r) r = btn.getBoundingClientRect();
+                    xTo((e.clientX - r.left - r.width / 2) * strength);
+                    yTo((e.clientY - r.top - r.height / 2) * strength);
+                }, { passive: true });
+                btn.addEventListener('mouseleave', () => {
+                    r = null;
+                    gsap.to(btn, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.3)' });
                 });
             });
-            btn.addEventListener('mouseleave', () => {
-                gsap.to(btn, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.3)' });
-            });
-        });
 
-        // ===== PROJECT CARD SPOTLIGHT (cursor-following glow) =====
-        document.querySelectorAll('.project-img-wrap').forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const r = card.getBoundingClientRect();
-                card.style.setProperty('--spot-x', `${e.clientX - r.left}px`);
-                card.style.setProperty('--spot-y', `${e.clientY - r.top}px`);
+            // ===== PROJECT CARD SPOTLIGHT (cursor-following glow) =====
+            document.querySelectorAll('.project-img-wrap').forEach(card => {
+                let r = null;
+                card.addEventListener('mouseenter', () => { r = card.getBoundingClientRect(); });
+                card.addEventListener('mousemove', (e) => {
+                    if (!r) r = card.getBoundingClientRect();
+                    card.style.setProperty('--spot-x', `${e.clientX - r.left}px`);
+                    card.style.setProperty('--spot-y', `${e.clientY - r.top}px`);
+                }, { passive: true });
+                card.addEventListener('mouseleave', () => { r = null; });
             });
-        });
+        }
 
         // ===== FOOTER ROTATING WORD (ported from 21st.dev's TextRotate pattern) =====
         const rotateWordEl = document.getElementById('footer-rotate-word');

@@ -14,31 +14,13 @@
     <script>
         document.documentElement.classList.add('js-active');
     </script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Prebuilt Tailwind (see tailwind.config.js to regenerate). Replaces the Play CDN,
+         which shipped the compiler to the browser and rebuilt this CSS on every page load. -->
+    <link rel="stylesheet" href="tailwind.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=League+Gothic&family=Dancing+Script:wght@400;700&family=Lilita+One&display=swap" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
-    <script id="tailwind-config">
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        cream: "#f5efe6",
-                        pink: "#e8c9a8",
-                        black: "#111111",
-                        darkGray: "#1f1f1f",
-                    },
-                    fontFamily: {
-                        display: ["League Gothic", "sans-serif"],
-                        body: ["Plus Jakarta Sans", "sans-serif"],
-                        script: ["Dancing Script", "cursive"],
-                        headline: ["Space Grotesk", "sans-serif"]
-                    }
-                }
-            }
-        }
-    </script>
     <style>
         /* ===== BASE ===== */
         html { scroll-behavior: auto; } /* Lenis handles smooth scroll */
@@ -93,16 +75,26 @@
             transition: background 0.4s, backdrop-filter 0.4s, box-shadow 0.4s;
         }
         #site-nav.scrolled {
-            background: rgba(245,239,230,0.88);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            box-shadow: 0 2px 20px rgba(0,0,0,0.07);
+            background: rgba(245,239,230,0.85);
+            backdrop-filter: blur(20px) saturate(160%);
+            -webkit-backdrop-filter: blur(20px) saturate(160%);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.5);
+            border-bottom: 1px solid rgba(255,255,255,0.3);
         }
         .nav-logo {
             font-family: 'Lilita One', cursive; font-size: 1.6rem;
             color: #111; text-decoration: none; letter-spacing: -0.03em;
             -webkit-text-stroke: 1px #111;
         }
+        .nav-status {
+            display: none; align-items: center; gap: 6px; margin-left: 14px;
+            padding: 5px 12px; border-radius: 9999px; background: rgba(0,0,0,0.05);
+            font-family: 'Space Grotesk', sans-serif; font-size: 0.7rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.06em; color: rgba(17,17,17,0.75);
+        }
+        .nav-status-dot { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; flex-shrink: 0; }
+        @media (min-width: 900px) { .nav-status { display: inline-flex; } }
+        html.dark .nav-status { background: rgba(255,255,255,0.08); color: rgba(240,232,223,0.55); }
         .nav-links { display: flex; gap: 28px; list-style: none; margin: 0; padding: 0; }
         .nav-links a {
             font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem;
@@ -414,7 +406,7 @@
         html.dark .project-img-wrap:hover {
             box-shadow: 0 20px 60px rgba(0,0,0,0.35);
         }
-        html.dark #works .font-body.text-black\/50 { color: rgba(240,232,223,0.45) !important; }
+        html.dark #works .font-body.text-black\/60 { color: rgba(240,232,223,0.45) !important; }
         html.dark #works .font-headline.text-black\/25 { color: rgba(240,232,223,0.2) !important; }
         html.dark #works .text-black\/30 { color: rgba(240,232,223,0.25) !important; }
         html.dark #works .bg-black\/15 { background-color: rgba(240,232,223,0.1) !important; }
@@ -432,10 +424,6 @@
         @keyframes float-sticker-r { 0%,100% { transform: translateY(0) rotate(6deg); } 50% { transform: translateY(-8px) rotate(8deg); } }
         .sticker-float { animation: float-sticker 3.5s ease-in-out infinite; }
         .sticker-float-r { animation: float-sticker-r 4s ease-in-out infinite; }
-
-        /* ===== SCROLL ARROW BOUNCE ===== */
-        @keyframes bounce-down { 0%,100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
-        .bounce-arrow { animation: bounce-down 1.8s ease-in-out infinite; }
 
         /* ===== CHINKI THE EXPLORER CTA ===== */
         .chinki-cta-section { background: #d4956a; padding: 70px 24px; overflow: hidden; }
@@ -582,15 +570,16 @@
         @media (max-height: 500px) and (orientation: landscape) {
             #hero-year { bottom: 6px; left: 6px; }
             #hero-year span { font-size: 1.1rem; }
-            #hero-scroll-cue { display: none; }
             #hero-subtitle { margin-top: 0.5rem; }
         }
 
         /* ===== SCROLL PROGRESS BAR ===== */
+        /* Scaled on the compositor rather than resized: animating width relayouts every scroll frame. */
         #scroll-progress {
-            position: fixed; top: 0; left: 0; width: 0%; height: 3px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 3px;
             background: linear-gradient(90deg, #d4956a, #c4845a, #e8c9a8);
-            z-index: 10001; pointer-events: none; will-change: width;
+            z-index: 10001; pointer-events: none;
+            transform: scaleX(0); transform-origin: 0 50%; will-change: transform;
         }
 
         /* ===== HERO LETTER SPLIT ===== */
@@ -598,7 +587,7 @@
 
         /* ===== REDUCED MOTION ===== */
         @media (prefers-reduced-motion: reduce) {
-            .sticker-float, .sticker-float-r, .bounce-arrow, .marquee-track, .hero-orbit-ring-slow, .hero-orbit-ring-fast, .hero-aurora-blob { animation: none !important; }
+            .sticker-float, .sticker-float-r, .marquee-track, .hero-orbit-ring-slow, .hero-orbit-ring-fast, .hero-aurora-blob { animation: none !important; }
             .reveal, .reveal-left, .reveal-right { transition: none !important; opacity: 1 !important; transform: none !important; }
             #scroll-progress { display: none; }
         }
@@ -607,15 +596,20 @@
         #dark-toggle {
             background: none; border: none; cursor: pointer;
             width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
-            border-radius: 50%; transition: background 0.2s; color: #111; padding: 0; flex-shrink: 0;
+            border-radius: 50%; transition: background 0.2s, backdrop-filter 0.2s, box-shadow 0.2s; color: #111; padding: 0; flex-shrink: 0;
         }
-        #dark-toggle:hover { background: rgba(0,0,0,0.07); }
+        #dark-toggle:hover {
+            background: rgba(255,255,255,0.25);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 2px 8px rgba(0,0,0,0.1);
+        }
         .dark-icon-sun { display: none; }
         .dark-icon-moon { display: block; }
 
         /* ===== DARK MODE ===== */
         html.dark body { background-color: #16120e !important; color: #f0e8df; }
-        html.dark #site-nav.scrolled { background: rgba(28,23,20,0.92) !important; box-shadow: 0 2px 20px rgba(0,0,0,0.4); }
+        html.dark #site-nav.scrolled { background: rgba(20,16,12,0.85) !important; box-shadow: 0 2px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08); border-bottom-color: rgba(255,255,255,0.08); }
         html.dark .nav-logo { color: #f0e8df !important; -webkit-text-stroke-color: #f0e8df; }
         html.dark .nav-links a { color: #f0e8df; }
         html.dark .nav-links a::after { background: #f0e8df; }
@@ -623,7 +617,7 @@
         html.dark .nav-mobile-menu { background: #16120e; }
         html.dark .nav-mobile-menu a { color: #f0e8df; }
         html.dark #dark-toggle { color: #f0e8df; }
-        html.dark #dark-toggle:hover { background: rgba(255,255,255,0.08); }
+        html.dark #dark-toggle:hover { background: rgba(255,255,255,0.08); box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 2px 8px rgba(0,0,0,0.3); }
         html.dark .dark-icon-sun { display: block; }
         html.dark .dark-icon-moon { display: none; }
 
@@ -652,7 +646,7 @@
         html.dark #resume li         { color: rgba(240,232,223,0.8); }
         html.dark #resume p          { color: rgba(240,232,223,0.8); }
         html.dark #resume .hover\:text-black:hover { color: #f0e8df !important; }
-        html.dark .text-black\/50    { color: rgba(240,232,223,0.5) !important; }
+        html.dark .text-black\/60    { color: rgba(240,232,223,0.5) !important; }
         html.dark .text-black\/40    { color: rgba(240,232,223,0.4) !important; }
         html.dark .text-black\/35    { color: rgba(240,232,223,0.35) !important; }
         html.dark .text-\[\#1c1c1c\]\/40 { color: rgba(240,232,223,0.3) !important; }
@@ -673,7 +667,7 @@
         html.dark .bg-\[\#f5efe6\]   { background-color: #2c2118 !important; }
 
         /* Dark bubble title */
-        html.dark .bubble-title { color: #c4845a; -webkit-text-stroke-color: rgba(240,232,223,0.8); filter: drop-shadow(2px 2px 0px rgba(240,232,223,0.3)); }
+        html.dark .bubble-title { color: #f0e8df; -webkit-text-stroke-color: #c4845a; filter: drop-shadow(2px 2px 0px #c4845a); }
 
         /* Dark progress bar */
         html.dark #scroll-progress { background: linear-gradient(90deg, #c4845a, #d4956a, rgba(240,232,223,0.5)); }
@@ -715,6 +709,7 @@
 
         /* Marquee section (skills ticker) */
         html.dark section[data-color="#e8c9a8"] .font-display { color: rgba(240,232,223,0.35) !important; }
+        html.dark #about-heading { -webkit-text-stroke-color: #c4845a !important; text-shadow: 3px 3px 0px #c4845a !important; }
 
         /* Hero title visibility */
         html.dark .hero-title { color: #f0e8df !important; }
@@ -944,7 +939,10 @@
 
     <!-- Floating Navigation -->
     <nav id="site-nav">
-        <a href="#main-content" class="nav-logo hover-target">AV ✦</a>
+        <div style="display:flex; align-items:center;">
+            <a href="#main-content" class="nav-logo hover-target">AV ✦</a>
+            <span class="nav-status"><span class="nav-status-dot"></span>Available for work</span>
+        </div>
         <ul class="nav-links">
             <li><a href="#about" class="hover-target">About</a></li>
             <li><a href="#resume" class="hover-target">Resume</a></li>
@@ -1049,11 +1047,6 @@
             </div>
         </div>
 
-        <!-- Scroll Down Arrow -->
-        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 bounce-arrow flex flex-col items-center gap-1 opacity-40" id="hero-scroll-cue">
-            <span class="text-xs font-body font-semibold uppercase tracking-widest">Scroll</span>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-        </div>
     </section>
 
     <!-- About Section -->
@@ -1105,7 +1098,7 @@
             </svg>
         </div>
 
-        <h2 class="font-display text-[12vw] md:text-[9vw] leading-[0.85] mb-12 text-left text-[#e8c9a8] tracking-tighter uppercase relative z-10" style="-webkit-text-stroke: 2px #111; text-shadow: 3px 3px 0px #111; font-family: 'Lilita One', cursive;">DIGITAL MARKETER</h2>
+        <h2 id="about-heading" class="font-display text-[12vw] md:text-[9vw] leading-[0.85] mb-12 text-left text-[#e8c9a8] tracking-tighter uppercase relative z-10" style="-webkit-text-stroke: 2px #111; text-shadow: 3px 3px 0px #111; font-family: 'Lilita One', cursive;">DIGITAL MARKETER</h2>
 
         <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 relative z-10 items-center">
 
@@ -1374,17 +1367,17 @@
 
                         <!-- Job 1 -->
                         <div class="mb-16 pt-2 relative">
-                            <div class="lg:hidden font-semibold text-gray-500 text-sm mb-2">Mar 2026 - Present</div>
-                            <div class="hidden lg:block absolute timeline-date top-1 text-center font-bold text-gray-700 text-[15px] leading-snug bg-cream py-1 px-1 z-10">Mar 2026-Present</div>
+                            <div class="lg:hidden font-semibold text-gray-500 text-sm mb-2">Aug 2026 - Present</div>
+                            <div class="hidden lg:block absolute timeline-date top-1 text-center font-bold text-gray-700 text-[15px] leading-snug bg-cream py-1 px-1 z-10">Aug 2026-Present</div>
                             <h3 class="font-bold text-[1.7rem] text-gray-800 mb-1">Social Media Management</h3>
-                            <p class="text-gray-500 mb-4 text-lg italic">TalkNLock</p>
+                            <p class="text-gray-500 mb-4 text-lg italic">The Cogent</p>
                             <ul class="list-disc pl-5 space-y-2 text-gray-700 text-base lg:text-[1.05rem]">
-                                <li>Created engaging visual designs for social media, websites, and marketing campaigns</li>
-                                <li>Developed design concepts aligned with brand identity and campaign goals</li>
-                                <li>Collaborated with marketing and content teams to produce creatives that drive engagement</li>
-                                <li>Contributed fresh ideas for improving brand aesthetics and visual storytelling</li>
-                                <li>Maintained consistency in branding across all digital platforms</li>
-                                <li>Used Adobe Photoshop, Illustrator, Canva, and Figma to execute designs</li>
+                                <li>Managing the brand's YouTube channel end to end, from uploads and thumbnails to publishing schedule</li>
+                                <li>Planning and designing content across social platforms, aligned to campaign goals</li>
+                                <li>Building content calendars that keep posting consistent across channels</li>
+                                <li>Working with the marketing and content teams to turn briefs into finished creatives</li>
+                                <li>Tracking channel performance and adjusting content based on what lands</li>
+                                <li>Using Adobe Photoshop, Illustrator, Canva, and Figma to execute designs</li>
                             </ul>
                         </div>
 
@@ -1404,6 +1397,22 @@
                         </div>
 
                         <!-- Job 3 -->
+                        <div class="mb-16 pt-2 relative">
+                            <div class="lg:hidden font-semibold text-gray-500 text-sm mb-2">Mar 2026 - July 2026</div>
+                            <div class="hidden lg:block absolute timeline-date top-1 text-center font-bold text-gray-700 text-[15px] leading-snug bg-cream py-1 px-1 z-10">Mar 2026-July 2026</div>
+                            <h3 class="font-bold text-[1.7rem] text-gray-800 mb-1">Social Media Management</h3>
+                            <p class="text-gray-500 mb-4 text-lg italic">TalkNLock</p>
+                            <ul class="list-disc pl-5 space-y-2 text-gray-700 text-base lg:text-[1.05rem]">
+                                <li>Created engaging visual designs for social media, websites, and marketing campaigns</li>
+                                <li>Developed design concepts aligned with brand identity and campaign goals</li>
+                                <li>Collaborated with marketing and content teams to produce creatives that drive engagement</li>
+                                <li>Contributed fresh ideas for improving brand aesthetics and visual storytelling</li>
+                                <li>Maintained consistency in branding across all digital platforms</li>
+                                <li>Used Adobe Photoshop, Illustrator, Canva, and Figma to execute designs</li>
+                            </ul>
+                        </div>
+
+                        <!-- Job 4 -->
                         <div class="mb-16 relative">
                             <div class="lg:hidden font-semibold text-gray-500 text-sm mb-2">July 2025 - Sept 2025</div>
                             <div class="hidden lg:block absolute timeline-date top-1 text-center font-bold text-gray-700 text-[15px] leading-snug bg-cream py-1 px-1 z-10">July 2025-Sept 2025</div>
@@ -1456,7 +1465,7 @@
                         </div>
                     </div>
                 </div>
-                <p class="font-body text-black/50 text-sm md:text-base mb-6 max-w-xl">Instagram stories and post designs for a fashion accessories brand, building a bold, recognizable visual identity.</p>
+                <p class="font-body text-black/60 text-sm md:text-base mb-6 max-w-xl">Instagram stories and post designs for a fashion accessories brand, building a bold, recognizable visual identity.</p>
                 <div class="flex flex-col md:flex-row md:items-start gap-4">
                     <div class="grid grid-cols-12 gap-3 md:gap-4 flex-1">
                         <a href="public/assets/Bag%20Central%20Stories.pdf" target="_blank" rel="noopener" aria-label="Bag Central stories PDF" class="col-span-12 md:col-span-6 relative rounded-2xl overflow-hidden group/pdf block h-56 md:h-[420px] project-img-wrap img-mask-reveal">
@@ -1507,7 +1516,7 @@
                         </div>
                     </div>
                 </div>
-                <p class="font-body text-black/50 text-sm md:text-base mb-6 max-w-xl">Complete social media presence for a restaurant brand, engaging food content, Reels, and post designs that drive footfall.</p>
+                <p class="font-body text-black/60 text-sm md:text-base mb-6 max-w-xl">Complete social media presence for a restaurant brand, engaging food content, Reels, and post designs that drive footfall.</p>
                 <div class="flex flex-col md:flex-row md:items-start gap-4">
                     <div class="grid grid-cols-12 gap-3 md:gap-4 flex-1">
                         <a href="public/assets/trimurti-posts.pdf" target="_blank" rel="noopener" aria-label="Trimurti posts PDF" class="col-span-12 md:col-span-8 relative rounded-2xl overflow-hidden group/pdf block h-56 md:h-[420px] project-img-wrap img-mask-reveal">
@@ -1542,7 +1551,7 @@
                         </div>
                     </div>
                 </div>
-                <p class="font-body text-black/50 text-sm md:text-base mb-6 max-w-xl">Visual branding and social media content for a lifestyle brand, curating a cohesive aesthetic that resonates with the target audience.</p>
+                <p class="font-body text-black/60 text-sm md:text-base mb-6 max-w-xl">Visual branding and social media content for a lifestyle brand, curating a cohesive aesthetic that resonates with the target audience.</p>
                 <div class="flex flex-col md:flex-row md:items-start gap-4">
                     <div class="grid grid-cols-12 gap-3 md:gap-4 flex-1">
                         <a href="public/assets/auroroma-posts.pdf" target="_blank" rel="noopener" aria-label="Aurooroma posts PDF" class="col-span-12 relative rounded-2xl overflow-hidden group/pdf block h-56 md:h-[420px] project-img-wrap img-mask-reveal">
@@ -1775,7 +1784,7 @@
     <section id="instagram-reels" class="panel py-20 bg-[#f5efe6] text-black scroll-section" data-color="#f5efe6">
         <div class="px-6 lg:px-20 mb-10">
             <h2 class="bubble-title text-[8vw] hover-target reveal">INSTAGRAM REELS</h2>
-            <p class="text-black/50 font-medium mt-2 reveal">Scroll-stopping short-form content, crafted to engage, entertain, and drive results.</p>
+            <p class="text-black/60 font-medium mt-2 reveal">Scroll-stopping short-form content, crafted to engage, entertain, and drive results.</p>
         </div>
         <div class="px-6 lg:px-20">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-start">
@@ -1911,7 +1920,7 @@
             <div class="chinki-cta-row">
                 <div class="chinki-cta-copy">
                     <p class="chinki-cta-text">
-                        <span class="chinki-strike">Dora</span> retired —<br class="hidden sm:block"/>
+                        <span class="chinki-strike">Dora</span> retired,<br class="hidden sm:block"/>
                         it's <span class="chinki-highlight">Chinki the Explorer</span> now
                     </p>
                     <span class="chinki-cta-arrow">See the shots <span class="chinki-arrow-icon">➔</span></span>
@@ -1962,7 +1971,7 @@
     <!-- Doodle Canvas -->
     <section id="doodle" class="panel py-20 bg-[#f5efe6] text-black text-center scroll-section" data-color="#f5efe6">
         <h2 class="bubble-title text-[8vw] hover-target reveal">LEAVE A DOODLE</h2>
-        <p class="text-black/50 font-medium mt-2 mb-8 reveal">Before you go — scribble something.</p>
+        <p class="text-black/60 font-medium mt-2 mb-8 reveal">Before you go, scribble something.</p>
 
         <div class="doodle-wrap mx-auto reveal">
             <div class="doodle-toolbar">
@@ -2138,16 +2147,6 @@
             y: -60,
             opacity: 0
         });
-        gsap.to('#hero-scroll-cue', {
-            scrollTrigger: {
-                trigger: '#main-content',
-                start: 'top top',
-                end: '30% top',
-                scrub: true
-            },
-            opacity: 0,
-            y: -20
-        });
 
         // ===== CUSTOM CURSOR =====
         const cursor = document.getElementById('custom-cursor');
@@ -2179,9 +2178,6 @@
         const nav = document.getElementById('site-nav');
         const hamburger = document.getElementById('nav-hamburger');
         const mobileMenu = document.getElementById('nav-mobile-menu');
-        window.addEventListener('scroll', () => {
-            nav.classList.toggle('scrolled', window.scrollY > 60);
-        }, { passive: true });
         function toggleMobileMenu() {
             const isOpen = hamburger.classList.toggle('open');
             mobileMenu.classList.toggle('open', isOpen);
@@ -2241,45 +2237,71 @@
         revealEls.forEach(el => revealObs.observe(el));
 
         // ===== MOUSE PARALLAX =====
-        const parallaxItems = document.querySelectorAll('.parallax');
-        document.addEventListener('mousemove', (e) => {
-            const x = (e.clientX - window.innerWidth / 2) / 50;
-            const y = (e.clientY - window.innerHeight / 2) / 50;
-            parallaxItems.forEach(item => {
-                if (getComputedStyle(item).display === 'none') return;
-                const speed = parseFloat(item.dataset.speed) || 1;
-                gsap.to(item, { x: x * speed, y: y * speed, duration: 0.6, ease: 'power2.out' });
-            });
-        });
+        // Pointer-driven, so it never binds on touch. quickTo reuses one tween per element
+        // instead of allocating a new one per item per mousemove, and offsetParent replaces
+        // getComputedStyle so hidden items don't force a style recalc on every event.
+        const pointerFine = window.matchMedia('(hover: hover) and (pointer: fine)');
+        if (pointerFine.matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            const parallaxItems = [...document.querySelectorAll('.parallax')].map(item => ({
+                el: item,
+                speed: parseFloat(item.dataset.speed) || 1,
+                xTo: gsap.quickTo(item, 'x', { duration: 0.6, ease: 'power2.out' }),
+                yTo: gsap.quickTo(item, 'y', { duration: 0.6, ease: 'power2.out' })
+            }));
+            document.addEventListener('mousemove', (e) => {
+                const x = (e.clientX - window.innerWidth / 2) / 50;
+                const y = (e.clientY - window.innerHeight / 2) / 50;
+                for (const item of parallaxItems) {
+                    if (item.el.offsetParent === null) continue;
+                    item.xTo(x * item.speed);
+                    item.yTo(y * item.speed);
+                }
+            }, { passive: true });
+        }
 
-        // ===== SCROLL PROGRESS BAR =====
+        // ===== SCROLL-DRIVEN NAV STATE + PROGRESS BAR =====
+        // Both run off Lenis' single scroll callback instead of separate window scroll
+        // listeners, so each scroll frame does one read and two compositor-only writes.
         const scrollProgress = document.getElementById('scroll-progress');
-        window.addEventListener('scroll', () => {
-            const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
-            scrollProgress.style.width = pct + '%';
-        }, { passive: true });
+        let navScrolled = null;
+        function onScrollFrame(scrollY) {
+            const isScrolled = scrollY > 60;
+            if (isScrolled !== navScrolled) {
+                navScrolled = isScrolled;
+                nav.classList.toggle('scrolled', isScrolled);
+            }
+            const max = document.documentElement.scrollHeight - window.innerHeight;
+            const p = max > 0 ? Math.min(scrollY / max, 1) : 0;
+            scrollProgress.style.transform = `scaleX(${p})`;
+        }
+        lenis.on('scroll', ({ scroll }) => onScrollFrame(scroll));
+        onScrollFrame(window.scrollY);
 
         // ===== NAV ENTRANCE =====
         gsap.from('#site-nav', { opacity: 0, y: -24, duration: 0.9, delay: 2.8, ease: 'power2.out' });
 
         // ===== PORTRAIT 3D TILT ON MOUSE =====
         const portraitWrap = document.querySelector('.portrait-wrap');
-        if (portraitWrap) {
+        if (portraitWrap && pointerFine.matches) {
             portraitWrap.classList.add('tilt-3d');
             portraitWrap.style.perspective = '800px';
             const portraitImg = portraitWrap.querySelector('img');
-            portraitWrap.addEventListener('mousemove', (e) => {
-                const rect = portraitWrap.getBoundingClientRect();
-                const x = (e.clientX - rect.left) / rect.width - 0.5;
-                const y = (e.clientY - rect.top) / rect.height - 0.5;
-                gsap.to(portraitImg, {
-                    rotateY: x * 12,
-                    rotateX: -y * 8,
-                    duration: 0.4,
-                    ease: 'power2.out'
-                });
+            // Rect is read on enter, not on every move, so the tilt never reads layout mid-gesture.
+            let portraitRect = null;
+            const rotYTo = gsap.quickTo(portraitImg, 'rotateY', { duration: 0.4, ease: 'power2.out' });
+            const rotXTo = gsap.quickTo(portraitImg, 'rotateX', { duration: 0.4, ease: 'power2.out' });
+            portraitWrap.addEventListener('mouseenter', () => {
+                portraitRect = portraitWrap.getBoundingClientRect();
             });
+            portraitWrap.addEventListener('mousemove', (e) => {
+                if (!portraitRect) portraitRect = portraitWrap.getBoundingClientRect();
+                const x = (e.clientX - portraitRect.left) / portraitRect.width - 0.5;
+                const y = (e.clientY - portraitRect.top) / portraitRect.height - 0.5;
+                rotYTo(x * 12);
+                rotXTo(-y * 8);
+            }, { passive: true });
             portraitWrap.addEventListener('mouseleave', () => {
+                portraitRect = null;
                 gsap.to(portraitImg, {
                     rotateY: 0,
                     rotateX: 0,
@@ -2506,32 +2528,40 @@
             immediateRender: false
         });
 
-        // ===== MAGNETIC HOVER — ALL CTAs + FOOTER SOCIAL =====
-        const magneticElements = document.querySelectorAll('#contact .flex.justify-center.gap-6 a, .tool-icon, #dark-toggle, .nav-logo');
-        magneticElements.forEach(btn => {
-            btn.classList.add('magnetic-btn');
-            btn.addEventListener('mousemove', (e) => {
-                const r = btn.getBoundingClientRect();
+        // ===== MAGNETIC HOVER: ALL CTAs + FOOTER SOCIAL =====
+        // Hover-only effects, so nothing is bound on touch devices where they can never fire.
+        if (pointerFine.matches) {
+            const magneticElements = document.querySelectorAll('#contact .flex.justify-center.gap-6 a, .tool-icon, #dark-toggle, .nav-logo');
+            magneticElements.forEach(btn => {
+                btn.classList.add('magnetic-btn');
                 const strength = btn.closest('#contact') ? 0.4 : 0.25;
-                gsap.to(btn, {
-                    x: (e.clientX - r.left - r.width / 2) * strength,
-                    y: (e.clientY - r.top - r.height / 2) * strength,
-                    duration: 0.2, ease: 'power2.out'
+                const xTo = gsap.quickTo(btn, 'x', { duration: 0.2, ease: 'power2.out' });
+                const yTo = gsap.quickTo(btn, 'y', { duration: 0.2, ease: 'power2.out' });
+                let r = null;
+                btn.addEventListener('mouseenter', () => { r = btn.getBoundingClientRect(); });
+                btn.addEventListener('mousemove', (e) => {
+                    if (!r) r = btn.getBoundingClientRect();
+                    xTo((e.clientX - r.left - r.width / 2) * strength);
+                    yTo((e.clientY - r.top - r.height / 2) * strength);
+                }, { passive: true });
+                btn.addEventListener('mouseleave', () => {
+                    r = null;
+                    gsap.to(btn, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.3)' });
                 });
             });
-            btn.addEventListener('mouseleave', () => {
-                gsap.to(btn, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.3)' });
-            });
-        });
 
-        // ===== PROJECT CARD SPOTLIGHT (cursor-following glow) =====
-        document.querySelectorAll('.project-img-wrap').forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const r = card.getBoundingClientRect();
-                card.style.setProperty('--spot-x', `${e.clientX - r.left}px`);
-                card.style.setProperty('--spot-y', `${e.clientY - r.top}px`);
+            // ===== PROJECT CARD SPOTLIGHT (cursor-following glow) =====
+            document.querySelectorAll('.project-img-wrap').forEach(card => {
+                let r = null;
+                card.addEventListener('mouseenter', () => { r = card.getBoundingClientRect(); });
+                card.addEventListener('mousemove', (e) => {
+                    if (!r) r = card.getBoundingClientRect();
+                    card.style.setProperty('--spot-x', `${e.clientX - r.left}px`);
+                    card.style.setProperty('--spot-y', `${e.clientY - r.top}px`);
+                }, { passive: true });
+                card.addEventListener('mouseleave', () => { r = null; });
             });
-        });
+        }
 
         // ===== FOOTER ROTATING WORD (ported from 21st.dev's TextRotate pattern) =====
         const rotateWordEl = document.getElementById('footer-rotate-word');
