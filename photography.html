@@ -717,8 +717,12 @@
             transform-style: preserve-3d;
             animation: pcar-spin 46s linear infinite;
         }
-        /* Without this you cannot hover a moving target. */
-        .pcar-scene:hover .pcar { animation-play-state: paused; }
+        /* Without the hover rule you cannot hover a moving target. The off-screen class is
+           set by script; both are CSS so neither can override the other the way an inline
+           animation-play-state would. */
+        .pcar-scene:hover .pcar,
+        .pcar-scene:focus-within .pcar,
+        .pcar-scene.is-offscreen .pcar { animation-play-state: paused; }
 
         .pcar-item {
             position: absolute;
@@ -734,12 +738,19 @@
             transform: rotateY(var(--angle)) translateZ(var(--radius));
             transition: transform 0.55s cubic-bezier(.2,.8,.2,1), box-shadow 0.55s ease;
         }
+        /* Drawn inside the tile: a normal outline would be clipped by overflow: hidden. */
+        .pcar-item:focus-visible {
+            outline: 3px solid #c4845a;
+            outline-offset: -3px;
+        }
         /* Pops toward the viewer as well as scaling, so it reads as depth, not just size. */
-        .pcar-item:hover {
+        .pcar-item:hover,
+        .pcar-item:focus-visible {
             transform: rotateY(var(--angle)) translateZ(calc(var(--radius) + var(--pop-z))) scale(var(--pop-scale));
             box-shadow: 0 26px 60px rgba(0,0,0,0.38);
         }
-        .pcar-item img {
+        .pcar-item img,
+        .pcar-item video {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -999,23 +1010,6 @@
     <!-- Photography & Videography Section -->
     <section id="photography" class="panel py-20 bg-[#ede4d8] text-black scroll-section" data-color="#ede4d8">
 
-        <!-- 3D photo ring. Decorative showcase; the grid below is the accessible gallery,
-             so this is hidden from assistive tech rather than announced twice. -->
-        <div class="pcar-scene mb-14" aria-hidden="true">
-            <div class="pcar">
-                <div class="pcar-item" style="--angle:0deg"><img src="public/assets/photography/photo-still-life.jpg" alt="" loading="lazy" decoding="async"/></div>
-                <div class="pcar-item" style="--angle:36deg"><img src="public/assets/photography/photo-cocktail.jpg" alt="" loading="lazy" decoding="async"/></div>
-                <div class="pcar-item" style="--angle:72deg"><img src="public/assets/photography/jaipur-patrika-gate-night.jpg" alt="" loading="lazy" decoding="async"/></div>
-                <div class="pcar-item" style="--angle:108deg"><img src="public/assets/photography/bougainvillea-sky.jpg" alt="" loading="lazy" decoding="async"/></div>
-                <div class="pcar-item" style="--angle:144deg"><img src="public/assets/photography/sunset-street.jpg" alt="" loading="lazy" decoding="async"/></div>
-                <div class="pcar-item" style="--angle:180deg"><img src="public/assets/photography/breathe-neon-sign.jpg" alt="" loading="lazy" decoding="async"/></div>
-                <div class="pcar-item" style="--angle:216deg"><img src="public/assets/photography/photo-pasta-dinner.jpg" alt="" loading="lazy" decoding="async"/></div>
-                <div class="pcar-item" style="--angle:252deg"><img src="public/assets/photography/mirror-selfie-camera.jpg" alt="" loading="lazy" decoding="async"/></div>
-                <div class="pcar-item" style="--angle:288deg"><img src="public/assets/photography/resort-pergola-dusk.jpg" alt="" loading="lazy" decoding="async"/></div>
-                <div class="pcar-item" style="--angle:324deg"><img src="public/assets/photography/photo-bts-shoot.jpg" alt="" loading="lazy" decoding="async"/></div>
-            </div>
-        </div>
-
         <div class="px-6 lg:px-20 columns-2 md:columns-3 gap-4 space-y-4">
             <a href="public/assets/photography/photo-still-life.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
                 <img src="public/assets/photography/photo-still-life.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Still life photography"/>
@@ -1025,25 +1019,13 @@
                 <img src="public/assets/photography/photo-cocktail.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:9/16;" alt="Cocktail drink styling"/>
                 <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
             </a>
-            <a href="public/assets/photography/photo-mirror-selfie.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
-                <img src="public/assets/photography/photo-mirror-selfie.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:9/16;" alt="Mirror selfie photography"/>
-                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
-            </a>
             <a href="public/assets/photography/photo-pasta-dinner.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
                 <img src="public/assets/photography/photo-pasta-dinner.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Food styling photography"/>
-                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
-            </a>
-            <a href="public/assets/photography/photo-bts-shoot.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
-                <img src="public/assets/photography/photo-bts-shoot.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Behind the scenes product shoot"/>
                 <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
             </a>
             <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
                 <video src="public/assets/videography/IMG_6736.MP4" autoplay muted loop playsinline preload="metadata" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:9/16;" aria-label="Content shoot video"></video>
             </div>
-            <a href="public/assets/photography/mirror-selfie-camera.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
-                <img src="public/assets/photography/mirror-selfie-camera.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:9/16;" alt="Mirror selfie with camera"/>
-                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
-            </a>
             <a href="public/assets/photography/jaipur-patrika-gate-night.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
                 <img src="public/assets/photography/jaipur-patrika-gate-night.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:4/3;" alt="Patrika Gate, Jaipur at night"/>
                 <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
@@ -1099,26 +1081,26 @@
             <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
                 <video src="public/assets/videography/bougainvillea-clip.mp4" autoplay muted loop playsinline preload="metadata" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:9/16;" aria-label="Bougainvillea in bloom, video clip"></video>
             </div>
-            <a href="public/assets/brands/bag-central/shoot-01.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
-                <img src="public/assets/brands/bag-central/shoot-01.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:2/3;" alt="Product styling shoot, denim bag"/>
-                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
-            </a>
-            <a href="public/assets/brands/bag-central/shoot-02.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
-                <img src="public/assets/brands/bag-central/shoot-02.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:2/3;" alt="Product styling shoot, denim bag"/>
-                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
-            </a>
-            <a href="public/assets/brands/bag-central/shoot-03.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
-                <img src="public/assets/brands/bag-central/shoot-03.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:2/3;" alt="Product styling shoot, denim bag"/>
-                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
-            </a>
-            <a href="public/assets/brands/bag-central/shoot-04.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
-                <img src="public/assets/brands/bag-central/shoot-04.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:2/3;" alt="Product styling shoot, denim bag"/>
-                <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
-            </a>
-            <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
-                <video src="public/assets/brands/bag-central/bts-video.mp4" autoplay muted loop playsinline preload="metadata" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:16/9;" aria-label="Behind the scenes, studio product shoot"></video>
+        </div>
+        <!-- These eight frames live here and nowhere else on the page, so the ring is real
+             content rather than decoration: each tile is a link with alt text, and the
+             rotation pauses on focus as well as hover so it can be tabbed through. -->
+        <div class="pcar-scene mt-14">
+            <!-- Eight tiles at 45deg. Every frame has a person in it: the on-set and mirror
+                 shots plus the Bag Central model shoot, and the one clip that is actually of
+                 people rather than food or flowers. -->
+            <div class="pcar">
+                <a class="pcar-item" style="--angle:0deg" href="public/assets/photography/mirror-selfie-camera.jpg" target="_blank" rel="noopener"><img src="public/assets/photography/mirror-selfie-camera.jpg" alt="Mirror selfie holding a camera" loading="lazy" decoding="async"/></a>
+                <a class="pcar-item" style="--angle:45deg" href="public/assets/brands/bag-central/shoot-01.jpg" target="_blank" rel="noopener"><img src="public/assets/brands/bag-central/shoot-01.jpg" alt="Bag Central shoot, denim shoulder bag in profile" loading="lazy" decoding="async"/></a>
+                <a class="pcar-item" style="--angle:90deg" href="public/assets/photography/photo-mirror-selfie.jpg" target="_blank" rel="noopener"><img src="public/assets/photography/photo-mirror-selfie.jpg" alt="Mirror selfie in a cap" loading="lazy" decoding="async"/></a>
+                <a class="pcar-item" style="--angle:135deg" href="public/assets/brands/bag-central/shoot-02.jpg" target="_blank" rel="noopener"><img src="public/assets/brands/bag-central/shoot-02.jpg" alt="Bag Central shoot, denim crossbody bag" loading="lazy" decoding="async"/></a>
+                <a class="pcar-item" style="--angle:180deg" href="public/assets/brands/bag-central/bts-video.mp4" target="_blank" rel="noopener" aria-label="Behind the scenes clip from the studio product shoot"><video src="public/assets/brands/bag-central/bts-video.mp4" muted loop playsinline preload="metadata"></video></a>
+                <a class="pcar-item" style="--angle:225deg" href="public/assets/brands/bag-central/shoot-03.jpg" target="_blank" rel="noopener"><img src="public/assets/brands/bag-central/shoot-03.jpg" alt="Bag Central shoot, denim hobo bag" loading="lazy" decoding="async"/></a>
+                <a class="pcar-item" style="--angle:270deg" href="public/assets/photography/photo-bts-shoot.jpg" target="_blank" rel="noopener"><img src="public/assets/photography/photo-bts-shoot.jpg" alt="Behind the scenes, shooting a product in a lightbox" loading="lazy" decoding="async"/></a>
+                <a class="pcar-item" style="--angle:315deg" href="public/assets/brands/bag-central/shoot-04.jpg" target="_blank" rel="noopener"><img src="public/assets/brands/bag-central/shoot-04.jpg" alt="Bag Central shoot, denim duffle bag" loading="lazy" decoding="async"/></a>
             </div>
         </div>
+
     </section>
 
     <!-- Follow Live Section -->
@@ -1498,6 +1480,40 @@
         }, { threshold: 0.2 });
         const skillsGrid = document.getElementById('skills-grid');
         if (skillsGrid) skillObs.observe(skillsGrid);
+
+        // ===== 3D RING + SECTION CLIPS: only run while on screen =====
+        // Rotation and video decoding are the two continuous costs in this section, and both
+        // ran even with the section scrolled far out of view. Video decode is by far the more
+        // expensive of the two. IntersectionObserver gates them rather than a scroll listener,
+        // and will-change is set only while the ring is actually animating instead of being
+        // left on permanently, which would keep a compositor layer alive for the whole page.
+        (function () {
+            const scene = document.querySelector('.pcar-scene');
+            const clips = document.querySelectorAll('#photography video');
+
+            if (clips.length) {
+                const clipObs = new IntersectionObserver((entries) => {
+                    entries.forEach(({ target, isIntersecting }) => {
+                        if (isIntersecting) {
+                            const played = target.play();
+                            if (played) played.catch(() => {});
+                        } else {
+                            target.pause();
+                        }
+                    });
+                }, { threshold: 0.1 });
+                clips.forEach(clip => clipObs.observe(clip));
+            }
+
+            if (scene && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                const rotator = scene.querySelector('.pcar');
+                const ringObs = new IntersectionObserver(([entry]) => {
+                    scene.classList.toggle('is-offscreen', !entry.isIntersecting);
+                    if (rotator) rotator.style.willChange = entry.isIntersecting ? 'transform' : 'auto';
+                }, { threshold: 0 });
+                ringObs.observe(scene);
+            }
+        })();
 
         // ===== IMAGE MASK REVEAL =====
         document.querySelectorAll('.img-mask-reveal').forEach((el, i) => {
