@@ -7,13 +7,21 @@
     <meta name="description" content="Aditi Vijay's photography and videography work, personal photography, product styling, content shoots, and Instagram Reels."/>
     <meta property="og:title" content="Photography &amp; Videography | Aditi Vijay"/>
     <meta property="og:description" content="Personal photography, product styling, content shoots, and Instagram Reels."/>
-    <meta property="og:image" content="public/assets/girl-portrait.png"/>
+    <meta property="og:image" content="public/assets/girl-portrait.webp"/>
     <meta property="og:type" content="website"/>
     <meta name="twitter:card" content="summary_large_image"/>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23f5efe6'/%3E%3Ctext x='50' y='68' font-family='Georgia,serif' font-weight='700' font-size='52' text-anchor='middle' fill='%23111111'%3EAV%3C/text%3E%3C/svg%3E"/>
     <script>
         document.documentElement.classList.add('js-active');
     </script>
+    <!-- Every origin below is contacted during load; without these the browser pays a fresh
+         DNS + TCP + TLS round trip the moment each is first needed, which is the bulk of the
+         stall on mobile. crossorigin is required on gstatic (fonts are CORS requests). -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com"/>
+    <link rel="preconnect" href="https://unpkg.com"/>
+    <link rel="dns-prefetch" href="https://i.scdn.co"/>
     <!-- Prebuilt Tailwind (see tailwind.config.js to regenerate). Replaces the Play CDN,
          which shipped the compiler to the browser and rebuilt this CSS on every page load. -->
     <link rel="stylesheet" href="tailwind.css"/>
@@ -720,8 +728,11 @@
         /* Without the hover rule you cannot hover a moving target. The off-screen class is
            set by script; both are CSS so neither can override the other the way an inline
            animation-play-state would. */
-        .pcar-scene:hover .pcar,
-        .pcar-scene:focus-within .pcar,
+        /* Pause on a tile, not on the scene. The scene is a full-width band, so keying this
+           off .pcar-scene:hover stopped the ring whenever the pointer was anywhere in that
+           strip, including the empty space either side of the photos. */
+        .pcar:has(.pcar-item:hover),
+        .pcar:has(.pcar-item:focus-visible),
         .pcar-scene.is-offscreen .pcar { animation-play-state: paused; }
 
         .pcar-item {
@@ -780,6 +791,80 @@
             .pcar { animation: none; }
             .pcar-item, .pcar-item:hover { transition: none; }
         }
+
+        /* ===== LIGHTBOX ===== */
+        /* Replaces dumping the raw file into a new tab, which showed the image on a bare
+           browser page with no way back except the back button. */
+        .lb {
+            position: fixed; inset: 0; z-index: 10050;
+            display: none; align-items: center; justify-content: center;
+            padding: 5vmin;
+            background: rgba(17,14,11,0.92);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            opacity: 0;
+            transition: opacity 0.28s ease;
+        }
+        .lb.is-open { display: flex; }
+        .lb.is-visible { opacity: 1; }
+        .lb-media {
+            max-width: min(92vw, 1100px);
+            max-height: 88vh;
+            border-radius: 14px;
+            display: block;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.55);
+            transform: scale(0.94);
+            transition: transform 0.28s cubic-bezier(.2,.8,.2,1);
+        }
+        .lb.is-visible .lb-media { transform: scale(1); }
+        .lb-close {
+            position: absolute; top: max(18px, env(safe-area-inset-top)); right: 18px;
+            width: 48px; height: 48px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; cursor: pointer;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.28);
+            color: #fff;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .lb-close:hover { background: rgba(255,255,255,0.22); transform: scale(1.06); }
+        .lb-close:focus-visible { outline: 3px solid #e8c9a8; outline-offset: 3px; }
+        .lb-caption {
+            position: absolute; left: 0; right: 0; bottom: max(20px, env(safe-area-inset-bottom));
+            text-align: center; color: rgba(255,255,255,0.72);
+            font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem;
+            padding: 0 24px;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .lb, .lb-media { transition: none; }
+            .lb-media { transform: none; }
+        }
+
+
+        /* ===== ADAPTIVE QUALITY ===== */
+        /* Set by the frame-rate watchdog below. Everything dropped here is decoration whose
+           cost is blur and large composited layers, which is what actually stalls a weak GPU. */
+        html.perf-low .hero-aurora-blob,
+        html.perf-low .particle { display: none !important; }
+        html.perf-low .project-img-wrap::after { display: none !important; }
+        html.perf-low #site-nav.scrolled { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+        html.perf-low .lb { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+        html.perf-low .pcar-item,
+        html.perf-low .phone-reel { box-shadow: none !important; }
+        html.perf-low .pcar-item { filter: none !important; }
+
+        /* Offscreen work the browser can skip entirely. Each tile already declares an
+           aspect-ratio, so the reserved box matches the real one and scroll height and every
+           ScrollTrigger position stay exactly where they were. */
+        .break-inside-avoid {
+            content-visibility: auto;
+            contain-intrinsic-size: auto 320px;
+        }
+
+
+        /* Infinite decoration keeps compositing forever otherwise, including three 46vw
+           blur(70px) blobs that stay busy long after the hero has scrolled away. */
+        .anim-off { animation-play-state: paused !important; }
 
         /* ===== IMAGE MASK REVEAL ===== */
         .img-mask-reveal {
@@ -1011,71 +1096,71 @@
     <section id="photography" class="panel py-20 bg-[#ede4d8] text-black scroll-section" data-color="#ede4d8">
 
         <div class="px-6 lg:px-20 columns-2 md:columns-3 gap-4 space-y-4">
-            <a href="public/assets/photography/photo-still-life.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
-                <img src="public/assets/photography/photo-still-life.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Still life photography"/>
+            <a href="public/assets/photography/photo-still-life.webp" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
+                <img src="public/assets/photography/photo-still-life.webp" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Still life photography"/>
                 <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
             </a>
-            <a href="public/assets/photography/photo-cocktail.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
-                <img src="public/assets/photography/photo-cocktail.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:9/16;" alt="Cocktail drink styling"/>
+            <a href="public/assets/photography/photo-cocktail.webp" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
+                <img src="public/assets/photography/photo-cocktail.webp" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:9/16;" alt="Cocktail drink styling"/>
                 <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
             </a>
-            <a href="public/assets/photography/photo-pasta-dinner.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
-                <img src="public/assets/photography/photo-pasta-dinner.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Food styling photography"/>
+            <a href="public/assets/photography/photo-pasta-dinner.webp" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
+                <img src="public/assets/photography/photo-pasta-dinner.webp" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Food styling photography"/>
                 <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
             </a>
             <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
                 <video src="public/assets/videography/IMG_6736.MP4" autoplay muted loop playsinline preload="metadata" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:9/16;" aria-label="Content shoot video"></video>
             </div>
-            <a href="public/assets/photography/jaipur-patrika-gate-night.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
-                <img src="public/assets/photography/jaipur-patrika-gate-night.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:4/3;" alt="Patrika Gate, Jaipur at night"/>
+            <a href="public/assets/photography/jaipur-patrika-gate-night.webp" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
+                <img src="public/assets/photography/jaipur-patrika-gate-night.webp" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:4/3;" alt="Patrika Gate, Jaipur at night"/>
                 <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
             </a>
-            <a href="public/assets/photography/jaipur-patrika-gate-marble.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
-                <img src="public/assets/photography/jaipur-patrika-gate-marble.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Marble archway detail, Jaipur"/>
+            <a href="public/assets/photography/jaipur-patrika-gate-marble.webp" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
+                <img src="public/assets/photography/jaipur-patrika-gate-marble.webp" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Marble archway detail, Jaipur"/>
                 <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
             </a>
-            <a href="public/assets/photography/pizza-dinner.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
-                <img src="public/assets/photography/pizza-dinner.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:9/16;" alt="Pizza dinner styling"/>
+            <a href="public/assets/photography/pizza-dinner.webp" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
+                <img src="public/assets/photography/pizza-dinner.webp" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:9/16;" alt="Pizza dinner styling"/>
                 <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
             </a>
-            <a href="public/assets/photography/jaipur-pigeons-gate.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
-                <img src="public/assets/photography/jaipur-pigeons-gate.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Pigeons flying over a city gate"/>
+            <a href="public/assets/photography/jaipur-pigeons-gate.webp" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
+                <img src="public/assets/photography/jaipur-pigeons-gate.webp" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Pigeons flying over a city gate"/>
                 <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
             </a>
-            <a href="public/assets/photography/dog-in-the-park.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
-                <img src="public/assets/photography/dog-in-the-park.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Dog exploring the park"/>
+            <a href="public/assets/photography/dog-in-the-park.webp" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
+                <img src="public/assets/photography/dog-in-the-park.webp" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Dog exploring the park"/>
                 <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
             </a>
-            <a href="public/assets/photography/flower-in-hand.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
-                <img src="public/assets/photography/flower-in-hand.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Holding a wildflower"/>
+            <a href="public/assets/photography/flower-in-hand.webp" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
+                <img src="public/assets/photography/flower-in-hand.webp" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Holding a wildflower"/>
                 <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
             </a>
-            <a href="public/assets/photography/cayo-lounge-night.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
-                <img src="public/assets/photography/cayo-lounge-night.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:9/16;" alt="Lounge ambience at night"/>
+            <a href="public/assets/photography/cayo-lounge-night.webp" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
+                <img src="public/assets/photography/cayo-lounge-night.webp" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:9/16;" alt="Lounge ambience at night"/>
                 <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
             </a>
-            <a href="public/assets/photography/resort-pergola-dusk.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
-                <img src="public/assets/photography/resort-pergola-dusk.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Resort pergola at dusk"/>
+            <a href="public/assets/photography/resort-pergola-dusk.webp" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
+                <img src="public/assets/photography/resort-pergola-dusk.webp" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Resort pergola at dusk"/>
                 <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
             </a>
-            <a href="public/assets/photography/resort-gate-dusk.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
-                <img src="public/assets/photography/resort-gate-dusk.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Resort entrance at dusk"/>
+            <a href="public/assets/photography/resort-gate-dusk.webp" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
+                <img src="public/assets/photography/resort-gate-dusk.webp" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Resort entrance at dusk"/>
                 <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
             </a>
-            <a href="public/assets/photography/bougainvillea-sky.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
-                <img src="public/assets/photography/bougainvillea-sky.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Bougainvillea against the sky"/>
+            <a href="public/assets/photography/bougainvillea-sky.webp" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
+                <img src="public/assets/photography/bougainvillea-sky.webp" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Bougainvillea against the sky"/>
                 <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
             </a>
-            <a href="public/assets/photography/sunset-street.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
-                <img src="public/assets/photography/sunset-street.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="City street at sunset"/>
+            <a href="public/assets/photography/sunset-street.webp" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
+                <img src="public/assets/photography/sunset-street.webp" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="City street at sunset"/>
                 <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
             </a>
-            <a href="public/assets/photography/breathe-neon-sign.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
-                <img src="public/assets/photography/breathe-neon-sign.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Breathe neon sign"/>
+            <a href="public/assets/photography/breathe-neon-sign.webp" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
+                <img src="public/assets/photography/breathe-neon-sign.webp" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Breathe neon sign"/>
                 <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
             </a>
-            <a href="public/assets/photography/studio-bts-props.jpg" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
-                <img src="public/assets/photography/studio-bts-props.jpg" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Studio props behind the scenes"/>
+            <a href="public/assets/photography/studio-bts-props.webp" target="_blank" rel="noopener" aria-label="View full-size image" class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative block">
+                <img src="public/assets/photography/studio-bts-props.webp" loading="lazy" decoding="async" class="w-full object-cover group-hover:scale-105 transition-transform duration-700" style="aspect-ratio:3/4;" alt="Studio props behind the scenes"/>
                 <span class="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></span>
             </a>
             <div class="break-inside-avoid rounded-2xl overflow-hidden hover-target group relative">
@@ -1090,14 +1175,14 @@
                  shots plus the Bag Central model shoot, and the one clip that is actually of
                  people rather than food or flowers. -->
             <div class="pcar">
-                <a class="pcar-item" style="--angle:0deg" href="public/assets/photography/mirror-selfie-camera.jpg" target="_blank" rel="noopener"><img src="public/assets/photography/mirror-selfie-camera.jpg" alt="Mirror selfie holding a camera" loading="lazy" decoding="async"/></a>
-                <a class="pcar-item" style="--angle:45deg" href="public/assets/brands/bag-central/shoot-01.jpg" target="_blank" rel="noopener"><img src="public/assets/brands/bag-central/shoot-01.jpg" alt="Bag Central shoot, denim shoulder bag in profile" loading="lazy" decoding="async"/></a>
-                <a class="pcar-item" style="--angle:90deg" href="public/assets/photography/photo-mirror-selfie.jpg" target="_blank" rel="noopener"><img src="public/assets/photography/photo-mirror-selfie.jpg" alt="Mirror selfie in a cap" loading="lazy" decoding="async"/></a>
-                <a class="pcar-item" style="--angle:135deg" href="public/assets/brands/bag-central/shoot-02.jpg" target="_blank" rel="noopener"><img src="public/assets/brands/bag-central/shoot-02.jpg" alt="Bag Central shoot, denim crossbody bag" loading="lazy" decoding="async"/></a>
+                <a class="pcar-item" style="--angle:0deg" href="public/assets/photography/mirror-selfie-camera.webp" target="_blank" rel="noopener"><img src="public/assets/photography/mirror-selfie-camera.webp" alt="Mirror selfie holding a camera" loading="lazy" decoding="async"/></a>
+                <a class="pcar-item" style="--angle:45deg" href="public/assets/brands/bag-central/shoot-01.webp" target="_blank" rel="noopener"><img src="public/assets/brands/bag-central/shoot-01.webp" alt="Bag Central shoot, denim shoulder bag in profile" loading="lazy" decoding="async"/></a>
+                <a class="pcar-item" style="--angle:90deg" href="public/assets/photography/photo-mirror-selfie.webp" target="_blank" rel="noopener"><img src="public/assets/photography/photo-mirror-selfie.webp" alt="Mirror selfie in a cap" loading="lazy" decoding="async"/></a>
+                <a class="pcar-item" style="--angle:135deg" href="public/assets/brands/bag-central/shoot-02.webp" target="_blank" rel="noopener"><img src="public/assets/brands/bag-central/shoot-02.webp" alt="Bag Central shoot, denim crossbody bag" loading="lazy" decoding="async"/></a>
                 <a class="pcar-item" style="--angle:180deg" href="public/assets/brands/bag-central/bts-video.mp4" target="_blank" rel="noopener" aria-label="Behind the scenes clip from the studio product shoot"><video src="public/assets/brands/bag-central/bts-video.mp4" muted loop playsinline preload="metadata"></video></a>
-                <a class="pcar-item" style="--angle:225deg" href="public/assets/brands/bag-central/shoot-03.jpg" target="_blank" rel="noopener"><img src="public/assets/brands/bag-central/shoot-03.jpg" alt="Bag Central shoot, denim hobo bag" loading="lazy" decoding="async"/></a>
-                <a class="pcar-item" style="--angle:270deg" href="public/assets/photography/photo-bts-shoot.jpg" target="_blank" rel="noopener"><img src="public/assets/photography/photo-bts-shoot.jpg" alt="Behind the scenes, shooting a product in a lightbox" loading="lazy" decoding="async"/></a>
-                <a class="pcar-item" style="--angle:315deg" href="public/assets/brands/bag-central/shoot-04.jpg" target="_blank" rel="noopener"><img src="public/assets/brands/bag-central/shoot-04.jpg" alt="Bag Central shoot, denim duffle bag" loading="lazy" decoding="async"/></a>
+                <a class="pcar-item" style="--angle:225deg" href="public/assets/brands/bag-central/shoot-03.webp" target="_blank" rel="noopener"><img src="public/assets/brands/bag-central/shoot-03.webp" alt="Bag Central shoot, denim hobo bag" loading="lazy" decoding="async"/></a>
+                <a class="pcar-item" style="--angle:270deg" href="public/assets/photography/photo-bts-shoot.webp" target="_blank" rel="noopener"><img src="public/assets/photography/photo-bts-shoot.webp" alt="Behind the scenes, shooting a product in a lightbox" loading="lazy" decoding="async"/></a>
+                <a class="pcar-item" style="--angle:315deg" href="public/assets/brands/bag-central/shoot-04.webp" target="_blank" rel="noopener"><img src="public/assets/brands/bag-central/shoot-04.webp" alt="Bag Central shoot, denim duffle bag" loading="lazy" decoding="async"/></a>
             </div>
         </div>
 
@@ -1137,6 +1222,15 @@
 
 
     <!-- Footer -->
+    <!-- Lightbox: filled in from whichever photo or clip was opened -->
+    <div class="lb" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" hidden>
+        <button class="lb-close" id="lb-close" type="button" aria-label="Close photo viewer">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <div id="lb-stage"></div>
+        <p class="lb-caption" id="lb-caption"></p>
+    </div>
+
     <footer id="contact" class="py-28 bg-[#111] text-center scroll-section relative overflow-hidden" data-color="#111111">
         <!-- Big THANK YOU -->
         <h2 class="font-display text-[20vw] leading-none uppercase text-transparent mb-8 select-none" id="footer-title" style="-webkit-text-stroke: 1.5px #e8c9a8;">THANK YOU</h2>
@@ -1167,17 +1261,122 @@
 
     <script>
         // ===== LENIS SMOOTH SCROLL =====
+        // Animated scrolling is a vestibular trigger, so it is switched off outright when the
+        // visitor asks for reduced motion; the page then scrolls natively.
+        const wantsReducedScroll = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
         const lenis = new Lenis({
-            lerp: 0.08,
-            smoothWheel: true,
-            smoothTouch: false,
+            lerp: wantsReducedScroll ? 1 : 0.1,
+            smoothWheel: !wantsReducedScroll,
+            // syncTouch is the Lenis 1.x option name. The old key here was smoothTouch, which
+            // 1.x does not read at all, so it was silently doing nothing. Left off on purpose:
+            // phones already scroll smoothly and hijacking that fights the platform.
+            syncTouch: false,
         });
-        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-        requestAnimationFrame(raf);
-        lenis.on('scroll', ScrollTrigger.update);
+
+        // One loop, not two. Lenis was running its own requestAnimationFrame alongside GSAP's
+        // ticker, so two independent loops drove the same frame. Driving Lenis from the ticker
+        // guarantees it updates before ScrollTrigger reads the new position each frame.
+        gsap.ticker.add((time) => lenis.raf(time * 1000));
         gsap.ticker.lagSmoothing(0);
+        lenis.on('scroll', ScrollTrigger.update);
+
+        // In-page links were doing a native jump straight past Lenis, so every nav item landed
+        // with a hard cut. Route them through Lenis and offset for the fixed header.
+        document.addEventListener('click', (e) => {
+            const link = e.target.closest('a[href^="#"]');
+            if (!link) return;
+            const id = link.getAttribute('href');
+            if (!id || id === '#') return;
+            const target = document.querySelector(id);
+            if (!target) return;
+            e.preventDefault();
+            const nav = document.getElementById('site-nav');
+            lenis.scrollTo(target, {
+                offset: -((nav ? nav.offsetHeight : 72) + 8),
+                duration: wantsReducedScroll ? 0 : 1.1,
+                immediate: wantsReducedScroll
+            });
+            if (history.replaceState) history.replaceState(null, '', id);
+        });
+
+
+        // ===== NETWORK-AWARE LOADING =====
+        // Two jobs: back off on slow or metered connections, and use idle time on good ones
+        // to warm the other page so navigating to it feels instant.
+        (function () {
+            const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+            const slow = !!conn && (conn.saveData === true ||
+                          ['slow-2g', '2g', '3g'].includes(conn.effectiveType));
+            // Exposed as a class so CSS can react too, and so the video gates can read it.
+            document.documentElement.classList.toggle('save-data', slow);
+            window.__lowBandwidth = slow;
+
+            if (slow) {
+                // Nothing heavy should stream on its own here. Clips keep their poster and
+                // controls, so they are still watchable on demand, just not auto-fetched.
+                document.querySelectorAll('video').forEach(v => {
+                    v.removeAttribute('autoplay');
+                    v.preload = 'none';
+                    v.pause();
+                    if (!v.hasAttribute('controls') && !v.closest('.phone-reel')) v.controls = true;
+                });
+                return; // skip prefetch entirely on a metered or slow link
+            }
+
+            // Warm the sibling page during idle time, never competing with the current load.
+            const other = location.pathname.includes('photography') ? 'index.html' : 'photography.html';
+            const warm = () => {
+                const l = document.createElement('link');
+                l.rel = 'prefetch';
+                l.href = other;
+                l.as = 'document';
+                document.head.appendChild(l);
+            };
+            if ('requestIdleCallback' in window) requestIdleCallback(warm, { timeout: 4000 });
+            else window.addEventListener('load', () => setTimeout(warm, 2500));
+        })();
+
+
+        // ===== FRAME-RATE WATCHDOG =====
+        // Watches real frame pacing for a few seconds of actual use. If the device is
+        // consistently missing frames, quality drops once (see html.perf-low) instead of
+        // letting the page stutter. One rAF loop that stops itself; it never touches state.
+        (function () {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            let frames = 0, missed = 0, last = performance.now();
+            const started = last;
+            (function tick(now) {
+                const dt = now - last; last = now; frames++;
+                if (dt > 28) missed++;               // slower than ~36fps for this frame
+                if (now - started < 4500) { requestAnimationFrame(tick); return; }
+                if (frames > 40 && missed / frames > 0.3) {
+                    document.documentElement.classList.add('perf-low');
+                }
+            })(performance.now());
+        })();
+
+
+        // ===== PAUSE OFF-SCREEN DECORATION =====
+        // Every looping decorative animation on the page runs forever by default, on or off
+        // screen. This parks them when they are not visible and wakes them a little before
+        // they scroll back in, so nothing pops.
+        (function () {
+            const loops = document.querySelectorAll(
+                '.hero-aurora-blob, .sticker-float, .sticker-float-r, .marquee-track,' +
+                '.hero-orbit-ring-slow, .hero-orbit-ring-fast, .particle'
+            );
+            if (!loops.length || !('IntersectionObserver' in window)) return;
+            const io = new IntersectionObserver((entries) => {
+                entries.forEach(e => e.target.classList.toggle('anim-off', !e.isIntersecting));
+            }, { rootMargin: '150px' });
+            loops.forEach(el => { el.classList.add('anim-off'); io.observe(el); });
+        })();
 
         // ===== GSAP INIT =====
+        // House feel in one place, so tweens that do not name an ease match the rest of the
+        // site instead of falling back to GSAP's generic power1.out.
+        gsap.defaults({ ease: 'power2.out' });
         gsap.registerPlugin(ScrollTrigger);
         // Display webfonts (League Gothic, Lilita One, Space Grotesk) can swap in after
         // ScrollTriggers are first computed, resizing headings and shifting everything
@@ -1226,12 +1425,57 @@
         // ===== CUSTOM CURSOR =====
         const cursor = document.getElementById('custom-cursor');
         gsap.set(cursor, { xPercent: -50, yPercent: -50 });
-        const cursorX = gsap.quickTo(cursor, 'x', { duration: 0.15, ease: 'power2.out' });
-        const cursorY = gsap.quickTo(cursor, 'y', { duration: 0.15, ease: 'power2.out' });
+        const cursorReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // The pointer is only ever read here; everything else is derived on the ticker.
+        const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+        const pos = { x: mouse.x, y: mouse.y };
+        const last = { x: mouse.x, y: mouse.y };
+        let cursorAngle = 0;
+
         document.addEventListener('mousemove', (e) => {
             cursor.classList.add('cursor-active');
-            cursorX(e.clientX);
-            cursorY(e.clientY);
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        }, { passive: true });
+
+        // Lerp toward the pointer each frame, then use the leftover distance as velocity to
+        // stretch along the direction of travel. One ticker callback doing a single gsap.set,
+        // so nothing is allocated per frame the way a tween per mousemove would be.
+        let cursorSettled = false;
+        gsap.ticker.add(() => {
+            if (cursorReduced) { gsap.set(cursor, { x: mouse.x, y: mouse.y }); return; }
+
+            // Bail before touching the DOM once the cursor has caught up and relaxed. Writing
+            // a transform every frame forever costs real scripting and a style recalc per
+            // frame even with the mouse parked, which is exactly what made the page feel heavy.
+            const restX = mouse.x - pos.x, restY = mouse.y - pos.y;
+            if (cursorSettled && Math.abs(restX) < 0.08 && Math.abs(restY) < 0.08) return;
+
+            pos.x += (mouse.x - pos.x) * 0.18;
+            pos.y += (mouse.y - pos.y) * 0.18;
+
+            const dx = pos.x - last.x;
+            const dy = pos.y - last.y;
+            const velocity = Math.sqrt(dx * dx + dy * dy);
+            const stretch = Math.min(velocity * 0.7, 22);
+
+            // Only steer while actually moving. atan2(0,0) is 0, so reading it at rest would
+            // snap the cursor upright every time you stop; instead it eases back.
+            if (velocity > 0.4) cursorAngle = (Math.atan2(dy, dx) * 180) / Math.PI;
+            else cursorAngle += (0 - cursorAngle) * 0.12;
+
+            gsap.set(cursor, {
+                x: pos.x,
+                y: pos.y,
+                rotation: cursorAngle,
+                scaleX: 1 + stretch / 35,
+                scaleY: 1 - stretch / 60
+            });
+
+            last.x = pos.x;
+            last.y = pos.y;
+            cursorSettled = velocity < 0.05 && Math.abs(cursorAngle) < 0.5;
         });
         const hoverTargets = document.querySelectorAll('.hover-target, a, button');
         hoverTargets.forEach(t => {
@@ -1481,6 +1725,75 @@
         const skillsGrid = document.getElementById('skills-grid');
         if (skillsGrid) skillObs.observe(skillsGrid);
 
+        // ===== LIGHTBOX =====
+        // The ring tiles and grid items still point at the real file, so without JS they
+        // keep working as plain links. With JS the click is intercepted and shown in place.
+        (function () {
+            const lb = document.getElementById('lightbox');
+            if (!lb) return;
+            const stage = document.getElementById('lb-stage');
+            const caption = document.getElementById('lb-caption');
+            const closeBtn = document.getElementById('lb-close');
+            let lastFocused = null;
+
+            function open(href, label, isVideo) {
+                stage.innerHTML = '';
+                let el;
+                if (isVideo) {
+                    el = document.createElement('video');
+                    el.src = href; el.autoplay = true; el.loop = true;
+                    el.muted = true; el.playsInline = true; el.controls = true;
+                } else {
+                    el = document.createElement('img');
+                    el.src = href; el.alt = label || '';
+                }
+                el.className = 'lb-media';
+                stage.appendChild(el);
+                caption.textContent = label || '';
+                lastFocused = document.activeElement;
+                lb.hidden = false;
+                lb.classList.add('is-open');
+                requestAnimationFrame(() => lb.classList.add('is-visible'));
+                document.body.style.overflow = 'hidden';
+                if (typeof lenis !== 'undefined') lenis.stop();
+                closeBtn.focus();
+            }
+
+            function close() {
+                lb.classList.remove('is-visible');
+                const done = () => {
+                    lb.classList.remove('is-open');
+                    lb.hidden = true;
+                    stage.innerHTML = '';          // stop any clip decoding
+                    document.body.style.overflow = '';
+                    if (typeof lenis !== 'undefined') lenis.start();
+                    if (lastFocused) lastFocused.focus();
+                };
+                if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) done();
+                else setTimeout(done, 280);
+            }
+
+            document.addEventListener('click', (e) => {
+                const link = e.target.closest('a.pcar-item, a.break-inside-avoid');
+                if (!link) return;
+                const href = link.getAttribute('href') || '';
+                if (!/\.(jpg|jpeg|png|webp|mp4|mov)$/i.test(href)) return;
+                e.preventDefault();
+                const img = link.querySelector('img');
+                const label = link.getAttribute('aria-label') || (img && img.alt) || '';
+                open(href, label, /\.(mp4|mov)$/i.test(href));
+            });
+
+            closeBtn.addEventListener('click', close);
+            lb.addEventListener('click', (e) => { if (e.target === lb) close(); });
+            // Escape closes, and Tab is kept inside since the close button is the only control.
+            document.addEventListener('keydown', (e) => {
+                if (lb.hidden) return;
+                if (e.key === 'Escape') close();
+                if (e.key === 'Tab') { e.preventDefault(); closeBtn.focus(); }
+            });
+        })();
+
         // ===== 3D RING + SECTION CLIPS: only run while on screen =====
         // Rotation and video decoding are the two continuous costs in this section, and both
         // ran even with the section scrolled far out of view. Video decode is by far the more
@@ -1494,7 +1807,7 @@
             if (clips.length) {
                 const clipObs = new IntersectionObserver((entries) => {
                     entries.forEach(({ target, isIntersecting }) => {
-                        if (isIntersecting) {
+                        if (isIntersecting && !window.__lowBandwidth) {
                             const played = target.play();
                             if (played) played.catch(() => {});
                         } else {
@@ -1795,10 +2108,19 @@
                     video.pause();
                     video.currentTime = 0;
                 });
-            } else if (!reducedMotion) {
-                video.setAttribute('autoplay', '');
-                video.play().catch(() => {});
-                phone.classList.add('is-playing');
+            } else if (!reducedMotion && !window.__lowBandwidth) {
+                // Play only the reel actually on screen. Blanket autoplay made every clip on
+                // the page start downloading at once, which on a phone is the single largest
+                // transfer on the site and the reason scrolling felt heavy.
+                const io = new IntersectionObserver(([e]) => {
+                    if (e.isIntersecting) {
+                        video.play().then(() => phone.classList.add('is-playing')).catch(() => {});
+                    } else {
+                        video.pause();
+                        phone.classList.remove('is-playing');
+                    }
+                }, { threshold: 0.4 });
+                io.observe(phone);
             }
         });
 

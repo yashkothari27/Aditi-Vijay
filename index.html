@@ -7,13 +7,24 @@
     <meta name="description" content="Aditi Vijay is a digital marketing professional specializing in social media management, content creation, and brand strategy. View selected work in Instagram content, SEO, and campaign design."/>
     <meta property="og:title" content="Aditi Vijay | Digital Marketing Portfolio"/>
     <meta property="og:description" content="Digital marketing professional specializing in social media management, content creation, and brand strategy."/>
-    <meta property="og:image" content="public/assets/girl-portrait.png"/>
+    <meta property="og:image" content="public/assets/girl-portrait.webp"/>
     <meta property="og:type" content="website"/>
     <meta name="twitter:card" content="summary_large_image"/>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23f5efe6'/%3E%3Ctext x='50' y='68' font-family='Georgia,serif' font-weight='700' font-size='52' text-anchor='middle' fill='%23111111'%3EAV%3C/text%3E%3C/svg%3E"/>
     <script>
         document.documentElement.classList.add('js-active');
     </script>
+    <!-- Every origin below is contacted during load; without these the browser pays a fresh
+         DNS + TCP + TLS round trip the moment each is first needed, which is the bulk of the
+         stall on mobile. crossorigin is required on gstatic (fonts are CORS requests). -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com"/>
+    <link rel="preconnect" href="https://unpkg.com"/>
+    <link rel="dns-prefetch" href="https://i.scdn.co"/>
+    <!-- Largest element in view once the hero clears; fetched up front instead of
+         waiting for layout to discover it. -->
+    <link rel="preload" as="image" href="public/assets/girl-portrait.webp" fetchpriority="high"/>
     <!-- Prebuilt Tailwind (see tailwind.config.js to regenerate). Replaces the Play CDN,
          which shipped the compiler to the browser and rebuilt this CSS on every page load. -->
     <link rel="stylesheet" href="tailwind.css"/>
@@ -838,6 +849,32 @@
             transform: scaleY(0);
         }
 
+
+        /* ===== ADAPTIVE QUALITY ===== */
+        /* Set by the frame-rate watchdog below. Everything dropped here is decoration whose
+           cost is blur and large composited layers, which is what actually stalls a weak GPU. */
+        html.perf-low .hero-aurora-blob,
+        html.perf-low .particle { display: none !important; }
+        html.perf-low .project-img-wrap::after { display: none !important; }
+        html.perf-low #site-nav.scrolled { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+        html.perf-low .lb { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+        html.perf-low .pcar-item,
+        html.perf-low .phone-reel { box-shadow: none !important; }
+        html.perf-low .pcar-item { filter: none !important; }
+
+        /* Offscreen work the browser can skip entirely. Each tile already declares an
+           aspect-ratio, so the reserved box matches the real one and scroll height and every
+           ScrollTrigger position stay exactly where they were. */
+        .break-inside-avoid {
+            content-visibility: auto;
+            contain-intrinsic-size: auto 320px;
+        }
+
+
+        /* Infinite decoration keeps compositing forever otherwise, including three 46vw
+           blur(70px) blobs that stay busy long after the hero has scrolled away. */
+        .anim-off { animation-play-state: paused !important; }
+
         /* ===== IMAGE MASK REVEAL ===== */
         .img-mask-reveal {
             position: relative;
@@ -1173,7 +1210,7 @@
 
             <!-- Center: Portrait — transparent PNG cutout, no card -->
             <div class="portrait-wrap relative flex justify-center items-end h-[320px] md:h-[500px] lg:h-[700px] z-10 hover-target order-first lg:order-none reveal">
-                <img src="public/assets/girl-portrait.png" alt="Portrait of Aditi Vijay" class="h-full w-auto max-w-none object-contain object-bottom origin-bottom scale-[1.4] md:scale-[1.8] lg:scale-[2.2] translate-y-[10%] lg:translate-y-[15%] transition-transform duration-500 hover:scale-[1.45] md:hover:scale-[1.85] lg:hover:scale-[2.25]"/>
+                <img src="public/assets/girl-portrait.webp" alt="Portrait of Aditi Vijay" class="h-full w-auto max-w-none object-contain object-bottom origin-bottom scale-[1.4] md:scale-[1.8] lg:scale-[2.2] translate-y-[10%] lg:translate-y-[15%] transition-transform duration-500 hover:scale-[1.45] md:hover:scale-[1.85] lg:hover:scale-[2.25]"/>
 
                 <!-- Doodle heart — right of portrait -->
                 <div class="absolute top-[30%] right-[-8%] parallax opacity-90 hidden md:block" data-speed="0.8">
@@ -1190,7 +1227,7 @@
                 </div>
 
                 <!-- Cupcake sticker — near her left foot (she faces camera, so her left foot is on the image-right side) -->
-                <img src="public/assets/cupcake-sticker.png" alt="" aria-hidden="true" loading="lazy" decoding="async" class="absolute bottom-[2%] right-[2%] w-20 md:w-24 parallax select-none" data-speed="1" style="transform: rotate(8deg); filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.18));"/>
+                <img src="public/assets/cupcake-sticker.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" class="absolute bottom-[2%] right-[2%] w-20 md:w-24 parallax select-none" data-speed="1" style="transform: rotate(8deg); filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.18));"/>
             </div>
 
             <!-- Right: Playlist + Bouquet + Doodles -->
@@ -1198,7 +1235,7 @@
 
                 <!-- Bouquet photo — top right, overlapping playlist -->
                 <div class="absolute -top-8 right-0 parallax z-10" data-speed="-1.2">
-                    <img src="public/assets/bouquet.png" alt="" aria-hidden="true" class="w-[110px] md:w-[140px] lg:w-[160px] object-contain" style="transform: rotate(-8deg); filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.15));"/>
+                    <img src="public/assets/bouquet.webp" alt="" aria-hidden="true" class="w-[110px] md:w-[140px] lg:w-[160px] object-contain" style="transform: rotate(-8deg); filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.15));"/>
                 </div>
 
                 <!-- Playlist widget — top area -->
@@ -1411,7 +1448,7 @@
                     <div class="hidden lg:block reveal">
                         <video class="resume-gif hover-target"
                                src="public/assets/gif/tom-mirror.mp4"
-                               poster="public/assets/gif/tom-mirror-poster.jpg"
+                               poster="public/assets/gif/tom-mirror-poster.webp"
                                muted loop playsinline preload="none" aria-hidden="true"></video>
                     </div>
                 </div>
@@ -1525,7 +1562,7 @@
                 <div class="flex flex-col md:flex-row md:items-start gap-4">
                     <div class="grid grid-cols-12 gap-3 md:gap-4 flex-1">
                         <a href="public/assets/Bag%20Central%20Stories.pdf" target="_blank" rel="noopener" aria-label="Bag Central stories PDF" class="col-span-12 md:col-span-6 relative rounded-2xl overflow-hidden group/pdf block h-56 md:h-[420px] project-img-wrap img-mask-reveal">
-                            <img src="public/assets/bag-central-stories.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central story"/>
+                            <img src="public/assets/bag-central-stories.webp" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central story"/>
                             <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover/pdf:opacity-100 transition-opacity duration-400 flex items-end p-6">
                                 <span class="font-bold text-white text-sm uppercase tracking-widest flex items-center gap-2">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
@@ -1535,7 +1572,7 @@
                             <span class="absolute top-3 right-3 bg-black/50 backdrop-blur-md rounded-full px-3 py-1.5 text-white text-xs font-bold">PDF · 5 pages</span>
                         </a>
                         <a href="public/assets/bag-central-posts.pdf" target="_blank" rel="noopener" aria-label="Bag Central posts PDF" class="col-span-12 md:col-span-6 relative rounded-2xl overflow-hidden group/pdf block h-56 md:h-[420px] project-img-wrap img-mask-reveal">
-                            <img src="public/assets/bag-central-posts-cover.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central posts PDF"/>
+                            <img src="public/assets/bag-central-posts-cover.webp" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central posts PDF"/>
                             <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover/pdf:opacity-100 transition-opacity duration-400 flex items-end p-6">
                                 <span class="font-bold text-white text-sm uppercase tracking-widest flex items-center gap-2">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
@@ -1545,13 +1582,13 @@
                             <span class="absolute top-3 right-3 bg-black/50 backdrop-blur-md rounded-full px-3 py-1.5 text-white text-xs font-bold">PDF · 3 pages</span>
                         </a>
                         <div class="col-span-4 rounded-2xl overflow-hidden img-mask-reveal project-img-wrap h-56 md:h-[200px]">
-                            <img src="public/assets/bag-central-story-1.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central Instagram story: From an idea"/>
+                            <img src="public/assets/bag-central-story-1.webp" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central Instagram story: From an idea"/>
                         </div>
                         <div class="col-span-4 rounded-2xl overflow-hidden img-mask-reveal project-img-wrap h-56 md:h-[200px]">
-                            <img src="public/assets/bag-central-story-2.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central Instagram story: To an icon"/>
+                            <img src="public/assets/bag-central-story-2.webp" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central Instagram story: To an icon"/>
                         </div>
                         <div class="col-span-4 rounded-2xl overflow-hidden img-mask-reveal project-img-wrap h-56 md:h-[200px]">
-                            <img src="public/assets/bag-central-story-3.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central Instagram story: Over the drama campaign shot"/>
+                            <img src="public/assets/bag-central-story-3.webp" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Bag Central Instagram story: Over the drama campaign shot"/>
                         </div>
                     </div>
                 </div>
@@ -1565,7 +1602,7 @@
                         <h3 class="font-headline font-black text-[11vw] md:text-[5.5vw] leading-[0.9] uppercase text-black project-title">TRIMURTI</h3>
                     </div>
                     <div class="flex flex-col items-end gap-2 mb-1">
-                        <img src="public/assets/Trimurti%20Doors.jpg" alt="Trimurti Doors World logo" class="h-16 w-16 md:h-20 md:w-20 rounded-full object-cover flex-shrink-0"/>
+                        <img src="public/assets/Trimurti%20Doors.webp" alt="Trimurti Doors World logo" class="h-16 w-16 md:h-20 md:w-20 rounded-full object-cover flex-shrink-0"/>
                         <div class="flex items-center gap-2">
                             <span class="project-badge project-badge-sm">Social Media</span>
                             <span class="project-badge project-badge-sm">Branding</span>
@@ -1576,7 +1613,7 @@
                 <div class="flex flex-col md:flex-row md:items-start gap-4">
                     <div class="grid grid-cols-12 gap-3 md:gap-4 flex-1">
                         <a href="public/assets/trimurti-posts.pdf" target="_blank" rel="noopener" aria-label="Trimurti posts PDF" class="col-span-12 md:col-span-8 relative rounded-2xl overflow-hidden group/pdf block h-56 md:h-[420px] project-img-wrap img-mask-reveal">
-                            <img src="public/assets/trimurti-posts-cover.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Trimurti posts PDF"/>
+                            <img src="public/assets/trimurti-posts-cover.webp" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Trimurti posts PDF"/>
                             <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover/pdf:opacity-100 transition-opacity duration-400 flex items-end p-6">
                                 <span class="font-bold text-white text-sm uppercase tracking-widest flex items-center gap-2">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
@@ -1611,7 +1648,7 @@
                 <div class="flex flex-col md:flex-row md:items-start gap-4">
                     <div class="grid grid-cols-12 gap-3 md:gap-4 flex-1">
                         <a href="public/assets/auroroma-posts.pdf" target="_blank" rel="noopener" aria-label="Aurooroma posts PDF" class="col-span-12 relative rounded-2xl overflow-hidden group/pdf block h-56 md:h-[420px] project-img-wrap img-mask-reveal">
-                            <img src="public/assets/auroroma-posts-cover.jpg" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Aurooroma posts PDF"/>
+                            <img src="public/assets/auroroma-posts-cover.webp" loading="lazy" decoding="async" class="w-full h-full object-cover project-img" alt="Aurooroma posts PDF"/>
                             <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover/pdf:opacity-100 transition-opacity duration-400 flex items-end p-6">
                                 <span class="font-bold text-white text-sm uppercase tracking-widest flex items-center gap-2">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
@@ -1643,7 +1680,7 @@
                         <div class="phone-reel">
                             <div class="phone-reel-screen">
                                 <div class="phone-reel-island" aria-hidden="true"></div>
-                                <img class="phone-reel-video" style="object-position: top;" src="public/assets/brands/bag-central/profile.jpg" loading="lazy" decoding="async" alt="The Bag Central Instagram profile">
+                                <img class="phone-reel-video" style="object-position: top;" src="public/assets/brands/bag-central/profile.webp" loading="lazy" decoding="async" alt="The Bag Central Instagram profile">
                                 <div class="phone-reel-overlay">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
                                     Instagram
@@ -1656,7 +1693,7 @@
                         <div class="phone-reel">
                             <div class="phone-reel-screen">
                                 <div class="phone-reel-island" aria-hidden="true"></div>
-                                <img class="phone-reel-video" style="object-position: top;" src="public/assets/brands/bag-central/insights.jpg" loading="lazy" decoding="async" alt="The Bag Central Instagram insights">
+                                <img class="phone-reel-video" style="object-position: top;" src="public/assets/brands/bag-central/insights.webp" loading="lazy" decoding="async" alt="The Bag Central Instagram insights">
                                 <div class="phone-reel-overlay">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
                                     Instagram
@@ -1676,7 +1713,7 @@
                         <div class="phone-reel">
                             <div class="phone-reel-screen">
                                 <div class="phone-reel-island" aria-hidden="true"></div>
-                                <img class="phone-reel-video" style="object-position: top;" src="public/assets/trimurti-profile-2.jpg" loading="lazy" decoding="async" alt="Trimurti Doors Instagram profile">
+                                <img class="phone-reel-video" style="object-position: top;" src="public/assets/trimurti-profile-2.webp" loading="lazy" decoding="async" alt="Trimurti Doors Instagram profile">
                                 <div class="phone-reel-overlay">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
                                     Instagram
@@ -1689,7 +1726,7 @@
                         <div class="phone-reel">
                             <div class="phone-reel-screen">
                                 <div class="phone-reel-island" aria-hidden="true"></div>
-                                <img class="phone-reel-video" style="object-position: top;" src="public/assets/trimurti-insights.jpg" loading="lazy" decoding="async" alt="Trimurti Doors Instagram insights">
+                                <img class="phone-reel-video" style="object-position: top;" src="public/assets/trimurti-insights.webp" loading="lazy" decoding="async" alt="Trimurti Doors Instagram insights">
                                 <div class="phone-reel-overlay">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
                                     Instagram
@@ -1709,7 +1746,7 @@
                         <div class="phone-reel">
                             <div class="phone-reel-screen">
                                 <div class="phone-reel-island" aria-hidden="true"></div>
-                                <img class="phone-reel-video" style="object-position: top;" src="public/assets/nesstaarent-profile-2.jpg" loading="lazy" decoding="async" alt="Nesstaarent Instagram profile">
+                                <img class="phone-reel-video" style="object-position: top;" src="public/assets/nesstaarent-profile-2.webp" loading="lazy" decoding="async" alt="Nesstaarent Instagram profile">
                                 <div class="phone-reel-overlay">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
                                     Instagram
@@ -1722,7 +1759,7 @@
                         <div class="phone-reel">
                             <div class="phone-reel-screen">
                                 <div class="phone-reel-island" aria-hidden="true"></div>
-                                <img class="phone-reel-video" style="object-position: top;" src="public/assets/nesstaarent-insights.jpg" loading="lazy" decoding="async" alt="Nesstaarent Instagram insights">
+                                <img class="phone-reel-video" style="object-position: top;" src="public/assets/nesstaarent-insights.webp" loading="lazy" decoding="async" alt="Nesstaarent Instagram insights">
                                 <div class="phone-reel-overlay">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
                                     Instagram
@@ -1742,7 +1779,7 @@
                         <div class="phone-reel">
                             <div class="phone-reel-screen">
                                 <div class="phone-reel-island" aria-hidden="true"></div>
-                                <img class="phone-reel-video" style="object-position: top;" src="public/assets/glovio-profile.jpg" loading="lazy" decoding="async" alt="Glovio Instagram profile">
+                                <img class="phone-reel-video" style="object-position: top;" src="public/assets/glovio-profile.webp" loading="lazy" decoding="async" alt="Glovio Instagram profile">
                                 <div class="phone-reel-overlay">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
                                     Instagram
@@ -1755,7 +1792,7 @@
                         <div class="phone-reel">
                             <div class="phone-reel-screen">
                                 <div class="phone-reel-island" aria-hidden="true"></div>
-                                <img class="phone-reel-video" style="object-position: top;" src="public/assets/glovio-insights.jpg" loading="lazy" decoding="async" alt="Glovio Instagram insights">
+                                <img class="phone-reel-video" style="object-position: top;" src="public/assets/glovio-insights.webp" loading="lazy" decoding="async" alt="Glovio Instagram insights">
                                 <div class="phone-reel-overlay">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
                                     Instagram
@@ -1775,7 +1812,7 @@
                         <div class="phone-reel">
                             <div class="phone-reel-screen">
                                 <div class="phone-reel-island" aria-hidden="true"></div>
-                                <img class="phone-reel-video" style="object-position: top;" src="public/assets/myniyati-profile.jpg" loading="lazy" decoding="async" alt="My Niyati Instagram profile">
+                                <img class="phone-reel-video" style="object-position: top;" src="public/assets/myniyati-profile.webp" loading="lazy" decoding="async" alt="My Niyati Instagram profile">
                                 <div class="phone-reel-overlay">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
                                     Instagram
@@ -1788,7 +1825,7 @@
                         <div class="phone-reel">
                             <div class="phone-reel-screen">
                                 <div class="phone-reel-island" aria-hidden="true"></div>
-                                <img class="phone-reel-video" style="object-position: top;" src="public/assets/myniyati-insights.jpg" loading="lazy" decoding="async" alt="My Niyati Instagram insights">
+                                <img class="phone-reel-video" style="object-position: top;" src="public/assets/myniyati-insights.webp" loading="lazy" decoding="async" alt="My Niyati Instagram insights">
                                 <div class="phone-reel-overlay">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
                                     Instagram
@@ -1808,7 +1845,7 @@
                         <div class="phone-reel">
                             <div class="phone-reel-screen">
                                 <div class="phone-reel-island" aria-hidden="true"></div>
-                                <img class="phone-reel-video" style="object-position: top;" src="public/assets/blueglobe-profile.jpg" loading="lazy" decoding="async" alt="Blue Globe Overseas Instagram profile">
+                                <img class="phone-reel-video" style="object-position: top;" src="public/assets/blueglobe-profile.webp" loading="lazy" decoding="async" alt="Blue Globe Overseas Instagram profile">
                                 <div class="phone-reel-overlay">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
                                     Instagram
@@ -1821,7 +1858,7 @@
                         <div class="phone-reel">
                             <div class="phone-reel-screen">
                                 <div class="phone-reel-island" aria-hidden="true"></div>
-                                <img class="phone-reel-video" style="object-position: top;" src="public/assets/blueglobe-insights.jpg" loading="lazy" decoding="async" alt="Blue Globe Overseas Instagram insights">
+                                <img class="phone-reel-video" style="object-position: top;" src="public/assets/blueglobe-insights.webp" loading="lazy" decoding="async" alt="Blue Globe Overseas Instagram insights">
                                 <div class="phone-reel-overlay">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
                                     Instagram
@@ -1981,7 +2018,7 @@
                     </p>
                     <span class="chinki-cta-arrow">See the shots <span class="chinki-arrow-icon">➔</span></span>
                 </div>
-                <img class="chinki-photo" src="public/assets/photography/chinki-explorer-cutout.png" loading="lazy" decoding="async" alt="Chinki twirling in a mirrorwork lehenga"/>
+                <img class="chinki-photo" src="public/assets/photography/chinki-explorer-cutout.webp" loading="lazy" decoding="async" alt="Chinki twirling in a mirrorwork lehenga"/>
             </div>
         </a>
     </section>
@@ -2070,17 +2107,122 @@
 
     <script>
         // ===== LENIS SMOOTH SCROLL =====
+        // Animated scrolling is a vestibular trigger, so it is switched off outright when the
+        // visitor asks for reduced motion; the page then scrolls natively.
+        const wantsReducedScroll = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
         const lenis = new Lenis({
-            lerp: 0.08,
-            smoothWheel: true,
-            smoothTouch: false,
+            lerp: wantsReducedScroll ? 1 : 0.1,
+            smoothWheel: !wantsReducedScroll,
+            // syncTouch is the Lenis 1.x option name. The old key here was smoothTouch, which
+            // 1.x does not read at all, so it was silently doing nothing. Left off on purpose:
+            // phones already scroll smoothly and hijacking that fights the platform.
+            syncTouch: false,
         });
-        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-        requestAnimationFrame(raf);
-        lenis.on('scroll', ScrollTrigger.update);
+
+        // One loop, not two. Lenis was running its own requestAnimationFrame alongside GSAP's
+        // ticker, so two independent loops drove the same frame. Driving Lenis from the ticker
+        // guarantees it updates before ScrollTrigger reads the new position each frame.
+        gsap.ticker.add((time) => lenis.raf(time * 1000));
         gsap.ticker.lagSmoothing(0);
+        lenis.on('scroll', ScrollTrigger.update);
+
+        // In-page links were doing a native jump straight past Lenis, so every nav item landed
+        // with a hard cut. Route them through Lenis and offset for the fixed header.
+        document.addEventListener('click', (e) => {
+            const link = e.target.closest('a[href^="#"]');
+            if (!link) return;
+            const id = link.getAttribute('href');
+            if (!id || id === '#') return;
+            const target = document.querySelector(id);
+            if (!target) return;
+            e.preventDefault();
+            const nav = document.getElementById('site-nav');
+            lenis.scrollTo(target, {
+                offset: -((nav ? nav.offsetHeight : 72) + 8),
+                duration: wantsReducedScroll ? 0 : 1.1,
+                immediate: wantsReducedScroll
+            });
+            if (history.replaceState) history.replaceState(null, '', id);
+        });
+
+
+        // ===== NETWORK-AWARE LOADING =====
+        // Two jobs: back off on slow or metered connections, and use idle time on good ones
+        // to warm the other page so navigating to it feels instant.
+        (function () {
+            const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+            const slow = !!conn && (conn.saveData === true ||
+                          ['slow-2g', '2g', '3g'].includes(conn.effectiveType));
+            // Exposed as a class so CSS can react too, and so the video gates can read it.
+            document.documentElement.classList.toggle('save-data', slow);
+            window.__lowBandwidth = slow;
+
+            if (slow) {
+                // Nothing heavy should stream on its own here. Clips keep their poster and
+                // controls, so they are still watchable on demand, just not auto-fetched.
+                document.querySelectorAll('video').forEach(v => {
+                    v.removeAttribute('autoplay');
+                    v.preload = 'none';
+                    v.pause();
+                    if (!v.hasAttribute('controls') && !v.closest('.phone-reel')) v.controls = true;
+                });
+                return; // skip prefetch entirely on a metered or slow link
+            }
+
+            // Warm the sibling page during idle time, never competing with the current load.
+            const other = location.pathname.includes('photography') ? 'index.html' : 'photography.html';
+            const warm = () => {
+                const l = document.createElement('link');
+                l.rel = 'prefetch';
+                l.href = other;
+                l.as = 'document';
+                document.head.appendChild(l);
+            };
+            if ('requestIdleCallback' in window) requestIdleCallback(warm, { timeout: 4000 });
+            else window.addEventListener('load', () => setTimeout(warm, 2500));
+        })();
+
+
+        // ===== FRAME-RATE WATCHDOG =====
+        // Watches real frame pacing for a few seconds of actual use. If the device is
+        // consistently missing frames, quality drops once (see html.perf-low) instead of
+        // letting the page stutter. One rAF loop that stops itself; it never touches state.
+        (function () {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            let frames = 0, missed = 0, last = performance.now();
+            const started = last;
+            (function tick(now) {
+                const dt = now - last; last = now; frames++;
+                if (dt > 28) missed++;               // slower than ~36fps for this frame
+                if (now - started < 4500) { requestAnimationFrame(tick); return; }
+                if (frames > 40 && missed / frames > 0.3) {
+                    document.documentElement.classList.add('perf-low');
+                }
+            })(performance.now());
+        })();
+
+
+        // ===== PAUSE OFF-SCREEN DECORATION =====
+        // Every looping decorative animation on the page runs forever by default, on or off
+        // screen. This parks them when they are not visible and wakes them a little before
+        // they scroll back in, so nothing pops.
+        (function () {
+            const loops = document.querySelectorAll(
+                '.hero-aurora-blob, .sticker-float, .sticker-float-r, .marquee-track,' +
+                '.hero-orbit-ring-slow, .hero-orbit-ring-fast, .particle'
+            );
+            if (!loops.length || !('IntersectionObserver' in window)) return;
+            const io = new IntersectionObserver((entries) => {
+                entries.forEach(e => e.target.classList.toggle('anim-off', !e.isIntersecting));
+            }, { rootMargin: '150px' });
+            loops.forEach(el => { el.classList.add('anim-off'); io.observe(el); });
+        })();
 
         // ===== GSAP INIT =====
+        // House feel in one place, so tweens that do not name an ease match the rest of the
+        // site instead of falling back to GSAP's generic power1.out.
+        gsap.defaults({ ease: 'power2.out' });
         gsap.registerPlugin(ScrollTrigger);
         // Display webfonts (League Gothic, Lilita One, Space Grotesk) can swap in after
         // ScrollTriggers are first computed, resizing headings and shifting everything
@@ -2191,7 +2333,11 @@
             },
             y: -100,
             scale: 0.9,
-            opacity: 0.3
+            opacity: 0.3,
+            // Scrubbed tweens are driven by scroll position, so the curve has to be linear.
+            // Without this GSAP applies its default power1.out across the whole range and the
+            // parallax speeds up and slows down independently of the scroll.
+            ease: 'none'
         });
         gsap.to('#hero-subtitle', {
             scrollTrigger: {
@@ -2201,18 +2347,66 @@
                 scrub: 0.5
             },
             y: -60,
-            opacity: 0
+            // autoAlpha also flips visibility, so the faded-out subtitle stops swallowing
+            // clicks meant for what is behind it.
+            autoAlpha: 0,
+            ease: 'none'
         });
 
         // ===== CUSTOM CURSOR =====
         const cursor = document.getElementById('custom-cursor');
         gsap.set(cursor, { xPercent: -50, yPercent: -50 });
-        const cursorX = gsap.quickTo(cursor, 'x', { duration: 0.15, ease: 'power2.out' });
-        const cursorY = gsap.quickTo(cursor, 'y', { duration: 0.15, ease: 'power2.out' });
+        const cursorReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // The pointer is only ever read here; everything else is derived on the ticker.
+        const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+        const pos = { x: mouse.x, y: mouse.y };
+        const last = { x: mouse.x, y: mouse.y };
+        let cursorAngle = 0;
+
         document.addEventListener('mousemove', (e) => {
             cursor.classList.add('cursor-active');
-            cursorX(e.clientX);
-            cursorY(e.clientY);
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        }, { passive: true });
+
+        // Lerp toward the pointer each frame, then use the leftover distance as velocity to
+        // stretch along the direction of travel. One ticker callback doing a single gsap.set,
+        // so nothing is allocated per frame the way a tween per mousemove would be.
+        let cursorSettled = false;
+        gsap.ticker.add(() => {
+            if (cursorReduced) { gsap.set(cursor, { x: mouse.x, y: mouse.y }); return; }
+
+            // Bail before touching the DOM once the cursor has caught up and relaxed. Writing
+            // a transform every frame forever costs real scripting and a style recalc per
+            // frame even with the mouse parked, which is exactly what made the page feel heavy.
+            const restX = mouse.x - pos.x, restY = mouse.y - pos.y;
+            if (cursorSettled && Math.abs(restX) < 0.08 && Math.abs(restY) < 0.08) return;
+
+            pos.x += (mouse.x - pos.x) * 0.18;
+            pos.y += (mouse.y - pos.y) * 0.18;
+
+            const dx = pos.x - last.x;
+            const dy = pos.y - last.y;
+            const velocity = Math.sqrt(dx * dx + dy * dy);
+            const stretch = Math.min(velocity * 0.7, 22);
+
+            // Only steer while actually moving. atan2(0,0) is 0, so reading it at rest would
+            // snap the cursor upright every time you stop; instead it eases back.
+            if (velocity > 0.4) cursorAngle = (Math.atan2(dy, dx) * 180) / Math.PI;
+            else cursorAngle += (0 - cursorAngle) * 0.12;
+
+            gsap.set(cursor, {
+                x: pos.x,
+                y: pos.y,
+                rotation: cursorAngle,
+                scaleX: 1 + stretch / 35,
+                scaleY: 1 - stretch / 60
+            });
+
+            last.x = pos.x;
+            last.y = pos.y;
+            cursorSettled = velocity < 0.05 && Math.abs(cursorAngle) < 0.5;
         });
         const hoverTargets = document.querySelectorAll('.hover-target, a, button');
         hoverTargets.forEach(t => {
@@ -2436,7 +2630,7 @@
         // preload="none" keeps the clip off the wire entirely until this fires, so it costs
         // nothing on load, and pausing off screen stops the decode work when it scrolls away.
         const resumeGif = document.querySelector('.resume-gif');
-        if (resumeGif && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        if (resumeGif && !window.__lowBandwidth && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             const gifObs = new IntersectionObserver(([entry]) => {
                 if (entry.isIntersecting) {
                     const played = resumeGif.play();
@@ -2771,10 +2965,19 @@
                     video.pause();
                     video.currentTime = 0;
                 });
-            } else if (!reducedMotion) {
-                video.setAttribute('autoplay', '');
-                video.play().catch(() => {});
-                phone.classList.add('is-playing');
+            } else if (!reducedMotion && !window.__lowBandwidth) {
+                // Play only the reel actually on screen. Blanket autoplay made every clip on
+                // the page start downloading at once, which on a phone is the single largest
+                // transfer on the site and the reason scrolling felt heavy.
+                const io = new IntersectionObserver(([e]) => {
+                    if (e.isIntersecting) {
+                        video.play().then(() => phone.classList.add('is-playing')).catch(() => {});
+                    } else {
+                        video.pause();
+                        phone.classList.remove('is-playing');
+                    }
+                }, { threshold: 0.4 });
+                io.observe(phone);
             }
         });
 
