@@ -138,6 +138,35 @@
             text-transform: uppercase;
         }
 
+        /* ===== PLAYLIST STAR ===== */
+        /* Opens the track on Spotify so the visitor can save it from there. Writing to a
+           library directly needs per-visitor OAuth (user-library-modify), and a Spotify app
+           outside Extended Quota Mode only authorises 25 whitelisted accounts, so a silent
+           save would fail for nearly everyone who clicked it. 44px box for the tap target. */
+        .playlist-star {
+            width: 44px; height: 44px; margin-right: -10px; flex-shrink: 0;
+            display: inline-flex; align-items: center; justify-content: center;
+            border-radius: 50%; text-decoration: none;
+            color: #9ca3af; font-size: 1.05rem; line-height: 1;
+            transition: color 0.25s ease, background-color 0.25s ease, transform 0.25s ease;
+        }
+        .playlist-star:hover,
+        .playlist-star:focus-visible {
+            color: #c4845a;
+            background: rgba(196,132,90,0.12);
+            transform: scale(1.12);
+        }
+        .playlist-star .star-fill { display: none; }
+        .playlist-star:hover .star-empty,
+        .playlist-star:focus-visible .star-empty { display: none; }
+        .playlist-star:hover .star-fill,
+        .playlist-star:focus-visible .star-fill { display: inline; }
+        html.dark .playlist-star { color: rgba(240,232,223,0.45); }
+        @media (prefers-reduced-motion: reduce) {
+            .playlist-star { transition: none; }
+            .playlist-star:hover, .playlist-star:focus-visible { transform: none; }
+        }
+
         /* ===== HIGHLIGHTS ===== */
         .highlight-yellow { background-color: #fef08a; padding: 0 4px; border-radius: 4px; }
         .highlight-pink { background-color: #fbcfe8; padding: 0 4px; border-radius: 4px; }
@@ -786,6 +815,23 @@
             transition: opacity 0.1s;
         }
 
+        /* ===== RESUME GIF ===== */
+        /* Was a 9.4MB GIF; re-encoded to a 104KB h264 clip, which decodes far cheaper than
+           90 GIF frames. preload="none" means nothing is fetched until it scrolls into view. */
+        .resume-gif {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            border-radius: 18px;
+            transform: rotate(-3deg);
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.12);
+            border: 2px solid #111;
+        }
+        html.dark .resume-gif {
+            border-color: rgba(240,232,223,0.35);
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.45);
+        }
+
         /* ===== TIMELINE LINE DRAW ===== */
         .timeline-line {
             transform-origin: top center;
@@ -1164,21 +1210,21 @@
                                 <img alt="" aria-hidden="true" src="https://i.scdn.co/image/ab67616d00004851e787cffec20aa2a396a61647" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
                             </div>
                             <div class="leading-tight flex-1"><p class="font-bold text-sm text-[#111]">Love Story</p><p class="text-xs text-gray-500 italic">Taylor Swift</p></div>
-                            <span class="text-gray-400 text-base" aria-hidden="true">☆</span>
+                            <a class="playlist-star hover-target" href="https://open.spotify.com/search/Love%20Story%20Taylor%20Swift" target="_blank" rel="noopener" aria-label="Open Love Story by Taylor Swift on Spotify" title="Open on Spotify"><span class="star-empty" aria-hidden="true">☆</span><span class="star-fill" aria-hidden="true">★</span></a>
                         </div>
                         <div class="flex items-center gap-3 playlist-item">
                             <div class="w-11 h-11 rounded overflow-hidden flex-shrink-0 border border-black/10" style="background: linear-gradient(135deg, #1a1a2e, #3d2b5e);">
                                 <img alt="" aria-hidden="true" src="https://i.scdn.co/image/ab67616d00004851d7fb3e4c63020039d1cff6b2" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
                             </div>
                             <div class="leading-tight flex-1"><p class="font-bold text-sm text-[#111]">Dark Paradise</p><p class="text-xs text-gray-500 italic">Lana Del Rey</p></div>
-                            <span class="text-gray-400 text-base" aria-hidden="true">☆</span>
+                            <a class="playlist-star hover-target" href="https://open.spotify.com/search/Dark%20Paradise%20Lana%20Del%20Rey" target="_blank" rel="noopener" aria-label="Open Dark Paradise by Lana Del Rey on Spotify" title="Open on Spotify"><span class="star-empty" aria-hidden="true">☆</span><span class="star-fill" aria-hidden="true">★</span></a>
                         </div>
                         <div class="flex items-center gap-3 playlist-item">
                             <div class="w-11 h-11 rounded overflow-hidden flex-shrink-0 border border-black/10" style="background: linear-gradient(135deg, #c8a97e, #a07850);">
                                 <img alt="" aria-hidden="true" src="https://i.scdn.co/image/ab67616d00004851ebc8cfac8b586bc475b04918" class="w-full h-full object-cover" onerror="this.style.display='none'"/>
                             </div>
                             <div class="leading-tight flex-1"><p class="font-bold text-sm text-[#111]">Young and Beautiful</p><p class="text-xs text-gray-500 italic">Lana Del Rey</p></div>
-                            <span class="text-gray-400 text-base" aria-hidden="true">☆</span>
+                            <a class="playlist-star hover-target" href="https://open.spotify.com/search/Young%20and%20Beautiful%20Lana%20Del%20Rey" target="_blank" rel="noopener" aria-label="Open Young and Beautiful by Lana Del Rey on Spotify" title="Open on Spotify"><span class="star-empty" aria-hidden="true">☆</span><span class="star-fill" aria-hidden="true">★</span></a>
                         </div>
                     </div>
                 </div>
@@ -1357,6 +1403,16 @@
                                 <svg viewBox="0 0 88 88" width="68" height="68" aria-hidden="true"><text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="24" fill="white">VN</text></svg>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Fills the gap left where this column runs out and Experience keeps
+                         going. Desktop only, because the columns stack on mobile and the
+                         gap does not exist there. -->
+                    <div class="hidden lg:block reveal">
+                        <video class="resume-gif hover-target"
+                               src="public/assets/gif/tom-mirror.mp4"
+                               poster="public/assets/gif/tom-mirror-poster.jpg"
+                               muted loop playsinline preload="none" aria-hidden="true"></video>
                     </div>
                 </div>
 
@@ -2375,6 +2431,22 @@
             }, { threshold: 0.2 });
             observer.observe(title);
         });
+
+        // ===== RESUME GIF: fetch and decode only while it is on screen =====
+        // preload="none" keeps the clip off the wire entirely until this fires, so it costs
+        // nothing on load, and pausing off screen stops the decode work when it scrolls away.
+        const resumeGif = document.querySelector('.resume-gif');
+        if (resumeGif && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            const gifObs = new IntersectionObserver(([entry]) => {
+                if (entry.isIntersecting) {
+                    const played = resumeGif.play();
+                    if (played) played.catch(() => {});
+                } else {
+                    resumeGif.pause();
+                }
+            }, { threshold: 0.15 });
+            gifObs.observe(resumeGif);
+        }
 
         // ===== TIMELINE LINE DRAW =====
         const timelineLine = document.getElementById('timeline-line');
