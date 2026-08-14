@@ -100,7 +100,7 @@
         .nav-status {
             display: none; align-items: center; gap: 6px; margin-left: 14px;
             padding: 5px 12px; border-radius: 9999px; background: rgba(0,0,0,0.05);
-            font-family: 'Space Grotesk', sans-serif; font-size: 0.7rem; font-weight: 600;
+            font-family: 'Space Grotesk', sans-serif; font-size: 0.75rem; font-weight: 600;
             text-transform: uppercase; letter-spacing: 0.06em; color: rgba(17,17,17,0.75);
         }
         .nav-status-dot { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; flex-shrink: 0; }
@@ -111,10 +111,15 @@
             font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem;
             font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;
             color: #111; text-decoration: none;
-            position: relative; padding-bottom: 2px;
+            position: relative;
+            /* The link box was only as tall as its 20px line, under the 24px WCAG minimum.
+               The nav row is already 44px because of the toggle button, so claiming that
+               height costs no layout change. */
+            display: inline-block;
+            padding: 11px 0;
         }
         .nav-links a::after {
-            content: ''; position: absolute; bottom: 0; left: 0;
+            content: ''; position: absolute; bottom: 10px; left: 0;
             width: 0; height: 1.5px; background: #111;
             transition: width 0.3s ease;
         }
@@ -236,7 +241,7 @@
             padding: 10px;
             box-shadow:
                 0 0 0 2px rgba(255,255,255,0.06) inset,
-                0 20px 50px rgba(0,0,0,0.25);
+                0 12px 30px rgba(0,0,0,0.22);
             transition: transform 0.4s cubic-bezier(.4,0,.2,1), box-shadow 0.4s ease;
         }
         /* Phone mockup in project cards — slightly larger, tighter aspect ratio to prevent screenshot clipping */
@@ -300,7 +305,7 @@
             gap: 8px;
             color: #fff;
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.72rem;
+            font-size: 0.75rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -311,7 +316,13 @@
         }
         .phone-reel:hover .phone-reel-overlay { opacity: 1; }
         .reel-brand-caption {
-            margin-top: 12px;
+            /* The phone's drop shadow is offset 20px down with a 50px blur, so it spills about
+               70px past the frame, straight across this caption. Paint the caption above it and
+               clear the spill, otherwise on a real screen the text reads as smudged or cut off
+               where the shadow crosses it. */
+            position: relative;
+            z-index: 2;
+            margin-top: 18px;
             text-align: center;
             font-family: 'Space Grotesk', sans-serif;
             font-weight: 600;
@@ -2098,7 +2109,7 @@
             </a>
         </div>
 
-        <a href="mailto:aditivijay642@gmail.com" class="text-white/60 hover:text-white text-sm font-body tracking-widest uppercase transition-colors hover-target flex items-center justify-center gap-2" style="text-decoration:none;">
+        <a href="mailto:aditivijay642@gmail.com" class="text-white/60 hover:text-white text-sm font-body tracking-widest uppercase transition-colors hover-target inline-flex items-center justify-center gap-2 py-3" style="text-decoration:none;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
             aditivijay642@gmail.com
         </a>
