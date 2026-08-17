@@ -744,7 +744,34 @@
            strip, including the empty space either side of the photos. */
         .pcar:has(.pcar-item:hover),
         .pcar:has(.pcar-item:focus-visible),
-        .pcar-scene.is-offscreen .pcar { animation-play-state: paused; }
+        .pcar-scene.is-offscreen .pcar,
+        .pcar-scene.is-paused .pcar { animation-play-state: paused; }
+
+        /* Touch has no hover, so the two rules above can never fire on a phone and the ring
+           could not be stopped at all. The hint says the tap is there, since an unlabelled one
+           is not discoverable. */
+        @media (hover: none) {
+            .pcar-scene::after {
+                content: 'Tap a side photo to pause';
+                position: absolute;
+                left: 50%;
+                bottom: 6px;
+                transform: translateX(-50%);
+                z-index: 2;
+                padding: 5px 12px;
+                border-radius: 999px;
+                background: rgba(17,17,17,0.62);
+                color: #fff;
+                font-family: 'Space Grotesk', sans-serif;
+                font-size: 0.68rem;
+                font-weight: 600;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                pointer-events: none;
+            }
+            .pcar-scene.is-paused::after { content: 'Tap the front photo to open · tap outside to resume'; }
+        }
+        html.dark .pcar-scene::after { background: rgba(240,232,223,0.75); color: #1a150f; }
 
         .pcar-item {
             position: absolute;
@@ -755,12 +782,29 @@
             margin-top: calc(var(--item-h) / -2);
             margin-left: calc(var(--item-w) / -2);
             border-radius: 14px;
-            overflow: hidden;
+            /* No overflow:hidden here. Clipping a preserve-3d child makes WebKit flatten the
+               tile into its own layer, which drops it out of depth sorting and makes the ring
+               z-fight and flicker on iOS. The radius is clipped on the img/video instead. */
             box-shadow: 0 10px 30px rgba(0,0,0,0.22);
             transform: rotateY(var(--angle)) translateZ(var(--radius));
-            transition: transform 0.55s cubic-bezier(.2,.8,.2,1), box-shadow 0.55s ease;
+            transition: transform 0.55s cubic-bezier(.2,.8,.2,1);
         }
-        /* Drawn inside the tile: a normal outline would be clipped by overflow: hidden. */
+        /* The lift shadow is a second layer faded with opacity rather than a box-shadow
+           transition on the tile. box-shadow is a paint property, so transitioning it re-rasters
+           a 60px blur on every frame of the hover; opacity stays on the compositor. Same look. */
+        .pcar-item::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            box-shadow: 0 26px 60px rgba(0,0,0,0.38);
+            opacity: 0;
+            transition: opacity 0.55s ease;
+            pointer-events: none;
+        }
+        .pcar-item:hover::after,
+        .pcar-item:focus-visible::after { opacity: 1; }
+        /* Inset so the ring follows the tile's rounded edge instead of boxing it. */
         .pcar-item:focus-visible {
             outline: 3px solid #c4845a;
             outline-offset: -3px;
@@ -769,7 +813,6 @@
         .pcar-item:hover,
         .pcar-item:focus-visible {
             transform: rotateY(var(--angle)) translateZ(calc(var(--radius) + var(--pop-z))) scale(var(--pop-scale));
-            box-shadow: 0 26px 60px rgba(0,0,0,0.38);
         }
         .pcar-item img,
         .pcar-item video {
@@ -777,12 +820,14 @@
             height: 100%;
             object-fit: cover;
             display: block;
+            border-radius: inherit;
         }
         @keyframes pcar-spin {
             from { transform: rotateY(0deg); }
             to   { transform: rotateY(360deg); }
         }
         html.dark .pcar-item { box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        html.dark .pcar-item::after { box-shadow: 0 26px 60px rgba(0,0,0,0.6); }
 
         @media (max-width: 1024px) {
             .pcar-scene {
@@ -863,6 +908,7 @@
         html.perf-low .pcar-item,
         html.perf-low .phone-reel { box-shadow: none !important; }
         html.perf-low .pcar-item { filter: none !important; }
+        html.perf-low .pcar-item::after { display: none !important; }
 
         /* Offscreen work the browser can skip entirely. Each tile already declares an
            aspect-ratio, so the reserved box matches the real one and scroll height and every
@@ -1180,7 +1226,8 @@
         </div>
         <!-- These eight frames live here and nowhere else on the page, so the ring is real
              content rather than decoration: each tile is a link with alt text, and the
-             rotation pauses on focus as well as hover so it can be tabbed through. -->
+             rotation pauses on focus as well as hover so it can be tabbed through, and on
+             the first tap on touch. -->
         <div class="pcar-scene mt-14">
             <!-- Eight tiles at 45deg. Every frame has a person in it: the on-set and mirror
                  shots plus the Bag Central model shoot, and the one clip that is actually of
@@ -1836,6 +1883,62 @@
                     if (rotator) rotator.style.willChange = entry.isIntersecting ? 'transform' : 'auto';
                 }, { threshold: 0 });
                 ringObs.observe(scene);
+            }
+
+            // Only the tile at the front of the ring opens its photo. A side tile is turned
+            // away and mostly occluded, so a click there is a request to stop and look, not to
+            // open something — it just pauses. Capture phase on the scene so this runs before
+            // the document-level lightbox delegate and can swallow the side-tile clicks.
+            //
+            // Which tile is at the front comes from the ring's own rotation rather than from
+            // rendered size: :hover scales a tile by --pop-scale, so the largest tile on screen
+            // is whichever one the pointer is over, not the front one.
+            if (scene) {
+                const rotator = scene.querySelector('.pcar');
+
+                const frontTile = () => {
+                    let spin = 0;
+                    if (rotator) {
+                        // rotateY(t) puts sin(t) in m31 and cos(t) in m11.
+                        const m = new DOMMatrix(getComputedStyle(rotator).transform);
+                        spin = Math.atan2(m.m31, m.m11) * 180 / Math.PI;
+                    }
+                    let best = null, bestDist = Infinity;
+                    scene.querySelectorAll('.pcar-item').forEach((t) => {
+                        const a = parseFloat(getComputedStyle(t).getPropertyValue('--angle')) || 0;
+                        const x = (((a + spin) % 360) + 360) % 360;
+                        const dist = Math.min(x, 360 - x);
+                        if (dist < bestDist) { bestDist = dist; best = t; }
+                    });
+                    return best;
+                };
+
+                // Ask what the pointer actually hit, not whether it is inside the front tile's
+                // bounding rect: these tiles are rotated, so an axis-aligned rect reaches well
+                // past the visible edges of the photo and a click on bare ring beside it still
+                // counted as a hit, opening the lightbox out of nowhere.
+                //
+                // Every click in the ring stops it and only a real hit on the front photo opens
+                // anything. Nothing here ever resumes — a click that misses is a miss, not a
+                // restart. That matters because the hover pop shifts a tile out from under the
+                // pointer, so aiming at a side photo frequently lands on bare ring; treating
+                // that as "resume" left the ring turning and the next click caught the front
+                // tile as it swung past, which is how clicking the sides kept opening photos.
+                scene.addEventListener('click', (e) => {
+                    const onFront = e.target.closest('.pcar-item') === frontTile();
+                    scene.classList.add('is-paused');
+                    if (!onFront) { e.preventDefault(); e.stopPropagation(); }
+                }, true);
+
+                // Resume: pointer leaves the ring on desktop, or a tap outside it on touch.
+                // Not on a click inside the scene, which is what made stopping unreliable.
+                const lb = document.querySelector('.lb');
+                scene.addEventListener('pointerleave', () => {
+                    if (!lb || lb.hidden) scene.classList.remove('is-paused');
+                });
+                document.addEventListener('click', (e) => {
+                    if (!scene.contains(e.target)) scene.classList.remove('is-paused');
+                });
             }
         })();
 

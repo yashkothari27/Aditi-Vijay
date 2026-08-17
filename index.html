@@ -282,10 +282,21 @@
             border-radius: 2.1rem;
             overflow: hidden;
             background: #000;
+            /* iOS Safari paints <video> on its own compositing layer and does NOT clip it to an
+               ancestor's rounded overflow, so the reel spilled past the bezel and over the caption.
+               The mask forces WebKit to clip this subtree; isolate keeps the layer in our stack. */
+            -webkit-mask-image: -webkit-radial-gradient(#fff, #000);
+            isolation: isolate;
         }
         .phone-reel-video {
+            /* Absolute + inset pins the video to the screen box on iOS, where percentage heights
+               inside an aspect-ratio box can resolve too large. Radius is inherited so the three
+               size variants (default / .project-card / #results) each clip to their own corner. */
+            position: absolute;
+            inset: 0;
             width: 100%;
             height: 100%;
+            border-radius: inherit;
             object-fit: cover;
             display: block;
         }
@@ -737,9 +748,11 @@
         /* Resume divider line + contact SVG icons */
         html.dark .bg-gray-400    { background-color: rgba(240,232,223,0.2) !important; }
         html.dark .bg-gray-200    { background-color: rgba(240,232,223,0.12) !important; }
-        /* contact-icon: fill/stroke on both SVG element AND child paths */
-        html.dark .contact-icon,
-        html.dark .contact-icon * { stroke: rgba(240,232,223,0.7) !important; fill: rgba(240,232,223,0.7) !important; }
+        /* All three contact icons are line marks drawn with stroke="currentColor", so a theme
+           only has to move one colour. The old rule forced a fill onto every child as well,
+           which turned the outlined pin and envelope into solid blobs in dark mode — they did
+           not match their own light-mode shape, let alone each other. */
+        html.dark .contact-icon { color: rgba(240,232,223,0.7); }
 
         /* Global hover:text-black override in dark mode */
         html.dark .hover\:text-black:hover { color: #f0e8df !important; }
@@ -771,8 +784,6 @@
         html.dark .bg-\[\#1f1f1f\] * { color: #e8c9a8 !important; }
 
         /* About section bio highlight spans — keep readable */
-        html.dark span[style*="background:#d4956a"] { background: #7a4e30 !important; color: #f0e8df !important; }
-        html.dark span[style*="background:#fde047"] { background: #7a6200 !important; color: #f0e8df !important; }
 
         /* Resume date labels background */
         html.dark .bg-cream { background-color: #2c2118 !important; }
@@ -814,6 +825,40 @@
             clip-path: inset(0 0 0% 0);
             transition: clip-path 1.2s cubic-bezier(.77,0,.175,1);
         }
+
+        /* ===== THEME SWATCHES ===== */
+        /* These are hard-coded to the light palette, and the near-black one was drawn with a
+           #111 border, so in dark mode it became a black disc with a black rim on a near-black
+           panel — invisible. Each swatch now carries its own fill and rim, and dark mode swaps
+           in the dark palette so the row keeps meaning what it says it means. */
+        .swatch { background: var(--sw); border: 2px solid var(--sw-rim); }
+        .swatch-ink   { --sw: #111111; --sw-rim: rgba(0,0,0,0.35); }
+        .swatch-tan   { --sw: #e8c9a8; --sw-rim: rgba(0,0,0,0.25); }
+        .swatch-cream { --sw: #f5efe6; --sw-rim: rgba(0,0,0,0.18); }
+        html.dark .swatch-ink   { --sw: #16120e; --sw-rim: rgba(240,232,223,0.45); }
+        html.dark .swatch-tan   { --sw: #c98d63; --sw-rim: rgba(240,232,223,0.25); }
+        html.dark .swatch-cream { --sw: #f0e8df; --sw-rim: rgba(240,232,223,0.35); }
+
+        /* ===== BIO HIGHLIGHT CHIPS ===== */
+        /* The chip colour lives in --hl so the sweep script can build its gradient from the
+           variable instead of rewriting the inline background. It used to overwrite
+           background:#fde047 with a linear-gradient(), which destroyed the very substring the
+           dark-mode [style*="background:#fde047"] rules matched on — so in dark mode the chip
+           kept its bright light-mode fill while the text went cream, and the yellow ones became
+           unreadable. Text stays dark here because the chip is light in both themes. */
+        .hl {
+            background: var(--hl);
+            color: #111;
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+        .hl-amber { --hl: #fde047; }
+        .hl-tan   { --hl: #d4956a; }
+        /* Dimmed a little for dark mode so the chip does not glare, still light enough that
+           #111 text clears WCAG AA on it. */
+        html.dark .hl-amber { --hl: #e7c53f; }
+        html.dark .hl-tan   { --hl: #c98d63; }
+        html.dark .hl { color: #111; }
 
         /* ===== HIGHLIGHT SWEEP ===== */
         .highlight-sweep {
@@ -1000,6 +1045,63 @@
         }
         .doodle-btn:hover { transform: translateY(-2px); }
         .doodle-btn.active { background: #111; color: #f5efe6; }
+
+        /* Second toolbar row: colours + brush size. Wraps on narrow screens so the swatches
+           never push the canvas sideways. */
+        .doodle-tools {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+        .doodle-swatches { display: flex; gap: 8px; }
+        .doodle-swatch {
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            border-radius: 999px;
+            border: 2px solid #111;
+            background: var(--c);
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        .doodle-swatch:hover { transform: translateY(-2px); }
+        /* The selected colour gets a ring rather than a border swap, so the swatch never
+           changes size and the row cannot shift as you pick. */
+        .doodle-swatch[aria-pressed="true"] {
+            box-shadow: 0 0 0 3px #f5efe6, 0 0 0 5px #111;
+        }
+        .doodle-size { display: flex; align-items: center; gap: 10px; }
+        .doodle-size label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #111;
+        }
+        .doodle-size input[type="range"] { width: 120px; accent-color: #111; cursor: pointer; }
+        /* Live preview of the nib so the number means something before you draw. */
+        .doodle-nib {
+            width: 26px; height: 26px;
+            display: grid; place-items: center;
+            flex-shrink: 0;
+        }
+        .doodle-nib i {
+            display: block;
+            width: var(--nib); height: var(--nib);
+            border-radius: 999px;
+            background: var(--c, #111);
+            border: 1px solid rgba(0,0,0,0.35);
+        }
+        html.dark .doodle-btn { border-color: #f0e8df; color: #f0e8df; }
+        html.dark .doodle-btn.active { background: #f0e8df; color: #16120e; }
+        html.dark .doodle-swatch { border-color: #f0e8df; }
+        html.dark .doodle-swatch[aria-pressed="true"] { box-shadow: 0 0 0 3px #231a12, 0 0 0 5px #f0e8df; }
+        html.dark .doodle-size label { color: #f0e8df; }
+        html.dark .doodle-size input[type="range"] { accent-color: #f0e8df; }
         .doodle-canvas {
             width: 100%;
             height: 380px;
@@ -1199,9 +1301,9 @@
             <!-- Left: Bio text & Tools -->
             <div class="flex flex-col justify-center gap-6 md:gap-10 relative z-20 lg:pl-4 reveal-left">
                 <div class="text-[15px] md:text-[17px] lg:text-[19px] leading-relaxed font-medium text-[#222] flex flex-col gap-4">
-                    <p>Hey, I'm <span class="font-bold">Aditi</span>, and I'm obsessed with <span style="background:#d4956a; padding: 2px 8px; border-radius: 6px;" class="font-bold text-black">social media</span>. I help brands grow online by creating content that grabs attention and keeps people engaged.</p>
-                    <p>From <span style="background:#fde047; padding: 2px 8px; border-radius: 6px;" class="font-bold text-black">scroll-stopping Reels</span> to planning complete <span class="font-bold">content calendars</span>, I make sure every piece of content looks great and serves a purpose.</p>
-                    <p>As an artist and <span style="background:#d4956a; padding: 2px 8px; border-radius: 6px;" class="font-bold text-black">social media marketer</span>, I bring both <span class="font-bold">creativity and strategy</span> to the table. My goal is simple: help brands go from being overlooked to becoming <span style="background:#fde047; padding: 2px 8px; border-radius: 6px;" class="font-bold text-black">memorable and impactful</span> online.</p>
+                    <p>Hey, I'm <span class="font-bold">Aditi</span>, and I'm obsessed with <span class="font-bold hl hl-tan">social media</span>. I help brands grow online by creating content that grabs attention and keeps people engaged.</p>
+                    <p>From <span class="font-bold hl hl-amber">scroll-stopping Reels</span> to planning complete <span class="font-bold">content calendars</span>, I make sure every piece of content looks great and serves a purpose.</p>
+                    <p>As an artist and <span class="font-bold hl hl-tan">social media marketer</span>, I bring both <span class="font-bold">creativity and strategy</span> to the table. My goal is simple: help brands go from being overlooked to becoming <span class="font-bold hl hl-amber">memorable and impactful</span> online.</p>
                     <p>In today's digital world, every business needs a strong online presence that feels authentic, engaging, and relatable. That's exactly what I help create. So, if you're ready to make your brand stand out, <span class="font-bold">let's make it happen.</span></p>
                 </div>
 
@@ -1280,11 +1382,12 @@
                 <!-- Bottom decorative area: swatches + arrow pointing at them + "6" + stars -->
                 <div class="relative mt-10" style="min-height: 220px;">
 
-                    <!-- Theme color swatches — black, pink, cream (actual page theme colors) -->
+                    <!-- Theme color swatches — they show the palette the page is actually using,
+                         so they restate themselves when the theme flips (see .swatch). -->
                     <div class="flex items-center gap-2" style="margin-left: 28px;">
-                        <div class="w-9 h-9 md:w-11 md:h-11 rounded-full" style="background:#111111; border: 2px solid #111;"></div>
-                        <div class="w-9 h-9 md:w-11 md:h-11 rounded-full" style="background:#e8c9a8; border: 2px solid rgba(0,0,0,0.25);"></div>
-                        <div class="w-9 h-9 md:w-11 md:h-11 rounded-full" style="background:#f5efe6; border: 2px solid rgba(0,0,0,0.18);"></div>
+                        <div class="w-9 h-9 md:w-11 md:h-11 rounded-full swatch swatch-ink"></div>
+                        <div class="w-9 h-9 md:w-11 md:h-11 rounded-full swatch swatch-tan"></div>
+                        <div class="w-9 h-9 md:w-11 md:h-11 rounded-full swatch swatch-cream"></div>
                     </div>
 
                     <!-- Hand-drawn "6" whose tail IS the arrow pointing up at the swatches — single SVG path -->
@@ -1337,22 +1440,27 @@
                         <ul class="space-y-5 font-medium text-gray-800" style="font-size:1.25rem;">
                             <li class="flex items-center gap-4">
                                 <!-- Cake icon -->
-                                <svg class="contact-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                <svg class="contact-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/>
                                 </svg>
                                 Jaipur, Rajasthan, India
                             </li>
                             <li class="flex items-center gap-4">
                                 <!-- Envelope icon -->
-                                <svg class="contact-icon" width="32" height="32" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg class="contact-icon" width="32" height="32" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <rect x="2" y="4" width="20" height="16" rx="2" fill="none"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
                                 </svg>
                                 <a href="mailto:aditivijay642@gmail.com" class="hover-target text-gray-800 hover:text-black transition-colors" style="text-decoration:none;">aditivijay642@gmail.com</a>
                             </li>
                             <li class="flex items-center gap-4">
-                                <!-- LinkedIn icon -->
-                                <svg class="contact-icon" aria-hidden="true" viewBox="0 0 24 24" fill="#333">
-                                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                                <!-- LinkedIn icon, drawn as a line mark to match the pin and the
+                                     envelope. The solid brand glyph read as a filled block next
+                                     to two outlines, which is what made it look like a different
+                                     colour even though it was the same one. -->
+                                <svg class="contact-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/>
+                                    <rect x="2" y="9" width="4" height="12"/>
+                                    <circle cx="4" cy="4" r="2"/>
                                 </svg>
                                 <a href="https://linkedin.com/in/aditivijay11" target="_blank" rel="noopener" class="hover-target text-gray-800 hover:text-black transition-colors" style="text-decoration:none;">linkedin.com/in/aditivijay11</a>
                             </li>
@@ -2083,6 +2191,26 @@
                 <button id="eraseBtn" class="doodle-btn hover-target" type="button">Erase</button>
                 <button id="clearBtn" class="doodle-btn hover-target" type="button">Clear</button>
             </div>
+
+            <!-- Enough of a palette to actually draw a flower: petals, a yellow centre, a green
+                 stem, and a brown for the soil. aria-pressed carries the selection so it is
+                 announced, since the only other cue is colour. -->
+            <div class="doodle-tools">
+                <div class="doodle-swatches" role="group" aria-label="Brush colour">
+                    <button type="button" class="doodle-swatch hover-target" style="--c:#ee413d" data-color="#ee413d" aria-label="Red"    aria-pressed="true"></button>
+                    <button type="button" class="doodle-swatch hover-target" style="--c:#f27ba9" data-color="#f27ba9" aria-label="Pink"   aria-pressed="false"></button>
+                    <button type="button" class="doodle-swatch hover-target" style="--c:#fbbf24" data-color="#fbbf24" aria-label="Yellow" aria-pressed="false"></button>
+                    <button type="button" class="doodle-swatch hover-target" style="--c:#4a9d5f" data-color="#4a9d5f" aria-label="Green"  aria-pressed="false"></button>
+                    <button type="button" class="doodle-swatch hover-target" style="--c:#7c5cff" data-color="#7c5cff" aria-label="Purple" aria-pressed="false"></button>
+                    <button type="button" class="doodle-swatch hover-target" style="--c:#111111" data-color="#111111" aria-label="Black"  aria-pressed="false"></button>
+                </div>
+
+                <div class="doodle-size">
+                    <label for="doodleSize">Brush</label>
+                    <input id="doodleSize" type="range" min="2" max="48" step="1" value="12" aria-label="Brush size">
+                    <span class="doodle-nib" aria-hidden="true"><i></i></span>
+                </div>
+            </div>
             <canvas id="doodleCanvas" class="doodle-canvas"></canvas>
         </div>
     </section>
@@ -2573,14 +2701,13 @@
         }
 
         // ===== BIO HIGHLIGHT SWEEP ANIMATION =====
-        const highlightSpans = document.querySelectorAll('#about span[style*="background:"]');
-        highlightSpans.forEach(span => {
-            // Convert solid bg to gradient for sweep effect
-            const bgColor = span.style.background || span.style.backgroundColor;
-            if (bgColor) {
-                span.style.background = `linear-gradient(to right, ${bgColor} 50%, transparent 50%)`;
-                span.classList.add('highlight-sweep');
-            }
+        // The gradient is built from var(--hl), not from the chip's current colour, so the
+        // sweep survives a theme switch: flipping to dark only changes --hl and the same
+        // gradient repaints in the new colour. Reading the colour out and baking it in here
+        // was what froze the chips at their light-mode fill.
+        document.querySelectorAll('#about .hl').forEach(span => {
+            span.style.background = 'linear-gradient(to right, var(--hl) 50%, transparent 50%)';
+            span.classList.add('highlight-sweep');
         });
         const highlightObs = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -2999,8 +3126,16 @@
             const ctx = canvas.getContext('2d');
 
             function resizeCanvas() {
-                canvas.width = canvas.clientWidth;
-                canvas.height = canvas.clientHeight;
+                // Read both sizes before writing either: setting canvas.width forces a layout,
+                // so reading clientHeight afterwards made the browser lay out twice per resize.
+                const w = canvas.clientWidth, h = canvas.clientHeight;
+                if (w === canvas.width && h === canvas.height) return;
+                // Resizing a canvas clears it, so carry the drawing across.
+                const prev = canvas.width && canvas.height
+                    ? ctx.getImageData(0, 0, canvas.width, canvas.height) : null;
+                canvas.width = w;
+                canvas.height = h;
+                if (prev) ctx.putImageData(prev, 0, 0);
             }
             resizeCanvas();
             window.addEventListener('resize', resizeCanvas);
@@ -3008,10 +3143,15 @@
             let mode = 'draw'; // draw | erase
             let isDrawing = false;
             let lastPos = null;
+            let color = '#ee413d';
+            let brush = 12;
 
             const drawBtn = document.getElementById('drawBtn');
             const eraseBtn = document.getElementById('eraseBtn');
             const clearBtn = document.getElementById('clearBtn');
+            const sizeInput = document.getElementById('doodleSize');
+            const nib = document.querySelector('.doodle-nib');
+            const swatches = [...document.querySelectorAll('.doodle-swatch')];
 
             function setMode(newMode) {
                 mode = newMode;
@@ -3019,8 +3159,31 @@
                 eraseBtn.classList.toggle('active', mode === 'erase');
             }
 
-            drawBtn.addEventListener('click', () => setMode('draw'));
-            eraseBtn.addEventListener('click', () => setMode('erase'));
+            function paintNib() {
+                if (!nib) return;
+                // Clamp the preview to the swatch box; the brush itself is not clamped.
+                nib.style.setProperty('--nib', Math.min(brush, 24) + 'px');
+                nib.style.setProperty('--c', mode === 'erase' ? '#fff' : color);
+            }
+
+            swatches.forEach((sw) => {
+                sw.addEventListener('click', () => {
+                    color = sw.dataset.color;
+                    swatches.forEach(o => o.setAttribute('aria-pressed', String(o === sw)));
+                    // Picking a colour means you want to draw with it.
+                    setMode('draw');
+                    paintNib();
+                });
+            });
+
+            if (sizeInput) {
+                brush = +sizeInput.value;
+                sizeInput.addEventListener('input', () => { brush = +sizeInput.value; paintNib(); });
+            }
+            paintNib();
+
+            drawBtn.addEventListener('click', () => { setMode('draw'); paintNib(); });
+            eraseBtn.addEventListener('click', () => { setMode('erase'); paintNib(); });
             clearBtn.addEventListener('click', () => ctx.clearRect(0, 0, canvas.width, canvas.height));
 
             function getPos(e) {
@@ -3038,6 +3201,14 @@
                 e.preventDefault();
                 isDrawing = true;
                 lastPos = getPos(e);
+                // Lay a dot down on press. Only mousemove painted before, so a tap left nothing
+                // behind — which you notice once the brush is small enough to dot with.
+                if (mode === 'draw') {
+                    ctx.fillStyle = color;
+                    ctx.beginPath();
+                    ctx.arc(lastPos.x, lastPos.y, brush / 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
             }
 
             function handleMove(e) {
@@ -3046,8 +3217,8 @@
                 const pos = getPos(e);
 
                 if (mode === 'draw') {
-                    ctx.strokeStyle = '#ee413d';
-                    ctx.lineWidth = 40;
+                    ctx.strokeStyle = color;
+                    ctx.lineWidth = brush;
                     ctx.lineCap = 'round';
                     ctx.lineJoin = 'round';
 
@@ -3056,12 +3227,13 @@
                     ctx.lineTo(pos.x, pos.y);
                     ctx.stroke();
                 } else {
-                    // Smooth round eraser
+                    // Smooth round eraser, tracked to the brush size so one slider drives both.
+                    // A floor keeps it usable at the small end, where a 1px hole erases nothing.
                     ctx.save();
                     ctx.globalCompositeOperation = 'destination-out';
 
                     ctx.beginPath();
-                    ctx.arc(pos.x, pos.y, 40, 0, Math.PI * 2);
+                    ctx.arc(pos.x, pos.y, Math.max(brush, 6), 0, Math.PI * 2);
                     ctx.fill();
 
                     ctx.restore();
